@@ -111,6 +111,7 @@ export class TetherTool {
   private beam: THREE.Mesh | null = null;
   private hook: THREE.Mesh | null = null;
   private lockMark: THREE.Mesh | null = null;
+  private snapLine: THREE.Line | null = null;
   private world: WorldColliders | null = null;
   private readonly look = new THREE.Vector3();
   private readonly hand = new THREE.Vector3();
@@ -141,12 +142,21 @@ export class TetherTool {
       new THREE.MeshBasicMaterial({ color: 0xc9a36a }),
     );
     lockMark.visible = false;
-    group.add(beam, hook, lockMark);
+    const snapGeo = new THREE.BufferGeometry();
+    snapGeo.setAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 0, 1, 0], 3));
+    const snapLine = new THREE.Line(
+      snapGeo,
+      new THREE.LineBasicMaterial({ color: 0x8fd4cf, transparent: true, opacity: 0.95 }),
+    );
+    snapLine.visible = false;
+    snapLine.frustumCulled = false;
+    group.add(beam, hook, lockMark, snapLine);
     root.add(group);
     this.group = group;
     this.beam = beam;
     this.hook = hook;
     this.lockMark = lockMark;
+    this.snapLine = snapLine;
   }
 
   detach(): void {
@@ -158,6 +168,10 @@ export class TetherTool {
     this.beam = null;
     this.hook = null;
     this.lockMark = null;
+    if (this.snapLine) {
+      this.snapLine.geometry.dispose();
+      this.snapLine = null;
+    }
   }
 
   reset(owned: boolean, assist: boolean): void {
@@ -570,6 +584,29 @@ export class TetherTool {
     const opacity = this.strain ? 0.4 : 0.7;
     const mat = this.beam.material;
     if (mat instanceof THREE.MeshBasicMaterial) mat.opacity = tick.reducedMotion ? 0.55 : opacity;
+    const held = this.heldId ? this.body(this.heldId) : undefined;
+    const socket = held ? this.bestSocket(held) : null;
+    const fit = held && socket ? this.canSnap(held, socket) : { ok: false, auto: false };
+    if (this.snapLine) {
+      if (held && socket && (fit.ok || held.object.position.distanceTo(socket.position) < socket.radius * 2.2)) {
+        this.snapLine.visible = true;
+        const attr = this.snapLine.geometry.getAttribute("position");
+        if (attr instanceof THREE.BufferAttribute) {
+          const from = held.object.position;
+          attr.setXYZ(0, from.x, from.y, from.z);
+          attr.setXYZ(1, socket.position.x, socket.position.y, socket.position.z);
+          attr.needsUpdate = true;
+        }
+        const lineMat = this.snapLine.material;
+        if (lineMat instanceof THREE.LineBasicMaterial) lineMat.color.setHex(fit.ok ? 0x8fd4cf : 0xe0a03a);
+        socket.ghost.scale.setScalar(fit.ok ? 1.35 : 1.1);
+      } else {
+        this.snapLine.visible = false;
+      }
+    }
+    for (const item of this.sockets) {
+      if (item !== socket) item.ghost.scale.setScalar(1);
+    }
   }
 
   private disposeMesh(mesh: THREE.Mesh | null): void {

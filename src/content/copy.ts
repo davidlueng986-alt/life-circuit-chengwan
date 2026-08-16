@@ -11,7 +11,7 @@ export const TASK: Record<string, string> = {
   "P-S02-pulse": "對牆放出脈衝",
   "P-S02-follow": "跟隨會流動的線",
   "P-S02-seat": "壓回鬆脫的接頭",
-  "P-S03-pick": "抓取牆上的連接工具",
+  "P-S03-pick": "取下牆上的連接工具",
   "P-S03-snap": "把板扣進形狀座",
   "P-S04": "找出訊號斷點",
   "P-S05-run": "跑到救援平台",

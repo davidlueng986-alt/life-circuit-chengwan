@@ -26,6 +26,7 @@ import { FlowLens } from "./systems/flowLens";
 import { SignalGraph } from "./systems/signalGraph";
 import { TetherTool } from "./systems/tether";
 import { Triangulation } from "./systems/triangulation";
+import { detectQuality, type QualityTier } from "./materials";
 import { bindTouchPad } from "./pad";
 import { WorldHints } from "./worldHints";
 
@@ -58,10 +59,12 @@ export class Game {
   private last = performance.now();
   private readonly hints = new WorldHints();
   private helpUntil = 0;
+  private readonly quality: QualityTier = detectQuality();
 
   constructor(canvas: HTMLCanvasElement) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, this.quality === "low" ? 1 : 1.5));
+    this.renderer.shadowMap.enabled = this.quality !== "low";
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.12;
@@ -321,8 +324,10 @@ export class Game {
         this.input.mouseDY + this.input.lookPadY * 12,
         this.save.settings.reducedMotion,
       );
+      this.input.tickBuffer(dt);
       this.player.update(dt, this.input, this.cam.yaw, this.world, {
         reducedMotion: this.save.settings.reducedMotion,
+        camDist: this.camera.position.distanceTo(this.player.position),
       });
       this.cam.fov = this.save.settings.fov;
       this.cam.update(this.camera, this.player, this.save.settings.reducedMotion, this.world);
@@ -397,20 +402,22 @@ export class Game {
       });
       this.hud.setTalking(this.hud.showing);
       const help = document.querySelector("#help-card");
+      const taught = Number.isFinite(this.helpUntil) && performance.now() > this.helpUntil;
+      const hudRoot = document.querySelector("#hud");
+      if (hudRoot instanceof HTMLElement) hudRoot.dataset["taught"] = taught ? "1" : "0";
       if (help instanceof HTMLElement) {
         const moving = Math.hypot(this.player.velocity.x, this.player.velocity.z) > 0.45;
-        if (moving && !Number.isFinite(this.helpUntil)) this.helpUntil = performance.now() + 14000;
-        if (performance.now() > this.helpUntil) help.dataset["fade"] = "1";
-        else help.dataset["fade"] = "0";
+        if (moving && !Number.isFinite(this.helpUntil)) this.helpUntil = performance.now() + 12000;
+        help.dataset["fade"] = taught ? "1" : "0";
         const scene = this.save.meta.currentScene;
-        help.hidden = !(
+        help.hidden = taught || !(
           scene === "P-S00" ||
           scene === "P-S01" ||
-          scene === "P-S02" ||
-          scene === "HUB-S00" ||
-          scene.startsWith("W-")
+          scene === "P-S02"
         );
       }
+      const fBtn = document.querySelector("[data-act='f']");
+      if (fBtn instanceof HTMLElement) fBtn.hidden = !this.tether.owned;
       const nowMs = performance.now();
       const ate = this.hud.consumeInteract(this.input.interactPressed, this.input.interactHeld, nowMs);
       const tetherLine = this.tether.prompt();
@@ -458,9 +465,10 @@ export class Game {
       if (!ate && !this.tether.heldId) {
         const used = this.interact.pollUse(dt, this.input.interactPressed, this.input.interactHeld);
         if (used) {
+          this.input.consumeInteract();
           const verb = used.prompt;
           if (/推開/.test(verb)) this.player.playAction("push");
-          else if (/拾起|抓取|帶上|拾起/.test(verb)) this.player.playAction("pick");
+          else if (/拾起|取下|帶上|抓取/.test(verb)) this.player.playAction("pick");
           used.onUse();
         }
       }

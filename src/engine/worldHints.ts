@@ -1,7 +1,10 @@
 import * as THREE from "three";
 import type { Interactable } from "./interact";
+import { cachedLabelMap } from "./materials";
 
 function canvasLabel(title: string, sub = ""): THREE.Sprite {
+  const key = `${title}\n${sub}`;
+  const map = cachedLabelMap(key, () => {
   const canvas = document.createElement("canvas");
   canvas.width = 640;
   canvas.height = sub ? 200 : 136;
@@ -25,9 +28,11 @@ function canvasLabel(title: string, sub = ""): THREE.Sprite {
       g.fillText(sub, canvas.width / 2, 140);
     }
   }
-  const map = new THREE.CanvasTexture(canvas);
-  map.colorSpace = THREE.SRGBColorSpace;
-  const aspect = canvas.height / canvas.width;
+    const built = new THREE.CanvasTexture(canvas);
+    built.colorSpace = THREE.SRGBColorSpace;
+    return built;
+  });
+  const aspect = (map.image instanceof HTMLCanvasElement ? map.image.height : 136) / (map.image instanceof HTMLCanvasElement ? map.image.width : 640);
   const sprite = new THREE.Sprite(
     new THREE.SpriteMaterial({
       map,

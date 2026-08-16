@@ -586,7 +586,17 @@ html[data-high-contrast="true"] .hud-task {
 }
 
 #help-card[data-fade="1"] {
-  opacity: 0.62;
+  opacity: 0;
+}
+
+#hud[data-taught="1"] #hud-legend,
+#hud[data-taught="1"] #minimap-caption,
+#hud[data-taught="1"] #relaxed-badge {
+  display: none;
+}
+
+#hud[data-taught="1"] #nav-cluster {
+  opacity: 0.72;
 }
 
 #scan-veil {

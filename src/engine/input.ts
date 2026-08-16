@@ -28,6 +28,8 @@ export class Input {
   private downX = 0;
   private downY = 0;
   private downAt = 0;
+  private interactBuf = 0;
+  private tetherBuf = 0;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -61,6 +63,31 @@ export class Input {
     this.mouseDX = 0;
     this.mouseDY = 0;
     this.wheel = 0;
+  }
+
+  tickBuffer(dt: number): void {
+    this.interactBuf = Math.max(0, this.interactBuf - dt);
+    this.tetherBuf = Math.max(0, this.tetherBuf - dt);
+    if (this.interactBuf > 0) this.interactPressed = true;
+    if (this.tetherBuf > 0) this.tetherPressed = true;
+  }
+
+  consumeInteract(): boolean {
+    if (this.interactPressed || this.interactBuf > 0) {
+      this.interactPressed = false;
+      this.interactBuf = 0;
+      return true;
+    }
+    return false;
+  }
+
+  consumeTether(): boolean {
+    if (this.tetherPressed || this.tetherBuf > 0) {
+      this.tetherPressed = false;
+      this.tetherBuf = 0;
+      return true;
+    }
+    return false;
   }
 
   clearHeld(): void {
@@ -106,11 +133,15 @@ export class Input {
   tapInteract(): void {
     this.interactPressed = true;
     this.interactHeld = true;
+    this.interactBuf = 0.16;
   }
 
   holdInteract(on: boolean): void {
     this.interactHeld = on;
-    if (on) this.interactPressed = true;
+    if (on) {
+      this.interactPressed = true;
+      this.interactBuf = 0.16;
+    }
   }
 
   holdLens(on: boolean): void {
@@ -139,12 +170,16 @@ export class Input {
     if (event.code === "KeyE") {
       this.interactPressed = true;
       this.interactHeld = true;
+      this.interactBuf = 0.16;
     }
     if (event.code === "KeyQ") {
       this.lensHeld = true;
       this.lensPressed = true;
     }
-    if (event.code === "KeyF") this.pressTether(true);
+    if (event.code === "KeyF") {
+      this.pressTether(true);
+      this.tetherBuf = 0.16;
+    }
     if (event.code === "Tab") {
       event.preventDefault();
       this.cyclePressed = true;

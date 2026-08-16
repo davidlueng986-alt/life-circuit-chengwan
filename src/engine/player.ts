@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { createRunnerAvatar, createSafetyLine, setLineEnds } from "./avatar";
+import { createRunnerAvatar, createSafetyLine, setAvatarLod, setLineEnds } from "./avatar";
 import type { WorldColliders } from "./collision";
 import type { Input } from "./input";
 import {
@@ -82,8 +82,9 @@ export class PlayerMotor {
     this.rope.visible = true;
   }
 
-  update(dt: number, input: Input, lookYaw: number, world: WorldColliders, extras: { reducedMotion?: boolean } = {}): void {
+  update(dt: number, input: Input, lookYaw: number, world: WorldColliders, extras: { reducedMotion?: boolean; camDist?: number } = {}): void {
     this.reduced = extras.reducedMotion === true;
+    if (extras.camDist !== undefined) setAvatarLod(this.avatar, extras.camDist > 9.5);
     this.justRecovered = false;
     this.yaw = lookYaw;
 
@@ -204,15 +205,17 @@ export class PlayerMotor {
     this.root.position.copy(this.position);
     this.avatar.rotation.y = this.yaw;
     const speed = Math.hypot(this.velocity.x, this.velocity.z);
-    if (this.grounded && speed > 0.4 && !this.reduced && !this.recovering) {
-      this.bob += dt * speed * 1.6;
+    if (this.grounded && speed > 0.35 && !this.reduced && !this.recovering) {
+      this.bob += dt * (2.4 + speed * 1.15);
     } else {
-      this.bob *= 1 - Math.min(1, dt * 8);
+      this.bob *= 1 - Math.min(1, dt * 7);
     }
-    const bob = this.reduced ? 0 : Math.sin(this.bob) * Math.min(0.045, speed * 0.01);
+    const phase = this.bob;
+    const amp = this.reduced ? 0 : Math.min(0.72, speed * 0.16);
+    const bob = this.reduced ? 0 : Math.abs(Math.sin(phase)) * Math.min(0.05, speed * 0.012);
     this.avatar.position.y = bob;
-    this.avatar.rotation.z = this.reduced ? 0 : THREE.MathUtils.clamp(-this.velocity.x * 0.015, -0.08, 0.08);
-    const swing = this.reduced ? 0 : Math.sin(this.bob) * Math.min(0.85, 0.28 + speed * 0.16);
+    this.avatar.rotation.z = this.reduced ? 0 : THREE.MathUtils.clamp(-this.velocity.x * 0.018, -0.09, 0.09);
+    const swing = Math.sin(phase) * amp;
     const legL = this.avatar.getObjectByName("legL");
     const legR = this.avatar.getObjectByName("legR");
     const armL = this.avatar.getObjectByName("armL");

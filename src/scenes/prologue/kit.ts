@@ -16,6 +16,7 @@ import {
 } from "../../engine/greybox";
 import { makeWorldLabel } from "../../engine/worldHints";
 import { citySkyline } from "../../engine/props";
+import { createNpc } from "../../engine/npc";
 import type { SceneContext } from "../types";
 
 export function lambertOf(mesh: THREE.Mesh): THREE.MeshStandardMaterial | THREE.MeshLambertMaterial | null {
@@ -197,18 +198,9 @@ export function addXiaocenFigure(root: THREE.Object3D, x: number, y: number, z: 
   const group = new THREE.Group();
   group.name = "xiaocen";
   group.position.set(x, y, z);
-  const shell = new THREE.MeshLambertMaterial({ color: 0x3a2a22 });
-  const strap = new THREE.MeshLambertMaterial({ color: 0xef6a1a });
-  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.18, sit ? 0.38 : 0.52, 4, 8), shell);
-  torso.position.y = sit ? 0.72 : 1.02;
-  if (sit) torso.rotation.x = 0.35;
-  group.add(torso);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.13, 8, 8), new THREE.MeshLambertMaterial({ color: 0x5a4a3c }));
-  head.position.y = sit ? 1.12 : 1.52;
-  group.add(head);
-  const band = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.05, 0.2), strap);
-  band.position.set(0, sit ? 0.82 : 1.14, 0.04);
-  group.add(band);
+  const body = createNpc("xiaocen", sit);
+  body.scale.setScalar(0.92);
+  group.add(body);
   const name = makeWorldLabel("小岑", sit ? "剛被拉上來" : "橙燈在這裡");
   name.position.y = sit ? 1.55 : 2.05;
   group.add(name);
@@ -490,8 +482,10 @@ export class SceneVoice {
   }
 }
 
+let rainTick = 0;
 export function tickSceneRain(rain: THREE.Points | null, dt: number): void {
-  if (rain) tickRain(rain, dt);
+  rainTick += 1;
+  if (rain) tickRain(rain, dt, { skip: rainTick % 2 === 0 });
 }
 
 export function addDeck(

@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { syncAabb, type WorldColliders } from "./collision";
+import { applyKind, inferKind, type SurfKind } from "./materials";
 
 export interface Palette {
   floor: number;
@@ -101,6 +102,9 @@ export function surf(
     opacity?: number;
     flat?: boolean;
     textured?: boolean;
+    kind?: SurfKind;
+    repeatX?: number;
+    repeatY?: number;
   } = {},
 ): THREE.MeshStandardMaterial {
   const opacity = opts.opacity ?? 1;
@@ -110,13 +114,15 @@ export function surf(
     roughness: opts.roughness ?? 0.78,
     metalness: opts.metalness ?? 0.06,
     emissive: opts.emissive ?? (dark ? color : 0x000000),
-    emissiveIntensity: opts.emissiveIntensity ?? (dark ? 0.28 : 0),
+    emissiveIntensity: opts.emissiveIntensity ?? (dark ? 0.22 : 0),
     transparent: opacity < 1,
     opacity,
     depthWrite: opacity >= 1,
     flatShading: opts.flat ?? false,
   });
-  if (opts.textured) {
+  if (opts.kind) {
+    applyKind(mat, opts.kind, opts.repeatX ?? 1, opts.repeatY ?? 1);
+  } else if (opts.textured) {
     const map = boxNoiseMap().clone();
     map.needsUpdate = true;
     mat.map = map;
@@ -178,9 +184,15 @@ export function boxMesh(
     Math.min(w, h, d) > 0.12
       ? new RoundedBoxGeometry(w, h, d, 2, r)
       : new THREE.BoxGeometry(w, h, d);
+  const kind = inferKind(w, h, d, y);
   const metal = Math.min(w, h, d) < 0.35 ? 0.35 : 0.05;
-  const mat = surf(color, { roughness: metal > 0.2 ? 0.42 : 0.8, metalness: metal, textured: true });
-  if (mat.map) mat.map.repeat.set(Math.max(1, w * 0.45), Math.max(1, d * 0.45));
+  const mat = surf(color, {
+    roughness: metal > 0.2 ? 0.42 : 0.8,
+    metalness: metal,
+    kind,
+    repeatX: Math.max(1, w * 0.45),
+    repeatY: Math.max(1, d * 0.45),
+  });
   const mesh = new THREE.Mesh(geo, mat);
   mesh.position.set(x, y, z);
   mesh.castShadow = true;
@@ -305,7 +317,7 @@ export function applyFog(scene: THREE.Scene, palette: Palette, reduced: boolean)
 
 export function makeRain(reduced: boolean): THREE.Points | null {
   if (reduced) return null;
-  const count = 900;
+  const count = 640;
   const positions = new Float32Array(count * 3);
   for (let i = 0; i < count; i += 1) {
     positions[i * 3] = (Math.random() - 0.5) * 52;
@@ -326,7 +338,8 @@ export function makeRain(reduced: boolean): THREE.Points | null {
   return points;
 }
 
-export function tickRain(points: THREE.Points, dt: number): void {
+export function tickRain(points: THREE.Points, dt: number, opts: { skip?: boolean } = {}): void {
+  if (opts.skip) return;
   const attr = points.geometry.getAttribute("position");
   if (!(attr instanceof THREE.BufferAttribute)) return;
   const array = attr.array;
@@ -391,25 +404,14 @@ export function addPlayLights(root: THREE.Group, mood: "storm" | "indoor" | "hub
     return;
   }
   if (mood === "workshop") {
-    root.add(new THREE.AmbientLight(0xb8ece8, 1.02));
-    for (const [x, z] of [
-      [-3.4, -3.2],
-      [3.4, -3.2],
-      [-3.4, 3.2],
-      [3.4, 3.2],
-    ] as const) {
-      const lampLight = playPoint(0xb8fff6, 2.4, 12, 1.05);
-      lampLight.position.set(x, 2.6, z);
-      root.add(lampLight);
-    }
+    root.add(new THREE.AmbientLight(0xb8ece8, 0.72));
+    const lampLight = playPoint(0xb8fff6, 1.6, 14, 1.05);
+    lampLight.position.set(0, 2.8, 0);
+    root.add(lampLight);
     return;
   }
-  root.add(new THREE.AmbientLight(0xd8c8b4, 0.92));
-  const key = playPoint(0xffd8b0, 3.4, 22, 1);
+  root.add(new THREE.AmbientLight(0xd8c8b4, 0.62));
+  const key = playPoint(0xffd8b0, 1.8, 18, 1.05);
   key.position.set(2, 3.4, 8);
-  const market = playPoint(0xffb080, 2.8, 16, 1.05);
-  market.position.set(-12, 3.2, 13);
-  const pump = playPoint(0xc8e0d8, 2.6, 16, 1.05);
-  pump.position.set(1, 3.6, 32);
-  root.add(key, market, pump);
+  root.add(key);
 }

@@ -2,7 +2,8 @@ import * as THREE from "three";
 import { PROMPT, TASK } from "../../content/copy";
 import { P_LINE } from "../../content/prologue/ids";
 import { P01_LAYOUT as L } from "../../content/prologue/layout";
-import { addSolidBox, placeSolid, playPoint } from "../../engine/greybox";
+import { addSolidBox, isLitMat, placeSolid, playPoint } from "../../engine/greybox";
+import { applyKind } from "../../engine/materials";
 import { makeWorldLabel } from "../../engine/worldHints";
 import type { GameScene } from "../types";
 import { addRelayMesh, onceFlags, stormShell, tickSceneRain } from "./kit";
@@ -43,7 +44,11 @@ export function createDeadLift(): GameScene {
       crate = addSolidBox(ctx.root, ctx.world, 1.15, 0.84, 1.15, 0x8a6a48, cratePos.x, cratePos.y, cratePos.z);
       crate.name = "toolbox";
       const crateMat = crate.material;
-      if (crateMat instanceof THREE.MeshStandardMaterial || crateMat instanceof THREE.MeshLambertMaterial) {
+      if (crateMat instanceof THREE.MeshStandardMaterial) {
+        applyKind(crateMat, "wood", 1.2, 1.2);
+        crateMat.emissive = new THREE.Color(0xc9861a);
+        crateMat.emissiveIntensity = 0.38;
+      } else if (isLitMat(crateMat)) {
         crateMat.emissive = new THREE.Color(0xc9861a);
         crateMat.emissiveIntensity = 0.42;
       }

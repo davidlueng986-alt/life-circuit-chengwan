@@ -94,7 +94,7 @@ export function createCutSpan(): GameScene {
         id: "holster",
         prompt: PROMPT.pickTether,
         position: new THREE.Vector3(L.holster.x, 0, L.holster.z),
-        radius: 1.6,
+        radius: 3.4,
         enabled: true,
         onUse: () => {
           if (!flags.take("tether")) return;
