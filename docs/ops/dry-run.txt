@@ -1,0 +1,26 @@
+# wrangler deploy --dry-run
+# repo: life-circuit-chengwan
+# date: 2026-08-15
+# wrangler: 4.123.0 (node_modules + npx, package-lock 4.123.0)
+# node: v24.14.1
+# cwd: C:\Users\daive\life-circuit-chengwan
+# command: npx wrangler deploy --dry-run
+# assets: dist/index.html, dist/favicon.svg, dist/_headers,
+#         dist/assets/index-vBdllirQ.js, dist/assets/index-vBdllirQ.js.map,
+#         dist/assets/index-DxyTvIel.css
+# live_deploy_requested: false
+# wrangler whoami: succeeded (OAuth session present; identifiers redacted)
+# live deploy: NOT RUN
+# blocker: LIVE_DEPLOY_REQUESTED is false. whoami success is not sufficient.
+# exit: 0
+
+wrangler 4.123.0
+
+Cloudflare collects anonymous telemetry about your usage of Wrangler. Learn more at https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md
+✨ Read 7 files from the assets directory C:\Users\daive\life-circuit-chengwan\dist
+Total Upload: 2.08 KiB / gzip: 0.92 KiB
+Your Worker has access to the following bindings:
+Binding            Resource
+env.ASSETS         Assets
+
+--dry-run: exiting now.

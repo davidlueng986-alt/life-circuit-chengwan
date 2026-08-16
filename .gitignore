@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+.env
+.env.*
+!.env.example
+.tmp-chrome-debug/
+.tmp-chrome-debug2/
+*.log
+.DS_Store
+Thumbs.db
+docs/qa/shot-*.png
+docs/qa/play_browser.py
+*.tsbuildinfo
+.vscode/
+.idea/

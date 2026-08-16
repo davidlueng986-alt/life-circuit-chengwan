@@ -1,0 +1,28 @@
+{
+  // Official Workers static-assets SPA (re-verified 2026-08-15):
+  // https://developers.cloudflare.com/workers/static-assets/
+  // https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/
+  // https://developers.cloudflare.com/workers/static-assets/binding/
+  // https://developers.cloudflare.com/workers/static-assets/headers/
+  // https://developers.cloudflare.com/workers/wrangler/configuration/
+  // https://developers.cloudflare.com/workers/wrangler/commands/workers/
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "life-circuit-chengwan",
+  "compatibility_date": "2026-08-15",
+  "workers_dev": true,
+  "send_metrics": false,
+  "main": "src/worker.ts",
+  "tsconfig": "tsconfig.worker.json",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application",
+    "binding": "ASSETS",
+    // Only /health must hit the Worker first. HTML/assets stay asset-first so
+    // public/_headers (copied to dist/_headers) apply. Wrangler ≥ 4.20.0.
+    "run_worker_first": ["/health", "/health/*"]
+  },
+  // Workers Logs only. Do not add Web Analytics or any workshop-PII beacon.
+  "observability": {
+    "enabled": false
+  }
+}

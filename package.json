@@ -1,0 +1,31 @@
+{
+  "name": "life-circuit-chengwan",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "生命迴路：澄灣 — iGEM 2026 第三人稱 3D 教育冒險（P0 骨架）",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.worker.json",
+    "test": "node --experimental-strip-types --test src/engine/motorMath.test.ts",
+    "cf:dev": "vite build && wrangler dev --port 8787",
+    "cf:dry": "vite build && wrangler deploy --dry-run",
+    "cf:deploy": "vite build && wrangler deploy"
+  },
+  "dependencies": {
+    "three": "^0.179.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260811.1",
+    "@types/three": "^0.179.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.3",
+    "wrangler": "^4.28.1"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "authority": "Life_Circuit_Chengwan_Full_Game_Script_v1",
+  "nameAfterAction": true,
+  "neverPassword": ["MerR", "Pmer", "dTomato"],
+  "unlocks": [
+    { "term": "cell", "after": "W-S00-D001", "requires": "scale-into-cell" },
+    { "term": "dnaGene", "after": "W-S00-D003", "requires": "aim-cell-dna-gene" },
+    { "term": "transcription", "after": "W-S01-D003", "requires": "rna-copy-seated" },
+    { "term": "translation", "after": "W-S02-D001", "requires": "chain-folded" },
+    { "term": "input", "after": "W-S03-D001", "requires": "smoke-then-trace" },
+    { "term": "regulator", "after": "W-S03-D001", "requires": "smoke-then-trace" },
+    { "term": "promoter", "after": "W-S03-D001", "requires": "smoke-then-trace" },
+    { "term": "reporter", "after": "W-S03-D002", "requires": "flag-or-lamp-output" },
+    { "term": "output", "after": "W-S03-D003", "requires": "reporter-swap" },
+    { "term": "controls", "after": "W-S04-D003", "requires": "valid-moon-sun-run" },
+    { "term": "validRun", "after": "W-S04-D004", "requires": "unknown-after-valid-refs" }
+  ]
+}

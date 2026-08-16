@@ -1,0 +1,135 @@
+import * as THREE from "three";
+import { PROMPT, TASK } from "../content/copy";
+import type { SceneId } from "../content/ids";
+import { nextC1Scene, workshopEntry } from "../content/progress";
+import { HUB, addPlayLights, addSolidBox, applyFog, configureKeyShadow, lamp, playPoint } from "../engine/greybox";
+import { makeWorldLabel } from "../engine/worldHints";
+import type { GameScene } from "./types";
+
+export function createHubScene(id: SceneId = "HUB-S00"): GameScene {
+  return {
+    id,
+    mount(ctx) {
+      applyFog(ctx.three, HUB, ctx.reducedMotion);
+      if (ctx.three.fog instanceof THREE.FogExp2) {
+        ctx.three.fog.density = ctx.reducedMotion ? 0.0018 : 0.0024;
+      }
+      ctx.root.add(new THREE.HemisphereLight(0xfff0dc, 0x2a2218, 1.28));
+      const sun = new THREE.DirectionalLight(0xffe6c4, 1.9);
+      sun.position.set(8, 14, 5);
+      configureKeyShadow(sun, 18);
+      ctx.root.add(sun);
+      ctx.root.add(lamp(HUB.accent, 0, 3.2, 0));
+      addPlayLights(ctx.root, "hub");
+      const harborLamp = playPoint(0xff8a52, 4.2, 10, 1);
+      harborLamp.position.set(-3.15, 2.15, 1.7);
+      const workshopLamp = playPoint(0x6ad4cc, 4.2, 10, 1);
+      workshopLamp.position.set(3.15, 2.15, 1.7);
+      ctx.root.add(harborLamp, workshopLamp);
+
+      addSolidBox(ctx.root, ctx.world, 22, 0.4, 16, HUB.floor, 0, -0.2, 0);
+      addSolidBox(ctx.root, ctx.world, 22, 4, 0.4, HUB.wall, 0, 2, -8);
+      addSolidBox(ctx.root, ctx.world, 22, 4, 0.4, HUB.wall, 0, 2, 8);
+      addSolidBox(ctx.root, ctx.world, 0.4, 4, 16, HUB.wall, -11, 2, 0);
+      addSolidBox(ctx.root, ctx.world, 0.4, 4, 16, HUB.wall, 11, 2, 0);
+
+      addSolidBox(ctx.root, ctx.world, 4.8, 0.7, 2.4, 0x4a4034, 0, 0.35, 0);
+      const tableTag = makeWorldLabel("中央桌", "先走到這裡");
+      tableTag.position.set(0, 1.35, 0);
+      ctx.root.add(tableTag);
+      mountDoor(ctx, -3.15, 1.35, 0xb85c38, "harbor-door");
+      mountDoor(ctx, 3.15, 1.35, 0x3d6a68, "workshop-door");
+      const harborTag = makeWorldLabel("去河港", "第一章");
+      harborTag.position.set(-3.15, 2.85, 1.35);
+      const shopTag = makeWorldLabel("微觀工作坊", "可跳過");
+      shopTag.position.set(3.15, 2.85, 1.35);
+      ctx.root.add(harborTag, shopTag);
+
+      const hatch = addSolidBox(ctx.root, ctx.world, 1.8, 2.3, 0.18, 0x2a2620, 0, 1.25, -7.72);
+      hatch.name = "c2-hatch";
+      if (ctx.save.c1.complete) {
+        const plaque = addSolidBox(ctx.root, ctx.world, 1.1, 0.28, 0.06, 0xc9861a, 0, 2.55, -7.62);
+        plaque.name = "c2-plaque";
+      }
+
+      const sky = ctx.save.world.harbor.monitoringModel ?? ctx.save.c1.monitoringModel;
+      if (sky === "fixed_station") {
+        addSolidBox(ctx.root, ctx.world, 1.4, 1.8, 1.4, 0x8a8f86, 8, 0.9, 5.4);
+        addSolidBox(ctx.root, ctx.world, 0.9, 1.1, 0.9, 0x6a7068, 8.8, 0.55, 6.6);
+      } else if (sky === "portable_kits") {
+        addSolidBox(ctx.root, ctx.world, 0.5, 0.8, 0.5, 0x7a6a4a, 7.4, 0.4, 5.2);
+        addSolidBox(ctx.root, ctx.world, 0.5, 0.8, 0.5, 0x7a6a4a, 8.2, 0.4, 5.6);
+        addSolidBox(ctx.root, ctx.world, 0.5, 0.8, 0.5, 0x7a6a4a, 8.9, 0.4, 5.1);
+        addSolidBox(ctx.root, ctx.world, 1.8, 0.28, 0.55, 0x5a4a34, 8.2, 0.18, 6.4);
+      }
+      if (sky) {
+        addSolidBox(ctx.root, ctx.world, 0.4, 1.1, 0.4, 0xb85c38, 7.4, 0.55, 4.4);
+        addSolidBox(ctx.root, ctx.world, 1.4, 1.2, 0.1, 0x2a3640, 9.2, 1.1, 4.2);
+      }
+
+      if (ctx.save.evidence.failedRunRetained || ctx.save.c1.invalidRunExperienced) {
+        const wall = addSolidBox(ctx.root, ctx.world, 1.8, 1.1, 0.08, 0x3a322c, -6.4, 1.4, -7.7);
+        wall.name = "fail-wall";
+      }
+
+      ctx.player.reset(0, 0, 5.15, 0);
+      ctx.camera.yaw = 0;
+      ctx.camera.pitch = -0.12;
+      ctx.hud.setTask(TASK["HUB-S00"] ?? "");
+
+      ctx.interact.add({
+        id: "harbor",
+        prompt: PROMPT.doorHarbor,
+        position: new THREE.Vector3(-3.15, 0, 1.35),
+        radius: 1.8,
+        enabled: true,
+        onUse: () => ctx.loadScene(nextC1Scene(ctx.save)),
+      });
+      const resume = ctx.save.workshop.resumeScene;
+      ctx.interact.add({
+        id: "workshop",
+        prompt: resume || ctx.save.workshop.complete ? PROMPT.doorWorkshopResume : PROMPT.doorWorkshop,
+        position: new THREE.Vector3(3.15, 0, 1.35),
+        radius: 1.8,
+        enabled: true,
+        onUse: () => ctx.loadScene(workshopEntry(ctx.save)),
+      });
+      ctx.interact.add({
+        id: "c2",
+        prompt: PROMPT.hatchC2,
+        position: new THREE.Vector3(0, 0, -7.2),
+        radius: 1.8,
+        enabled: true,
+        onUse: () => {
+          ctx.hud.setTask(TASK["C2-STUB"] ?? "");
+          ctx.say(ctx.save.c1.complete ? "C1-S08-D003" : "C2-STUB-R001");
+        },
+      });
+
+      if (id === "C2-STUB") {
+        ctx.hud.setTask(TASK["C2-STUB"] ?? "");
+        ctx.say(ctx.save.c1.complete ? "C1-S08-D003" : "C2-STUB-R001");
+      }
+    },
+    update(_dt, _ctx) {
+      return;
+    },
+    unmount() {
+      return;
+    },
+  };
+}
+
+function mountDoor(ctx: Parameters<GameScene["mount"]>[0], x: number, z: number, tint: number, name: string): void {
+  addSolidBox(ctx.root, ctx.world, 1.15, 2.15, 0.22, 0x2a2620, x, 1.45, z);
+  addSolidBox(ctx.root, ctx.world, 0.16, 2.15, 0.28, 0x3a322c, x - 0.52, 1.45, z);
+  addSolidBox(ctx.root, ctx.world, 0.16, 2.15, 0.28, 0x3a322c, x + 0.52, 1.45, z);
+  addSolidBox(ctx.root, ctx.world, 1.15, 0.16, 0.28, 0x3a322c, x, 2.55, z);
+  const slab = addSolidBox(ctx.root, ctx.world, 0.78, 1.65, 0.08, tint, x, 1.4, z + 0.08);
+  slab.name = name;
+  const mat = slab.material;
+  if (mat instanceof THREE.MeshStandardMaterial || mat instanceof THREE.MeshLambertMaterial) {
+    mat.emissive = new THREE.Color(tint);
+    mat.emissiveIntensity = 0.42;
+  }
+}

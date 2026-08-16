@@ -1,0 +1,115 @@
+/** Official Chapter 1 line IDs from Life_Circuit_Chengwan_Full_Game_Script_v1. */
+export const C1_LINE_IDS = [
+  "C1-S00-D001",
+  "C1-S00-D002",
+  "C1-S00-D003",
+  "C1-S00-D003A",
+  "C1-S00-D004",
+  "C1-S00-D005",
+  "C1-S01-D001",
+  "C1-S01-D002",
+  "C1-S01-D003",
+  "C1-S01-D004",
+  "C1-S02-D001",
+  "C1-S02-D002",
+  "C1-S02-D003",
+  "C1-S02-D004",
+  "C1-S03-D001",
+  "C1-S03-D002",
+  "C1-S03-D003",
+  "C1-S03-D004",
+  "C1-S03-D005",
+  "C1-S04-D001",
+  "C1-S04-D002",
+  "C1-S04-D003",
+  "C1-S04-D004",
+  "C1-S04-D005",
+  "C1-S05-D001",
+  "C1-S05-D002",
+  "C1-S05-D003",
+  "C1-S05-D004",
+  "C1-S05-D005",
+  "C1-S06-D001",
+  "C1-S06-D002",
+  "C1-S06-D003",
+  "C1-S06-D004",
+  "C1-S06-D005",
+  "C1-S06-D006",
+  "C1-S07-D001",
+  "C1-S07-D002",
+  "C1-S07-D003",
+  "C1-S07-D004",
+  "C1-S08-D001",
+  "C1-S08-D002",
+  "C1-S08-D003",
+] as const;
+
+export type C1LineId = (typeof C1_LINE_IDS)[number];
+
+export const C1_SCENE_IDS = [
+  "C1-S00",
+  "C1-S01",
+  "C1-S02",
+  "C1-S03",
+  "C1-S04",
+  "C1-S05",
+  "C1-S06",
+  "C1-S07",
+  "C1-S08",
+] as const;
+
+export type C1SceneId = (typeof C1_SCENE_IDS)[number];
+
+export function isC1SceneId(id: string): id is C1SceneId {
+  return (C1_SCENE_IDS as readonly string[]).includes(id);
+}
+
+/** Script triggers. Spoken text lives in src/content/dialogue.ts. */
+export const C1_LINE_TRIGGER: Record<C1LineId, string> = {
+  "C1-S00-D001": "approach-table",
+  "C1-S00-D002": "map-unfold",
+  "C1-S00-D003": "workshop.complete",
+  "C1-S00-D003A": "workshop.incomplete",
+  "C1-S00-D004": "pick-probe",
+  "C1-S00-D005": "loadout-choice",
+  "C1-S01-D001": "first-probe-wake",
+  "C1-S01-D002": "near-market",
+  "C1-S01-D003": "observe-fish",
+  "C1-S01-D004": "first-trace-jack",
+  "C1-S02-D001": "turn-still-full",
+  "C1-S02-D002": "leave-still-full",
+  "C1-S02-D003": "self-test-blink",
+  "C1-S02-D004": "evac-start",
+  "C1-S03-D001": "docks-open",
+  "C1-S03-D002": "dock-moon",
+  "C1-S03-D003": "refs-restored",
+  "C1-S03-D004": "keep-first-fail",
+  "C1-S03-D005": "unknown-run",
+  "C1-S04-D001": "enter-second",
+  "C1-S04-D002": "first-beacon",
+  "C1-S04-D003": "near-second-zone",
+  "C1-S04-D004": "sluice-open",
+  "C1-S04-D005": "overlap-ok",
+  "C1-S05-D001": "usability-start",
+  "C1-S05-D002": "enter-shade",
+  "C1-S05-D003": "npc-guess",
+  "C1-S05-D004": "desk-open",
+  "C1-S05-D005": "second-walk-ok",
+  "C1-S06-D001": "arrive-sluice",
+  "C1-S06-D002": "pipe-puzzle",
+  "C1-S06-D003": "first-brownout",
+  "C1-S06-D004": "latch-held",
+  "C1-S06-D005": "rover-in",
+  "C1-S06-D006": "finale-evac",
+  "C1-S07-D001": "layer-fail",
+  "C1-S07-D002": "layer-zone-or-route",
+  "C1-S07-D003": "layer-wait",
+  "C1-S07-D004": "layer-controls",
+  "C1-S08-D001": "echo-start",
+  "C1-S08-D002": "echo-hook",
+  "C1-S08-D003": "radio-stop-line",
+};
+
+export const C1_UNRESOLVED = ["confirmation_result", "long_term_monitoring"] as const;
+
+export const C1_FAKE_LAYERS = ["全河安全", "已完成清理"] as const;

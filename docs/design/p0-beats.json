@@ -1,0 +1,1249 @@
+{
+  "$schemaNote": "P0 level-design companion to docs/design/p0-level.md. Not a wrangler schema. Not player UI.",
+  "id": "life-circuit-chengwan-p0-beats",
+  "title": {
+    "zhHant": "生命迴路：澄灣",
+    "en": "Life Circuit: Chengwan"
+  },
+  "version": "2026-08-15-p0",
+  "role": "Lead Level Designer beat sheet — game-first, not classroom",
+  "localeDefault": "zh-Hant",
+  "authority": "Life_Circuit_Chengwan_Full_Game_Script_v1",
+  "companions": [
+    "docs/design/p0-level.md",
+    "docs/delivery/p0-contract.md",
+    "docs/delivery/p0-manifest.json",
+    "docs/education/p0-learning.md",
+    "docs/safety/p0-boundaries.md",
+    "docs/claims/p0-claims.md"
+  ],
+  "scope": {
+    "in": [
+      "BOOT-S00",
+      "HUB-S00",
+      "P-S00",
+      "P-S01",
+      "P-S02",
+      "P-S03",
+      "P-S04",
+      "P-S05",
+      "P-S06",
+      "W-S00",
+      "W-S01",
+      "W-S02",
+      "W-S03",
+      "W-S04",
+      "W-S05",
+      "C1-S00",
+      "C1-S01",
+      "C1-S02",
+      "C1-S03",
+      "C1-S04",
+      "C1-S05",
+      "C1-S06",
+      "C1-S07",
+      "C1-S08",
+      "C2-STUB"
+    ],
+    "outPlayable": ["C2", "C3", "C4", "C5", "C6", "C7", "FINAL"]
+  },
+  "floorLaws": [
+    "30s-visible-goal",
+    "90s-spatial-verb",
+    "brightness-is-never-the-answer",
+    "shape-over-paint",
+    "completed-work-survives-fail",
+    "no-death-screen-no-red-x",
+    "no-click-all-critical-path",
+    "two-valid-routes-where-scripted",
+    "player-is-not-an-authority",
+    "name-after-phenomenon"
+  ],
+  "structureCitationsOnly": [
+    {
+      "from": "PEAK",
+      "method": "Destination visible before text; movement and readable mistakes are the opening story",
+      "chengwanUse": "P-S00 frames Gate 3 + orange SOS; safety line not corpse cam",
+      "doNotCopy": "Mountain race, stamina, camp kit, peak silhouette, HUD, VO, audio"
+    },
+    {
+      "from": "R.E.P.O.",
+      "method": "Carried objects have mass, inertia, break states; evac pressure is the thing in your hands",
+      "chengwanUse": "Tether plates, sealed probe, beacons, rover relay",
+      "doNotCopy": "Shop loop, monster extraction, price tags, grab-beam look"
+    },
+    {
+      "from": "Outer Wilds",
+      "method": "Follow a signal with the body; knowledge opens geometry; environment can invalidate a route",
+      "chengwanUse": "Flow Lens + triangle density; Chen rain sluice; tide closes first pier",
+      "doNotCopy": "Time loop, planetary scale, traveler instruments, ship, their music"
+    },
+    {
+      "from": "Pacific Drive",
+      "method": "Hub prepare → sortie → extract → repair → go out again; weather worsens on return",
+      "chengwanUse": "HUB loadout → east shore → saturated probe → van controls → second entry → rain finale",
+      "doNotCopy": "Car, garage radio, Olympic Exclusion Zone, anomaly biomes"
+    },
+    {
+      "from": "Portal 2",
+      "method": "One verb in a safe volume, then the same verb under pressure or in combination",
+      "chengwanUse": "Prologue verb stack; workshop one-idea rooms",
+      "doNotCopy": "Portals, test-chamber chrome, announcer, companion cube, emancipation grills"
+    }
+  ],
+  "criticalPath": [
+    "BOOT-S00",
+    "P-S00",
+    "P-S01",
+    "P-S02",
+    "P-S03",
+    "P-S04",
+    "P-S05",
+    "P-S06",
+    "HUB-S00",
+    "C1-S00",
+    "C1-S01",
+    "C1-S02",
+    "C1-S03",
+    "C1-S04",
+    "C1-S05",
+    "C1-S06",
+    "C1-S07",
+    "C1-S08"
+  ],
+  "optionalPath": ["W-S00", "W-S01", "W-S02", "W-S03", "W-S04", "W-S05"],
+  "stubPath": ["C2-STUB"],
+  "hubDoors": {
+    "equalStatus": ["去河港", "試一次微觀工作坊"],
+    "workshopSkipWarning": false,
+    "workshopQualificationGate": false,
+    "harborLegalIfWorkshopIncomplete": true,
+    "workshopReturnableBeforeAndAfterC1": true,
+    "c2": "honest-stub"
+  },
+  "tools": {
+    "flowLens": {
+      "unlock": "P-S02",
+      "verbs": ["hold-charge", "release-pulse", "trace-direction", "read-occlusion", "spend-battery"],
+      "mustInclude": ["pulse", "direction", "occlusion", "battery", "false-bright-dead-lines"],
+      "mustNot": ["answer-highlighter", "permanent-wallhack", "first-pickup-definition-text"]
+    },
+    "tether": {
+      "unlock": "P-S03",
+      "verbs": ["grab", "pull", "push", "rotate", "insert", "cut", "snap", "park"],
+      "mustInclude": ["weight", "inertia", "collision", "shape-sockets", "drop-recovery"],
+      "mustNot": ["2d-card-drag-critical-path"]
+    },
+    "sealedBioRig": {
+      "unlock": "C1-S00",
+      "slots": ["sense", "regulate", "output"],
+      "mustInclude": ["shape-or-sound-or-fill-animation", "sealed-shell", "failed-positive-control-blocks-unknown"],
+      "mustNot": ["sequences", "culture-conditions", "concentrations", "wet-lab-steps", "environmental-release"],
+      "reporterNeverColorAlone": true
+    }
+  },
+  "beats": [
+    {
+      "id": "BOOT-S00",
+      "chapter": "title",
+      "name": { "zhHant": "標題／冷啟動", "en": "Title / cold start" },
+      "minutes": 0.5,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "開始、繼續、或設定。第一次遊玩直接走進暴雨，不要先讀世界觀。",
+      "goal30s": "按開始之後站在維修台上。",
+      "verb": "Choose New / Continue / Settings in a semantic DOM shell.",
+      "verb90s": "First play is already walking P-S00.",
+      "spatialPuzzle": "Restraint: no lore wall, no classroom crawl, no pre-test. WebGL-less machines get a DOM block, not a black void.",
+      "failureConsequence": "Missing WebGL → 「無法啟動 3D」 plus settings. Continue with no save behaves as New.",
+      "recovery": "Settings persist in localStorage. New always spawns P-S00.",
+      "noQuizBypass": "Title is not a biology pre-test and not a disclaimer lecture.",
+      "hudTask": "開始 / 繼續 / 設定",
+      "tools": [],
+      "space": {
+        "id": "ui.boot",
+        "landmarks": ["New", "Continue", "Settings"],
+        "sightline": "No destination render until P-S00",
+        "circulation": "First play → black rain audio → ext.service_deck"
+      },
+      "structureBorrow": {
+        "from": "Pacific Drive",
+        "method": "Cold start into weather, Hub later",
+        "doNotCopy": "Garage, car, radio stack"
+      },
+      "persist": ["meta.hasSave", "settings.*"],
+      "qa": [
+        "First play never shows 生命迴路：澄灣 title card before P-S06",
+        "No developer-voice 這是教學故事 on boot"
+      ]
+    },
+    {
+      "id": "HUB-S00",
+      "chapter": "hub",
+      "name": { "zhHant": "研究站大廳", "en": "Station hub" },
+      "minutes": 2,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "unlock": "prologueComplete",
+      "visibleGoal": "走到中央桌。兩扇同等的門：去河港，或試一次微觀工作坊。",
+      "goal30s": "Player can point at both physical entries.",
+      "verb": "Walk a real floor. Interact with a door volume, not a chapter list.",
+      "verb90s": "Stand at the briefing table and choose a door by walking into it.",
+      "spatialPuzzle": "Equal scale, light, and dignity on harbor vs workshop. After C1 the skyline window shows the chosen monitoring furniture and the first-fail plaque is on the tool wall.",
+      "failureConsequence": "C2 hatch stays shut and may play 何主任 radio after C1. It never loads a factory.",
+      "recovery": "Both doors remain usable. Workshop leave mid-scene writes workshop.resumeScene only.",
+      "noQuizBypass": "Harbor is legal with workshop.complete === false. No 未完成基礎 lock, no skip-shame modal.",
+      "hudTask": "走到中央桌，選一扇門",
+      "tools": ["flowLens", "tether"],
+      "space": {
+        "id": "hub.floor",
+        "landmarks": ["briefing_table", "tool_wall", "skyline", "c2_hatch"],
+        "sightline": "Table is the first readable cluster from the P-S06 fade-in",
+        "circulation": "Free walk; two load volumes; stub hatch"
+      },
+      "structureBorrow": {
+        "from": "Pacific Drive",
+        "method": "Hub as prepare / return furniture",
+        "doNotCopy": "Car garage layout"
+      },
+      "persist": ["hub.unlocked"],
+      "qa": [
+        "Skip workshop shows no warning",
+        "After C1, skyline matches world.harbor.monitoringModel"
+      ]
+    },
+    {
+      "id": "P-S00",
+      "chapter": "prologue",
+      "name": { "zhHant": "暴雨入站", "en": "Storm arrival" },
+      "minutes": 1,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "到防洪控制室。高處閘門停著，下方每隔三秒閃小岑的橙色求救燈。",
+      "goal30s": "Untutored player says 救人 / 到上面的閘 / 控制室 — not 學生物.",
+      "verb": "Walk the amber service spine. Auto step-up a 20 cm pipe. Look through the glass slit.",
+      "verb90s": "Past the glass with Gate 3 and the SOS still in frame.",
+      "spatialPuzzle": "Dual attractors: warm indoor door (allowed, wrong) vs high cold gate. Spine is the only route that grows the SOS in frame. Indoor wall map lights ~8 m of yellow if they wander.",
+      "failureConsequence": "Fall → safety line 1.2 s to last amber anchor. Look away 3 s → 方雅 radio. Linger 12 s → 小岑 jab.",
+      "recovery": "Rope. Indoor door opens; 方雅 redirects; no death screen, no HP.",
+      "noQuizBypass": "No which-way multiple choice. Scene cannot complete without walking to the dead lift.",
+      "hudTask": "到防洪控制室",
+      "firstLearn": ["move", "see-destination"],
+      "termsDuringCrisis": [],
+      "tools": ["move"],
+      "space": {
+        "id": "ext.service_deck",
+        "landmarks": ["ext.gate3_silhouette", "ext.lower_call", "ext.amber_spine", "int.indoor_refuge"],
+        "sightline": "Default camera: gate 12–18 m up, 80–120 m out; SOS period 3 s",
+        "circulation": "Forward-right spine; left indoor curiosity"
+      },
+      "structureBorrow": {
+        "from": "PEAK",
+        "method": "See the high destination before any bible",
+        "doNotCopy": "Mountain, climb stamina, camp"
+      },
+      "evidence": {
+        "seen": "Stopped sluice + orange SOS + rising water through glass",
+        "claim": "Walk the yellow line, not the indoor refuge",
+        "consequence": "Arrive at the dead lift",
+        "revision": "Indoor wander still allowed; map lights the short route"
+      },
+      "qa": [
+        "Mute VO + hide subtitles: 4/5 still walk toward gate/SOS",
+        "Fall never shows a death screen"
+      ]
+    },
+    {
+      "id": "P-S01",
+      "chapter": "prologue",
+      "name": { "zhHant": "電梯死機", "en": "Dead lift" },
+      "minutes": 1,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "電梯沒電。推開擋住右邊維修梯的工具箱，爬上去。",
+      "goal30s": "Push the crate, climb the ladder.",
+      "verb": "Interact-shove a light crate. Climb a low ladder. Enter the dark booth crack.",
+      "verb90s": "Hands on the single-button handheld.",
+      "spatialPuzzle": "Crate occupies the ladder volume. Climb is a 2.4–3.0 m low vault. Camera eases in and never steals control. Handheld is the only lit desk object.",
+      "failureConsequence": "Crate shoved off-axis still blocks if it intersects the climb volume.",
+      "recovery": "Shove again. No timer. No enemies.",
+      "noQuizBypass": "A Use Ladder prompt on a blocked volume is a fail. Collision stays blocked until the crate moves.",
+      "hudTask": "推開工具箱，爬右邊的梯",
+      "firstLearn": ["interact", "low-climb"],
+      "termsDuringCrisis": [],
+      "tools": ["interact"],
+      "space": {
+        "id": "int.dead_lift",
+        "landmarks": ["crate", "service_ladder", "int.unlit_booth"],
+        "sightline": "Ladder visible as soon as the lift cage is reached",
+        "circulation": "Shove → climb → booth crack"
+      },
+      "structureBorrow": {
+        "from": "Portal 2",
+        "method": "First interact in zero threat",
+        "doNotCopy": "Test-chamber look, announcer"
+      },
+      "qa": ["Ladder unusable until crate leaves its volume"]
+    },
+    {
+      "id": "P-S02",
+      "chapter": "prologue",
+      "name": { "zhHant": "借來的透鏡", "en": "Borrowed lens" },
+      "minutes": 2,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "用桌上的透鏡叫醒維修標記。跟會流動的那條，不是最亮的死線。",
+      "goal30s": "Hold, aim at the wall, release. See three runs.",
+      "verb": "Flow Lens pulse. Follow moving glow around an occluding panel. Press the loose relay home.",
+      "verb90s": "First useful pulse has shown direction versus dead shine.",
+      "spatialPuzzle": "Three-Run Wall. Top = brightest dead reflector, fades ~1 s. Mid = dimmer live flow toward the lock, then behind a panel. Bottom = dull dummy. Occlusion is the puzzle. First pulse free; then battery ring with no definition text.",
+      "failureConsequence": "Follow the flare → line dies, lock stays dark. Empty battery → pulse refuses, ring blinks.",
+      "recovery": "Repulse. Live run still moves. Wait for battery. First pulse remains free so the lesson is readable.",
+      "noQuizBypass": "Clicking or highlighting all three pipes does nothing. Only seating the live relay opens the lock. No pick-the-correct-line list.",
+      "hudTask": "對著牆按住再放開；沿著會流動的線走",
+      "firstLearn": ["scan", "trace", "bright-is-not-direction"],
+      "termsDuringCrisis": [],
+      "tools": ["flowLens"],
+      "space": {
+        "id": "int.three_run_wall",
+        "landmarks": ["dead_bright_run", "live_occluded_run", "dummy_run", "loose_relay", "door_lock"],
+        "sightline": "All three pipes readable from the desk",
+        "circulation": "Pulse → sidestep panel → seat relay → lock lights; outer span is already out"
+      },
+      "structureBorrow": {
+        "from": "Outer Wilds",
+        "method": "Signal, not waypoint; instrument can show false shine",
+        "doNotCopy": "Traveler tools, planetary radio"
+      },
+      "evidence": {
+        "seen": "Moving particles versus fading flare",
+        "claim": "Follow flow to the relay",
+        "consequence": "Lock lights; Cut Span is the next gap",
+        "revision": "Dead line teaches by dying"
+      },
+      "persist": ["player.tool.flowLens"],
+      "transfer": ["C1-S01 warehouse civic red", "C1-S06 bright-still residue"],
+      "qa": [
+        "Brightest run never opens the lock",
+        "Live run is occluded after the first metre of particles"
+      ]
+    },
+    {
+      "id": "P-S03",
+      "chapter": "prologue",
+      "name": { "zhHant": "斷掉的橋", "en": "Broken bridge" },
+      "minutes": 2,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "抓住牆上的連接工具，把兩塊板拉來，扣進兩個形狀座，走過去。",
+      "goal30s": "Grab Tether. Move the first plate.",
+      "verb": "Tether pull, push, rotate, snap-by-shape.",
+      "verb90s": "First plate seated or clearly failing to seat on a wrong pose.",
+      "spatialPuzzle": "1.0 m gap; jump is illegal (rope back). Plate A light, one pose seats in a chevron socket. Plate B heavier, slower rotate, wind gusts. Sockets are silhouette, not color. After crossing, plate A lifts in the wind but the lock holds.",
+      "failureConsequence": "Drop → safety cable returns plate to the rack. Fall → rope to the near lip. Wrong pose: no snap.",
+      "recovery": "Cable / rope. Assist mode auto-aligns near ~15° and 20 cm.",
+      "noQuizBypass": "No click-to-place. Distance, rotation, and socket shape are required. Color-only sockets fail the script.",
+      "hudTask": "把板拉過來，扣進形狀座",
+      "firstLearn": ["tether-carry", "shape-snap", "weight"],
+      "termsDuringCrisis": [],
+      "tools": ["tether"],
+      "space": {
+        "id": "ext.cut_span",
+        "landmarks": ["gap_1m", "plate_a", "plate_b", "chevron_socket", "notch_socket", "tether_holster"],
+        "sightline": "Gap and far lip visible as soon as the lock opens",
+        "circulation": "Rack → span → far lip; no legal jump"
+      },
+      "structureBorrow": {
+        "from": "R.E.P.O.",
+        "method": "Mass, drop, recover",
+        "doNotCopy": "Extraction monsters, shop prices"
+      },
+      "persist": ["player.tool.tether"],
+      "qa": [
+        "Wrong rotation never snaps",
+        "Dropped plate returns to rack, not despawn"
+      ]
+    },
+    {
+      "id": "P-S04",
+      "chapter": "prologue",
+      "name": { "zhHant": "閘門下方", "en": "Under the gate" },
+      "minutes": 2,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "電在，命令沒有到。找斷點，讓閘門聽見一次。",
+      "goal30s": "Pulse the gallery; see command stop.",
+      "verb": "Combine Flow Lens and Tether: find the stop, clear, re-seat or re-route.",
+      "verb90s": "At least one relay state has changed by hand.",
+      "spatialPuzzle": "Three faults, three heights, free order. Wrong-path relay seated on a dummy bus. Jammed relay behind debris. Loose relay hanging. Each fix stacks a mechanical audio layer. Last snap raises Gate 3 and turns the water; 小岑 deck slips.",
+      "failureConsequence": "Dummy-bus seat lights the wrong loop; actuator silent. No 「正確」 toast.",
+      "recovery": "Unplug and route to the actuator run. Debris re-grabbable.",
+      "noQuizBypass": "A three-item look-at checklist is illegal. Gate moves only when all three electrical/mechanical states are true.",
+      "hudTask": "找斷點，清開，再接",
+      "firstLearn": ["combine-scan-tether"],
+      "termsDuringCrisis": [],
+      "tools": ["flowLens", "tether"],
+      "space": {
+        "id": "int.actuator_gallery",
+        "landmarks": ["power_bus_lit", "relay_wrong_path", "relay_jammed", "relay_loose", "gate3_overlook"],
+        "sightline": "Gate 3 and slipping deck readable from the booth glass",
+        "circulation": "Floor / mid catwalk / hung yoke"
+      },
+      "structureBorrow": {
+        "from": "Portal 2",
+        "method": "Combine two taught verbs under mild pressure",
+        "doNotCopy": "Chamber aesthetic"
+      },
+      "evidence": {
+        "seen": "Command stop on the pulse; dummy loop versus actuator run",
+        "claim": "Reconnect here",
+        "consequence": "Gate rises; water direction changes; evac starts",
+        "revision": "Wrong bus is reversible"
+      },
+      "qa": [
+        "World audio stacks per fix",
+        "UI never prints 正確"
+      ]
+    },
+    {
+      "id": "P-S05",
+      "chapter": "prologue",
+      "name": { "zhHant": "回頭跑", "en": "Run back" },
+      "minutes": [1, 2],
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "沿白色脈衝跑到救援台，按住升降梯，把小岑拉上來。",
+      "goal30s": "See the old span is unusable and the new white-pulse cut.",
+      "verb": "Sprint. Pulse if lost. Tether the missing lever. Hold the lift until 小岑 rises.",
+      "verb90s": "Inside the return cut, not still in the booth.",
+      "spatialPuzzle": "Cut Span first plate lifts (lock holds) so the taught bridge is gone. New side corridor exists only because the gate moved. Lever is on the floor; door will not close the circuit without it. Lift is a hold, not a tap.",
+      "failureConsequence": "Standard 70 s to hold-start. Water first → mist wipe, 方雅 lock, restart at corridor mouth. Relaxed timer: no hard fail, water stays theatrical.",
+      "recovery": "Lever stays seated. Completed tethers stay. 小岑: 閘替我擋了一次。再來。",
+      "noQuizBypass": "No booth Rescue button. Path is gated by the lever door.",
+      "hudTask": "跟白色脈衝走，啟動升降梯",
+      "firstLearn": ["evac", "fast-retry", "hold"],
+      "termsDuringCrisis": [],
+      "tools": ["flowLens", "tether"],
+      "timerSecondsStandard": 70,
+      "timerRelaxed": "no-hard-fail-same-story",
+      "space": {
+        "id": "int.return_cut",
+        "landmarks": ["white_pulse", "missing_lever", "lift_hold", "rescue_lip"],
+        "sightline": "White pulse readable from gallery exit",
+        "circulation": "Booth → new cut → lever door → lift"
+      },
+      "structureBorrow": {
+        "from": "Pacific Drive",
+        "method": "Extract through weather; tools are the lifeline",
+        "doNotCopy": "Car extract, exclusion-zone storms"
+      },
+      "qa": [
+        "Relaxed timer still finishes the story",
+        "Water-first does not reset the lever"
+      ]
+    },
+    {
+      "id": "P-S06",
+      "chapter": "prologue",
+      "name": { "zhHant": "天亮之前", "en": "Before dawn" },
+      "minutes": 1,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "看三號閘重新運作。標題出現。走進大廳，選河港或工作坊。",
+      "goal30s": "Sit-down, then title 生命迴路：澄灣.",
+      "verb": "Watch, then walk into Hub control. Choose a physical door.",
+      "verb90s": "Controllable on hub.floor.",
+      "spatialPuzzle": "Breather. Title lands after competence, not before. Two Hub doors of equal dignity.",
+      "failureConsequence": "None.",
+      "recovery": "—",
+      "noQuizBypass": "No recap quiz. Skip workshop shows no warning and writes no unqualified flag.",
+      "hudTask": null,
+      "firstLearn": ["story-goal", "hub"],
+      "titleCard": "生命迴路：澄灣",
+      "tools": [],
+      "space": {
+        "id": "int.wet_bench",
+        "landmarks": ["working_gate3_through_glass", "title_card", "hub.briefing_table"],
+        "sightline": "Gate working outside",
+        "circulation": "Soft fade to hub.floor"
+      },
+      "structureBorrow": {
+        "from": "PEAK",
+        "method": "Arrive, then name the journey",
+        "doNotCopy": "Summit card, their type"
+      },
+      "persist": [
+        "prologueComplete",
+        "hub.unlocked",
+        "workshop.available",
+        "relationships.xiaocen.rescued",
+        "player.tool.flowLens",
+        "player.tool.tether"
+      ],
+      "qa": ["Workshop skip from the table has no warning modal"]
+    },
+    {
+      "id": "W-S00",
+      "chapter": "workshop",
+      "name": { "zhHant": "放大一萬倍", "en": "Zoom ten thousand" },
+      "minutes": 2,
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "visibleGoal": "拉下縮放手柄，走進放大的細胞。看清楚外殼、長軌、軌上的短段。",
+      "goal30s": "Stand inside the translucent cell.",
+      "verb": "Pull scale handle. Lens boundary, rail, marked stretch. Tether the magnifier frame, never the DNA. Aim three exit frames in order.",
+      "verb90s": "Scale-in complete; rail is readable as a bolted track.",
+      "spatialPuzzle": "Inclusion as space: cell volume ⊃ rail length ⊃ short marked gene. Exit plays cell → DNA → gene only when aim-order is correct. DNA is rack-bolted.",
+      "failureConsequence": "Wrong aim order: frames dim, door stays. Grab DNA: lock icon, rail does not move.",
+      "recovery": "Re-aim. Safe pad returns to Hub and sets workshop.resumeScene = W-S00.",
+      "noQuizBypass": "Three labeled buttons are illegal. Door reads camera aim + order, not A/B/C/D.",
+      "hudTask": "對準外殼、長軌、短段",
+      "termsAfterAction": ["cell", "DNA", "gene"],
+      "tools": ["flowLens", "tether"],
+      "space": {
+        "id": "ws.scale_well",
+        "landmarks": ["scale_handle", "cell_boundary", "dna_rails", "marked_gene", "three_aim_frames", "safe_pad"],
+        "sightline": "Cell hangs in the well before scale-in",
+        "circulation": "Handle → interior → aim frames"
+      },
+      "structureBorrow": {
+        "from": "Portal 2",
+        "method": "One idea in a safe volume",
+        "doNotCopy": "Test chamber, portals"
+      },
+      "persist": ["codex.cell", "codex.dnaGene", "workshop.resumeScene"],
+      "qa": ["DNA cannot be pulled off the rack"]
+    },
+    {
+      "id": "W-S01",
+      "chapter": "workshop",
+      "name": { "zhHant": "保留下來的軌道", "en": "The track that stays" },
+      "minutes": 2,
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "visibleGoal": "讓讀取頭沿短段走出一份可以帶走的新軌。舊軌留在架上。",
+      "goal30s": "Start the reader; see a second rail peel.",
+      "verb": "Start reader. Tether RNA to the next station. Refuse DNA grabs.",
+      "verb90s": "RNA exists as a carryable single rail.",
+      "spatialPuzzle": "Two rails, two rights. DNA welded. RNA free. Wrong station: RNA tip keeps streaming toward the fold ring.",
+      "failureConsequence": "Wrong dock: no snap, glow keeps pointing. DNA grab: lock icon.",
+      "recovery": "Follow the glow. Leave on safe pad; resume W-S01.",
+      "noQuizBypass": "Cannot select transcription from a list. Next room stays empty until an RNA rail arrives.",
+      "hudTask": "把新的單軌帶到下一站",
+      "termsAfterAction": ["RNA", "transcription"],
+      "tools": ["tether"],
+      "space": {
+        "id": "ws.reader_bench",
+        "landmarks": ["reader_head", "welded_dna", "rna_copy", "wrong_station", "fold_ring_door"],
+        "sightline": "Peel is readable from the start button",
+        "circulation": "Bench → carry → next station"
+      },
+      "structureBorrow": {
+        "from": "Portal 2",
+        "method": "Teach a constraint (this object cannot move) before the next verb",
+        "doNotCopy": "Chamber props"
+      },
+      "persist": ["codex.transcription"],
+      "qa": ["Arrows must not read as DNA turning into RNA"]
+    },
+    {
+      "id": "W-S02",
+      "chapter": "workshop",
+      "name": { "zhHant": "會折起來的產物", "en": "The folding product" },
+      "minutes": 2,
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "visibleGoal": "看珠鏈折好，把它放進會轉動的鎖。RNA 對不準。",
+      "goal30s": "See the chain fold on the ring.",
+      "verb": "Walk the ring. Seat the folded protein. Optionally offer RNA to prove the mismatch.",
+      "verb90s": "Barrel has turned, or RNA mismatch has been seen.",
+      "spatialPuzzle": "Shape lock. Protein keyway turns the barrel. RNA silhouette will not seat.",
+      "failureConsequence": "RNA in lock: visible mismatch, barrel still.",
+      "recovery": "Take RNA back. Protein remains.",
+      "noQuizBypass": "No which-molecule cards. The lock is a 3D keyway.",
+      "hudTask": "把折好的產物放進鎖",
+      "termsAfterAction": ["protein", "translation"],
+      "tools": ["tether"],
+      "space": {
+        "id": "ws.fold_ring",
+        "landmarks": ["annular_walk", "bead_chain", "folded_protein", "shape_lock"],
+        "sightline": "Fold happens in front of the lock",
+        "circulation": "Ring walk → seat → door"
+      },
+      "structureBorrow": {
+        "from": "Portal 2",
+        "method": "Shape, not label, opens the door",
+        "doNotCopy": "Companion cube, emancipation grill"
+      },
+      "persist": ["codex.translation"],
+      "qa": ["RNA cannot turn the barrel"]
+    },
+    {
+      "id": "W-S03",
+      "chapter": "workshop",
+      "name": { "zhHant": "閘門與報告燈", "en": "Gate and reporter" },
+      "minutes": 3,
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "visibleGoal": "先看沒有煙霧時燈為什麼暗；再開煙，跟著訊號走到旗。把燈換成形狀旗。",
+      "goal30s": "Dark run: gate shut, lamp dark.",
+      "verb": "Run dark. Tether-open smoke. Pulse sensor → regulator → promoter → reporter. Swap lamp for a shape flag.",
+      "verb90s": "Smoke is on and the chain is being traced.",
+      "spatialPuzzle": "Four world objects in a line plus a delayed reporter spool. Flag swap proves output form ≠ sensing logic.",
+      "failureConsequence": "Skipping the dark run: hall still forces a no-input cycle before smoke is accepted.",
+      "recovery": "Close smoke, run dark again. Always legal.",
+      "noQuizBypass": "Naming promoter from a list does not open the door. Door wants dark run + smoke run + flag swap.",
+      "hudTask": "開煙霧，追訊號，換成形狀旗",
+      "termsAfterAction": ["input", "regulator", "promoter", "reporter", "output"],
+      "tools": ["flowLens", "tether"],
+      "space": {
+        "id": "ws.smoke_hall",
+        "landmarks": ["smoke_machine", "sensor_block", "regulator_yoke", "promoter_gate", "reporter_tower", "shape_flag"],
+        "sightline": "Whole chain readable from the dark-run pad",
+        "circulation": "Linear, one way, swap at the tower"
+      },
+      "structureBorrow": {
+        "from": "Portal 2",
+        "method": "Chain verbs the player just learned",
+        "doNotCopy": "Laser redirection chambers"
+      },
+      "persist": ["codex.promoter", "codex.reporter", "codex.input", "codex.output"],
+      "transfer": ["C1-S05 Chen walk requires shape+sound even if this room was skipped"],
+      "qa": ["Reporter after swap is a flag, not color-only"]
+    },
+    {
+      "id": "W-S04",
+      "chapter": "workshop",
+      "name": { "zhHant": "先測設備", "en": "Test the instrument first" },
+      "minutes": 3,
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "visibleGoal": "月亮該暗、太陽該亮。太陽也暗時，不要讀問號。",
+      "goal30s": "First run: all three dark.",
+      "verb": "Run. Pulse the broken sun joint. Tether-repair. Run again. Only then read ?",
+      "verb90s": "Player has tried the run and seen the sun fail.",
+      "spatialPuzzle": "Authored-broken first run. Flow Lens shows the sun coupler open. ? hatch collision stays solid until moon dark AND sun bright. Second run: moon dark, sun bright, ? mid/fluctuating.",
+      "failureConsequence": "? hatch does not move. That is the lesson, not a scold.",
+      "recovery": "Fix joint, re-run. Exit sealed until the pair is valid.",
+      "noQuizBypass": "Cannot skip to a definition of control. Cannot treat ?-dark as river-empty. Failed positive control blocks unknown — same hard rule as C1-S03.",
+      "hudTask": "先修好太陽通道，再看問號",
+      "termsAfterAction": ["negative control", "positive control", "valid run"],
+      "failedPositiveBlocksUnknown": true,
+      "tools": ["flowLens", "tether", "sealedBioRig"],
+      "space": {
+        "id": "ws.ref_lanes",
+        "landmarks": ["moon_lane", "sun_lane", "unknown_lane", "broken_sun_joint"],
+        "sightline": "Three icons readable before any term",
+        "circulation": "Console → lanes → joint → console"
+      },
+      "structureBorrow": {
+        "from": "Portal 2",
+        "method": "The room is broken on purpose so the verb is diagnosis",
+        "doNotCopy": "Wheatley / announcer voice"
+      },
+      "persist": ["codex.controls", "codex.validRun"],
+      "qa": ["? cannot open the exit on the first run"]
+    },
+    {
+      "id": "W-S05",
+      "chapter": "workshop",
+      "name": { "zhHant": "你剛才做的循環", "en": "The loop you just ran" },
+      "minutes": [1, 2],
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "visibleGoal": "看見自己剛做過的圈：問、組、跑、斷、修、再測。然後回大廳。",
+      "goal30s": "Desk replay is running.",
+      "verb": "Watch the shrink + replay. Walk back to Hub.",
+      "verb90s": "Controllable toward the Hub door.",
+      "spatialPuzzle": "No new verb. Shrink proves the model wing is the same station.",
+      "failureConsequence": "Leave early: workshop.complete stays false. Legal.",
+      "recovery": "Re-enter from Hub; resume this scene.",
+      "noQuizBypass": "No DBTL four-letter exam. Names are not a password. Completing this does not lock or unlock C1.",
+      "hudTask": null,
+      "termsAfterAction": ["synthetic biology", "DBTL"],
+      "tools": [],
+      "space": {
+        "id": "ws.shrink_desk",
+        "landmarks": ["replay_desk", "hub_door"],
+        "sightline": "Desk first, Hub door second",
+        "circulation": "Watch → Hub"
+      },
+      "structureBorrow": {
+        "from": "Portal 2",
+        "method": "Name the verb after the player already used it",
+        "doNotCopy": "End-of-course announcer recap"
+      },
+      "persist": ["workshop.complete"],
+      "qa": ["C1 remains legal if this flag is false"]
+    },
+    {
+      "id": "C1-S00",
+      "chapter": "c1",
+      "name": { "zhHant": "河港還在睡", "en": "Harbor still asleep" },
+      "minutes": 3,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "帶封閉探頭去東岸，追第一次訊號。桌上選電池或抗撞外殼，只能帶一件。",
+      "goal30s": "Find the repeating alarm’s direction so 郭工’s team can walk safely.",
+      "verb": "Pick sealed probe. Pick one loadout. Walk to the east-shore airlock.",
+      "verb90s": "Probe in hand, loadout chosen, map wall glanced.",
+      "spatialPuzzle": "Loadout is a physical claim about risk, not a moral test. Map wall shows three time-stamped blinks and dark public stations. No vials, no A/B/C/D pins.",
+      "failureConsequence": "Second loadout object snaps back. Airlock stays shut without the probe.",
+      "recovery": "Either loadout completes the chapter. Dialogue only forks on workshop.complete (D003 vs D003A).",
+      "noQuizBypass": "No which-module-is-the-sensor test. No sample-candidate cards. 方雅 states the permission split: carry device + route; 郭工 confirms.",
+      "hudTask": "沿東岸步道追蹤第一次訊號",
+      "tools": ["flowLens", "tether", "sealedBioRig"],
+      "dialogueFork": {
+        "workshop.complete": "C1-S00-D003",
+        "workshop.incomplete": "C1-S00-D003A"
+      },
+      "dualValidRoutes": ["battery", "crash_shell"],
+      "space": {
+        "id": "hub.floor",
+        "landmarks": ["loadout_table", "map_wall", "east_airlock", "sealed_probe"],
+        "sightline": "Foggy harbor through storm glass",
+        "circulation": "Table → airlock"
+      },
+      "structureBorrow": {
+        "from": "Pacific Drive",
+        "method": "Prepare one tool, then leave the Hub",
+        "doNotCopy": "Car parts, roof rack"
+      },
+      "persist": ["c1.loadout", "player.tool.sealedProbe"],
+      "qa": ["Both loadouts exist; neither is labelled 正確"]
+    },
+    {
+      "id": "C1-S01",
+      "chapter": "c1",
+      "name": { "zhHant": "第一條紅線", "en": "First red line" },
+      "minutes": 6,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "轉身體，看三角形何時跳得更密。把完整記錄帶到泵房側面。",
+      "goal30s": "Probe awake; triangle is filling; player is rotating.",
+      "verb": "Pulse. Aim sealed probe with the body. Tether float crates. Cage the probe over a cable.",
+      "verb90s": "A heading has changed triangle density. Player is off the first pad.",
+      "spatialPuzzle": "Market back-cut, pump crown, finger pier, soak tunnel. Lure: warehouse civic red, brighter, still. Truth: weak pulse against current. Fish / oil / smell are observations, not pollution stamps. Probe shock: shell stays up; battery needs wall power 10 s.",
+      "failureConsequence": "Warehouse fence: no record slot. Probe in water: bob + Tether; untreated shock uses the loadout rule.",
+      "recovery": "Both loadouts can finish. Record writes only at the pump-side jack after a direction-stable heading.",
+      "noQuizBypass": "No three candidate sites with one green check. The warehouse exists to punish click-all. Carrying a record is the claim.",
+      "hudTask": "跟著三角形變密的方向走，帶回完整記錄",
+      "reporter": ["triangle-fill", "tick-density", "not-color-only"],
+      "tools": ["flowLens", "tether", "sealedBioRig"],
+      "space": {
+        "id": "hbr.east_promenade",
+        "landmarks": [
+          "market_back_cut",
+          "pump_house_crown",
+          "low_finger_pier",
+          "soak_tunnel",
+          "hbr.false_warehouse",
+          "hbr.live_pulse",
+          "pump_side_jack"
+        ],
+        "sightline": "Warehouse red is the brightest far mark on purpose",
+        "circulation": "Promenade with optional lure branch that dead-ends"
+      },
+      "structureBorrow": {
+        "from": "Outer Wilds",
+        "method": "Rotate the body to a signal; landmarks can lie",
+        "doNotCopy": "Planetary scale, traveler signals"
+      },
+      "evidence": {
+        "seen": "Triangle density along a counter-current pulse; observations of fish/oil/smell",
+        "claim": "This heading is worth carrying back",
+        "consequence": "c1.firstTraceRecovered",
+        "revision": "Observations stay observations"
+      },
+      "persist": ["c1.firstTraceRecovered"],
+      "qa": [
+        "Warehouse path cannot write the first trace",
+        "Reporter is never red/green only"
+      ]
+    },
+    {
+      "id": "C1-S02",
+      "chapter": "c1",
+      "name": { "zhHant": "全部都紅", "en": "Everything reads max" },
+      "minutes": 5,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "工具每個方向都一樣滿。先親自試三件事，再把整支探頭帶回高地流動站。",
+      "goal30s": "Saturation is visible as max triangle every facing.",
+      "verb": "Must try: turn in place, leave the slot, kill the env relay. Then carry the whole probe. Evac the roof.",
+      "verb90s": "At least one of the three tests has been performed after saturation.",
+      "spatialPuzzle": "Authored saturation ~60 s in. Mission flip is code-gated on triedTurn && triedLeave && triedKillRelay. Tide kills the pier. Battery evac = short lift. Shell evac = shorter carry over a beam. Times similar.",
+      "failureConsequence": "Overstay → 郭工 remote lock, fade to van mouth, probe kept, no blame. Treating max-everywhere as river-wide concentration is a hypothesis the next room breaks.",
+      "recovery": "Appear at High-Bench. Invalid run already in evidence.runHistory and cannot be deleted.",
+      "noQuizBypass": "A dialogue line the tool is broken must not skip the three tests. Flip is not a quiz grade.",
+      "hudTask": "先停。帶回完整探頭",
+      "mustTryBeforeFlip": ["turn", "leave-spot", "kill-env-relay"],
+      "tools": ["flowLens", "sealedBioRig", "tether"],
+      "space": {
+        "id": "hbr.pump_slot",
+        "landmarks": ["narrow_slot", "env_relay", "roof_evac", "short_lift", "carry_beam"],
+        "sightline": "No heading changes the fill after saturation",
+        "circulation": "Slot → roof → High-Bench"
+      },
+      "structureBorrow": {
+        "from": "Outer Wilds",
+        "method": "The instrument can saturate and become useless",
+        "doNotCopy": "Time-loop reset as the recover"
+      },
+      "evidence": {
+        "seen": "Three failed spatial tests; self-test blink",
+        "claim": "This run is unreadable; retreat",
+        "consequence": "c1.invalidRunExperienced; tide evac",
+        "revision": "Fail kept; repair later"
+      },
+      "persist": ["c1.invalidRunExperienced", "evidence.failedRunRetained"],
+      "qa": ["Mission text does not flip before the three tests"]
+    },
+    {
+      "id": "C1-S03",
+      "chapter": "c1",
+      "name": { "zhHant": "先證明它看得見", "en": "Prove it can see" },
+      "minutes": 6,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "月亮低、太陽高之後，才准看問號。",
+      "goal30s": "Three docks are out. Moon should stay low.",
+      "verb": "Dock moon. Dock sun (still max = not restored). Lens self-test. External-port reset regulator relay. Swap sealed wet reporter joint. Re-run pair. Then ?",
+      "verb90s": "Sun has been docked and is visibly wrong.",
+      "spatialPuzzle": "Van side-rack. Icons first; small labels only if workshop complete. Shell never opens. ? collision off until moon low AND sun high. ? then mid + fluctuation. UI: two control states + session clock. Never 100% 準確.",
+      "failureConsequence": "? stays solid while sun is wrong. First fail remains on the paper roll.",
+      "recovery": "Ports remain. 方雅 forbids delete. Second harbor airlock stays shut until c1.controlsRestored.",
+      "noQuizBypass": "Cannot select positive control from a list. Cannot publish a harbor claim from this van. Same hard gate as W-S04 even if workshop was skipped.",
+      "hudTask": "先證明它看得見低，也看得見高",
+      "failedPositiveBlocksUnknown": true,
+      "uiNeverShows": ["100%準確", "已校準", "validated"],
+      "tools": ["flowLens", "tether", "sealedBioRig"],
+      "space": {
+        "id": "hbr.high_bench_van",
+        "landmarks": ["moon_dock", "sun_dock", "unknown_dock", "external_ports", "paper_roll_history"],
+        "sightline": "Three docks slide out of the van wall",
+        "circulation": "Dock → ports → dock → ?"
+      },
+      "structureBorrow": {
+        "from": "Pacific Drive",
+        "method": "Repair at home base before the next sortie",
+        "doNotCopy": "Car engine minigame"
+      },
+      "evidence": {
+        "seen": "Moon low, sun high after external repair",
+        "claim": "This run is readable; unknown may be looked at",
+        "consequence": "? opens; second entry legal",
+        "revision": "First fail stays in runHistory"
+      },
+      "persist": ["c1.controlsRestored", "evidence.controlRunBeforeClaim"],
+      "qa": [
+        "? collision off until pair valid",
+        "Workshop skippers still get the hard gate"
+      ]
+    },
+    {
+      "id": "C1-S04",
+      "chapter": "c1",
+      "name": { "zhHant": "第二次進入", "en": "Second entry" },
+      "minutes": 7,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "用兩個 relay 加手上的探頭，交出一塊確認隊能走進的範圍。不要一個紅點。",
+      "goal30s": "Tide has sealed the market road. Roofs and crane are the new way.",
+      "verb": "Place up to two beacons. Walk the third reading. Accept an overlap. Optional: take 陳姨’s unmapped sluice.",
+      "verb90s": "First beacon is singing or in hand on the crane span.",
+      "spatialPuzzle": "No painted triad. Overlap from headings + quality (occlusion lowers quality). Near/occluded vs far/exposed. Wide/fast vs far/tight both write c1.sourceZoneMarked. Crane drop → Tether retrieve. 陳姨 radio opens a dark cut the official decal missed.",
+      "failureConsequence": "Pocket-both or zero-quality overlap cannot be accepted. Dropped beacon is retrieved, not lost.",
+      "recovery": "Re-place. First-trace overlay stays so S01 is not repeated.",
+      "noQuizBypass": "Three sample wells with one correct well are illegal. The claim is a polygon the player made. Confirm time later differs; there is no score.",
+      "hudTask": "標出確認隊能安全進入的範圍",
+      "validStrategies": ["wide-fast", "far-tight"],
+      "tools": ["flowLens", "tether", "sealedBioRig"],
+      "space": {
+        "id": "hbr.second_entry",
+        "landmarks": ["flooded_market_road", "roofs", "yard_crane_span", "drain_tower", "hbr.rain_sluice"],
+        "sightline": "First-trace overlay on the field map",
+        "circulation": "Free placement inside walkable roofs/piers/tower"
+      },
+      "structureBorrow": {
+        "from": "Outer Wilds",
+        "method": "Knowledge (Chen) opens geometry; no four glowing waypoints",
+        "doNotCopy": "Quantum moon, time loop"
+      },
+      "evidence": {
+        "seen": "Three headings, quality, overlap area",
+        "claim": "This polygon is worth confirming",
+        "consequence": "c1.sourceZoneMarked; rover path must match",
+        "revision": "Widen or tighten; both legal"
+      },
+      "persist": ["c1.sourceZoneMarked"],
+      "qa": [
+        "No three painted wells",
+        "Both strategies complete the scene"
+      ]
+    },
+    {
+      "id": "C1-S05",
+      "chapter": "c1",
+      "name": { "zhHant": "陳姨的路", "en": "Aunt Chen's walk" },
+      "minutes": 5,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "讓站在棚下、推車後面的人看得見、聽得到，並知道下一步和誰更新。",
+      "goal30s": "Demo probe is at the market mouth. 陳姨 starts walking.",
+      "verb": "Walk behind 陳姨. Change workbench props. Walk again.",
+      "verb90s": "Shade has already killed a color-only read, or the cart has hidden a low panel.",
+      "spatialPuzzle": "Playable usability test, not a cutscene. Shade kills color-only. Cart occludes knee-height panel. Text that only says 紅 starts NPC guessing. Workbench: shape flag, short chime, action line, municipal board + timestamp. Second walk must succeed.",
+      "failureConsequence": "Missing visible channel / next action / owner+time → specific confusion. Scene cannot complete. 陳姨 will not call it usable.",
+      "recovery": "Change on the spot. Re-walk is instant. No affinity meter.",
+      "noQuizBypass": "Honesty cards, I-will-communicate-better dialogue, or a compliment cutscene with the same prototype are Learning Gate fails. Pass requires shape_audio AND municipal_update_with_timestamp.",
+      "hudTask": "改輸出和通知，再跟陳姨走一次",
+      "mustChange": ["reporter-shape-sound", "notification-rule"],
+      "passRequires": {
+        "c1.accessibilityOutput": "shape_audio",
+        "c1.notificationRule": "municipal_update_with_timestamp"
+      },
+      "tools": ["sealedBioRig"],
+      "space": {
+        "id": "hbr.stall_walk",
+        "landmarks": ["market_mouth", "stall_shade", "blocking_cart", "workbench", "municipal_board"],
+        "sightline": "Daylight probe looks fine; shade does not",
+        "circulation": "Mouth → shade → cart → bench → second walk"
+      },
+      "structureBorrow": {
+        "from": "Pacific Drive",
+        "method": "A person in the world changes what you take back out",
+        "doNotCopy": "Their NPC routes or radio voices"
+      },
+      "evidence": {
+        "seen": "Shade blob, hidden low panel, guessing NPCs",
+        "claim": "Shape+sound + municipal next step",
+        "consequence": "Prototype and public rule change",
+        "revision": "Fix in place; second walk"
+      },
+      "persist": [
+        "c1.accessibilityOutput",
+        "c1.notificationRule",
+        "evidence.userFeedbackChangedPrototype"
+      ],
+      "qa": [
+        "Talk-only cannot complete the scene",
+        "Color-only reporter fails the second walk"
+      ]
+    },
+    {
+      "id": "C1-S06",
+      "chapter": "c1",
+      "name": { "zhHant": "閘門背後", "en": "Behind the sluice" },
+      "minutes": 6,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "打開遠端門，把確認隊無人車送進去。自己不要進去。然後撤。",
+      "goal30s": "On the maintained catwalk. Unknown side is volume-locked.",
+      "verb": "Pulse two pipes. Tether the grate, not the live pressure line. Seat rover relay. Plug the remember-finished-steps module across brownouts. Evac the new cable.",
+      "verb90s": "Player has pulsed and can tell still-bright from flowing.",
+      "spatialPuzzle": "Left pipe: bright, still residue (P-S02 lesson). Right pipe: weaker, flowing. Grate blocks the rover. Pressure-line touch: safety valve, grate blows back. Brownouts clear door memory until latch module is seated — function first, no formal name. Rover enters; player does not. Water climbs the yellow mark.",
+      "failureConsequence": "Wrong pipe / pressure line: world pushes back, no gore. Water catch-up: rescue cable to last platform.",
+      "recovery": "Latch progress kept. Rover-through does not redo.",
+      "noQuizBypass": "No chemical-ID interactable on the far side. Player cannot walk in to confirm. 郭工: 正式結果稍後由實驗室發布.",
+      "hudTask": "開門送車，然後撤離",
+      "modulesIntroducedByFunction": ["latch"],
+      "playerTouchesUnknown": false,
+      "tools": ["flowLens", "tether", "sealedBioRig"],
+      "space": {
+        "id": "hbr.sluice_catwalk",
+        "landmarks": [
+          "maintained_side",
+          "unknown_volume_lock",
+          "bright_still_pipe",
+          "flowing_pipe",
+          "collapsed_grate",
+          "pressure_line",
+          "rover",
+          "latch_slot",
+          "evac_cable"
+        ],
+        "sightline": "Door and rover path match the S04 polygon",
+        "circulation": "Catwalk only; rover through; cable evac"
+      },
+      "structureBorrow": {
+        "from": "R.E.P.O.",
+        "method": "Carry a fragile relay through a failing space, then extract",
+        "doNotCopy": "Monster pressure, loot value"
+      },
+      "evidence": {
+        "seen": "Flowing pulse, rover through, no player contact",
+        "claim": "We opened a door for confirmation",
+        "consequence": "Identity still pending",
+        "revision": "Latch keeps brownout progress"
+      },
+      "persist": ["player.tool.modules"],
+      "qa": [
+        "Player volume cannot enter the confirmation zone",
+        "Bright-still pipe does not unlock the door"
+      ]
+    },
+    {
+      "id": "C1-S07",
+      "chapter": "c1",
+      "name": { "zhHant": "說到證據為止", "en": "Only as far as the evidence" },
+      "minutes": 4,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "把實際跑過的圖層打開給廣場看，並放下一種監測模型。",
+      "goal30s": "The 3D table is the run history, not a slogan.",
+      "verb": "Toggle five obtained layers. Attempt forbidden layers. Carry one physical model onto the city plate.",
+      "verb90s": "At least one obtained layer is open and one forbidden layer has been refused, or a model is in hand.",
+      "spatialPuzzle": "Layers = invalid first run, controls restored, overlap zone, rover route, waiting lab result. 全河安全 / 已完成清理 → 目前沒有資料圖層, no scold. Two models: heavy kiosk vs crate-of-kits. Last placed wins. Both keep a stop button and a public board later.",
+      "failureConsequence": "Cannot finish without a model. Cannot finish with a forbidden layer on.",
+      "recovery": "Toggle off. Swap models.",
+      "noQuizBypass": "No which-statement-is-responsible exam. Claim ≤ evidence is a missing mesh. Both models are full clears, not saint/villain.",
+      "hudTask": "打開已有圖層，放下一種監測模型",
+      "missingLayers": ["全河安全", "已完成清理"],
+      "missingLayerCopy": "目前沒有資料圖層",
+      "monitoringModels": ["fixed_station", "portable_kits"],
+      "claimMustNotExceedEvidence": true,
+      "tools": ["tether"],
+      "space": {
+        "id": "hbr.square_map",
+        "landmarks": [
+          "map_table",
+          "layer_invalid_run",
+          "layer_controls",
+          "layer_overlap",
+          "layer_rover",
+          "layer_waiting_lab",
+          "model_fixed_station",
+          "model_portable_kits"
+        ],
+        "sightline": "Table is the square’s center",
+        "circulation": "Walk around table; carry model; place"
+      },
+      "structureBorrow": {
+        "from": "Outer Wilds",
+        "method": "The ship log is the world, not a quiz",
+        "doNotCopy": "Ship log UI, rumbling discovery sting"
+      },
+      "evidence": {
+        "seen": "Only obtained valid layers",
+        "claim": "fixed_station OR portable_kits",
+        "consequence": "Harbor + Hub furniture",
+        "revision": "Unresolved confirmation + long-term monitoring stay listed"
+      },
+      "persist": [
+        "c1.publicMapPublished",
+        "c1.monitoringModel",
+        "world.harbor.monitoringModel",
+        "c1.unresolved"
+      ],
+      "unresolvedMustInclude": ["confirmation_result", "long_term_monitoring"],
+      "qa": [
+        "Forbidden layers never become true",
+        "Both models complete the chapter"
+      ]
+    },
+    {
+      "id": "C1-S08",
+      "chapter": "c1",
+      "name": { "zhHant": "城市回聲", "en": "City echo" },
+      "minutes": 2,
+      "required": true,
+      "skippable": false,
+      "qualificationGate": false,
+      "visibleGoal": "看見三件自己造成的事。第一次失效留在牆上。河還沒被寫成已解決。",
+      "goal30s": "Montage matches the chosen monitoring model.",
+      "verb": "Walk the montage path. Read the plaque. Hear 何主任. Later, the C2 hatch is an honest stub.",
+      "verb90s": "Stop button and public board are visible on the chosen furniture.",
+      "spatialPuzzle": "Branch set dressing only: attended kiosk + far patrol OR numbered kits / return racks / training marks. Both keep 陳姨 stop + public board. Wall plaque = the saturated run. Recap is three player-caused facts, not a grade.",
+      "failureConsequence": "None. Unresolved stays. This is a complete ending that does not solve the river.",
+      "recovery": "—",
+      "noQuizBypass": "No you-understood-control stamp. Radio hook to 停線 is not a factory level.",
+      "hudTask": null,
+      "recapNotScore": [
+        "controls-before-unknown",
+        "chen-shape-sound-update",
+        "monitoring-model-changed-harbor"
+      ],
+      "nextChapterHook": "停線",
+      "tools": [],
+      "space": {
+        "id": "hbr.echo",
+        "landmarks": ["chosen_furniture", "stop_button", "public_board", "first_fail_plaque"],
+        "sightline": "Harbor far-view matches C1-S07 placement",
+        "circulation": "Montage cameras then Hub return"
+      },
+      "structureBorrow": {
+        "from": "Pacific Drive",
+        "method": "The Hub remembers the last run",
+        "doNotCopy": "Their ending cards"
+      },
+      "persist": ["c1.complete"],
+      "qa": [
+        "First fail still on the wall",
+        "C2 hatch does not load a factory"
+      ]
+    },
+    {
+      "id": "C2-STUB",
+      "chapter": "stub",
+      "name": { "zhHant": "停線（未開放）", "en": "Stop-line (not open)" },
+      "minutes": 0,
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "playable": false,
+      "honestStub": true,
+      "visibleGoal": "這扇門還沒開。上面寫著停線（未開放）。",
+      "goal30s": "Player understands it is not a broken load.",
+      "verb": "Interact once. Hear 何主任 if C1 is done. Walk away.",
+      "verb90s": "Still on hub.floor.",
+      "spatialPuzzle": "Hatch scale is honest: maintenance door, not a fake airlock that pretends to stream a factory.",
+      "failureConsequence": "None. Door stays shut.",
+      "recovery": "—",
+      "noQuizBypass": "No preview quiz about biomanufacturing. No wet-process poster that is a protocol.",
+      "hudTask": "停線（未開放）",
+      "tools": [],
+      "space": {
+        "id": "hub.c2_hatch",
+        "landmarks": ["unopened_hatch"],
+        "sightline": "Visible from the briefing table after C1",
+        "circulation": "Dead end"
+      },
+      "structureBorrow": {
+        "from": "Pacific Drive",
+        "method": "A locked route can exist without being a lie",
+        "doNotCopy": "Their locked biome gates"
+      },
+      "persist": [],
+      "qa": ["Interact does not change scene ID to a C2 playable"]
+    }
+  ],
+  "dualValidRoutes": [
+    {
+      "id": "c1-loadout",
+      "scene": "C1-S00",
+      "options": ["battery", "crash_shell"],
+      "wrongAnswer": false,
+      "worldDifference": "S01 shock handling and S02 evac geometry; same clear"
+    },
+    {
+      "id": "c1-zone",
+      "scene": "C1-S04",
+      "options": ["wide-fast", "far-tight"],
+      "wrongAnswer": false,
+      "worldDifference": "Confirm-team time on the map, not a score"
+    },
+    {
+      "id": "c1-monitoring",
+      "scene": "C1-S07",
+      "options": ["fixed_station", "portable_kits"],
+      "wrongAnswer": false,
+      "worldDifference": "Harbor furniture + Hub skyline; both keep stop + board"
+    },
+    {
+      "id": "workshop-skip",
+      "scene": "HUB-S00",
+      "options": ["play-workshop", "skip-workshop"],
+      "wrongAnswer": false,
+      "worldDifference": "Language + Codex only; C1 fully legal either way"
+    }
+  ],
+  "antiQuiz": {
+    "illegalWidgets": [
+      "A/B/C/D source location",
+      "Evidence/Claim/Impact cards on the Critical Path",
+      "three painted sample wells",
+      "honesty/persuasion dialogue as pass",
+      "正確 / Wrong / red-X toasts",
+      "chapter recap multiple choice",
+      "workshop as a locked ticket to C1",
+      "MerR / Pmer / dTomato passwords"
+    ],
+    "hardCodeGates": [
+      {
+        "id": "P-S02-live-relay",
+        "rule": "Lock opens only when the live occluded relay is seated"
+      },
+      {
+        "id": "W-S00-aim-order",
+        "rule": "Exit reads camera aim order cell ⊃ DNA ⊃ gene"
+      },
+      {
+        "id": "W-S04-failed-positive",
+        "rule": "? hatch solid until moon dark and sun bright"
+      },
+      {
+        "id": "C1-S02-three-tests",
+        "rule": "Mission flip requires turn + leave + kill env relay"
+      },
+      {
+        "id": "C1-S03-failed-positive",
+        "rule": "? collision off until controls restored; second entry airlock uses this flag"
+      },
+      {
+        "id": "C1-S05-prototype",
+        "rule": "Pass requires shape_audio and municipal_update_with_timestamp after a second walk"
+      },
+      {
+        "id": "C1-S07-claim-scope",
+        "rule": "全河安全 and 已完成清理 cannot become true layers"
+      }
+    ]
+  },
+  "failRecoverGlobal": {
+    "noDeathScreen": true,
+    "noRedX": true,
+    "completedWorkSurvives": true,
+    "fall": "safety-line-1.2s-last-anchor",
+    "drop": "object-remains-tether-or-cable",
+    "p05WaterFirst": "mist-wipe-corridor-mouth-keep-tethers",
+    "c1s02Overstay": "remote-lock-van-mouth-keep-probe-keep-fail",
+    "earlyUnknown": "hatch-does-not-move",
+    "c1s06Pressure": "valve-slam-grate-back",
+    "c1s06Water": "cable-to-last-pad-keep-latch",
+    "fakeLayer": "目前沒有資料圖層"
+  },
+  "greyboxPriority": [
+    "P-S00",
+    "P-S01",
+    "P-S02",
+    "P-S03",
+    "P-S04",
+    "P-S05",
+    "HUB-S00",
+    "C1-S00",
+    "C1-S01",
+    "C1-S02",
+    "C1-S03"
+  ],
+  "verticalSlice0Minutes": [20, 25],
+  "funGate": ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10"],
+  "privacy": {
+    "noPiiInSave": true,
+    "noChat": true,
+    "noRemoteTelemetry": true
+  }
+}

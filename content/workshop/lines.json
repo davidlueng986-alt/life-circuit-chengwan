@@ -1,0 +1,121 @@
+{
+  "authority": "Life_Circuit_Chengwan_Full_Game_Script_v1",
+  "locale": "zh-Hant",
+  "note": "Official IDs only. Player copy is served from src/content/dialogue.ts. Terms unlock after the matching action.",
+  "lines": [
+    {
+      "id": "W-S00-D001",
+      "speaker": "林博士",
+      "after": "scale-into-cell",
+      "text": "你現在站在一個放大的細胞模型裡。那條長軌是 DNA，細胞把很多資訊保存在上面。"
+    },
+    {
+      "id": "W-S00-D002",
+      "speaker": "小岑",
+      "after": "magnifier-marks-gene",
+      "text": "所以 gene 不是另一條東西？"
+    },
+    {
+      "id": "W-S00-D003",
+      "speaker": "林博士",
+      "after": "aim-cell-dna-gene-in-order",
+      "text": "對。gene 是 DNA 上的一段。先記住位置關係，名稱之後才有用。"
+    },
+    {
+      "id": "W-S01-D001",
+      "speaker": "林博士",
+      "after": "reader-leaves-dna-in-place",
+      "text": "看清楚：DNA 留在原位。機器沿它讀取，做出一份新的 RNA。"
+    },
+    {
+      "id": "W-S01-D002",
+      "speaker": "小岑",
+      "after": "rna-copy-exists",
+      "text": "不是 DNA 變成 RNA，是多了一份可以帶走的副本。"
+    },
+    {
+      "id": "W-S01-D003",
+      "speaker": "林博士",
+      "after": "rna-seated-at-next-station",
+      "text": "正是。這一步叫 transcription。"
+    },
+    {
+      "id": "W-S02-D001",
+      "speaker": "林博士",
+      "after": "chain-folds-into-protein",
+      "text": "這個環按 RNA 的資訊製作一條 protein。這一步叫 translation。"
+    },
+    {
+      "id": "W-S02-D002",
+      "speaker": "小岑",
+      "after": "protein-exists-as-worker",
+      "text": "DNA 保存，RNA 帶消息，protein 去做事。這比三張名字容易記。"
+    },
+    {
+      "id": "W-S02-D003",
+      "speaker": "林博士",
+      "after": "protein-turns-lock",
+      "text": "這只是基本模型，但已足夠讓我們開始設計輸入和輸出。"
+    },
+    {
+      "id": "W-S03-D001",
+      "speaker": "林博士",
+      "after": "smoke-opens-gate-chain",
+      "text": "煙霧是 input。感應部分改變 regulator，promoter 決定下游資訊何時被使用。"
+    },
+    {
+      "id": "W-S03-D002",
+      "speaker": "小岑",
+      "after": "reporter-is-visible-output",
+      "text": "最後那面旗是 reporter——它報告前面的系統發生了甚麼。"
+    },
+    {
+      "id": "W-S03-D003",
+      "speaker": "林博士",
+      "after": "flag-swap-same-logic",
+      "text": "對。Reporter 讓狀態可被看見，但它不會自動告訴你輸入的所有細節。"
+    },
+    {
+      "id": "W-S04-D001",
+      "speaker": "小岑",
+      "after": "first-run-all-dark",
+      "text": "問號是暗的。但本來應該會亮的那條也沒亮。"
+    },
+    {
+      "id": "W-S04-D002",
+      "speaker": "林博士",
+      "after": "unknown-blocked-by-failed-sun",
+      "text": "所以我們現在不能相信問號。先證明設備有能力給出兩種已知結果。"
+    },
+    {
+      "id": "W-S04-D003",
+      "speaker": "林博士",
+      "after": "valid-moon-dark-sun-bright",
+      "text": "月亮通道是 negative control；太陽通道是 positive control。它們不是裝飾，是這次運行能否解讀的條件。"
+    },
+    {
+      "id": "W-S04-D004",
+      "speaker": "小岑",
+      "after": "unknown-readable-only-after-valid-run",
+      "text": "不是「問號暗，所以答案是沒有」；而是「設備連應該亮的東西都看不到」。"
+    },
+    {
+      "id": "W-S05-D001",
+      "speaker": "林博士",
+      "after": "desk-replay-of-player-loop",
+      "text": "你先定義問題，再設計、建構、測試，從失敗中修正。當我們用工程方式設計生物系統，便是在做 synthetic biology。"
+    },
+    {
+      "id": "W-S05-D002",
+      "speaker": "小岑",
+      "after": "names-are-not-a-password",
+      "text": "所以名字不是通關密碼。真正有用的是知道改一個條件，哪一段會跟著改。"
+    },
+    {
+      "id": "W-S05-D003",
+      "speaker": "林博士",
+      "after": "transfer-to-harbor",
+      "text": "河港那個紅色訊號，正好需要這種思考。"
+    }
+  ]
+}

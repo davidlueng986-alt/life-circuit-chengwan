@@ -1,0 +1,699 @@
+{
+  "$schemaNote": "P0 machine-readable companion to docs/delivery/p0-contract.md. Not a wrangler schema.",
+  "id": "life-circuit-chengwan-p0",
+  "title": {
+    "zhHant": "生命迴路：澄灣",
+    "en": "Life Circuit: Chengwan"
+  },
+  "version": "2026-08-15-p0",
+  "localeDefault": "zh-Hant",
+  "liveDeployRequested": false,
+  "localUrl": "http://127.0.0.1:8787",
+  "authorities": [
+    "team-science-safety-signoff-if-present",
+    "Life_Circuit_Chengwan_Full_Game_Script_v1",
+    "legacy-20_SOURCE_AND_CLAIM_REGISTER-safety-wording-only",
+    "legacy-GDD-TDD-if-no-conflict"
+  ],
+  "stack": {
+    "language": "TypeScript strict",
+    "bundler": "Vite",
+    "renderer": "Three.js",
+    "hud": "semantic-dom",
+    "backend": "none",
+    "accounts": false,
+    "analytics": false,
+    "save": "localStorage",
+    "saveKey": "life-circuit-chengwan.save.v1",
+    "schemaVersion": 1
+  },
+  "cloudflare": {
+    "configFile": "wrangler.jsonc",
+    "name": "life-circuit-chengwan",
+    "workers_dev": true,
+    "compatibility_date": "2026-08-15",
+    "main": "src/worker.ts",
+    "assets": {
+      "directory": "./dist",
+      "not_found_handling": "single-page-application",
+      "binding": "ASSETS",
+      "run_worker_first": ["/health", "/health/*"],
+      "html_handling": "omit-use-default-auto-trailing-slash"
+    },
+    "forbiddenBindings": ["kv_namespaces", "d1_databases", "r2_buckets", "queues", "secrets", "analytics_engine_datasets"],
+    "observability": {
+      "workersLogsOptional": true,
+      "webAnalytics": false,
+      "collectWorkshopPii": false
+    },
+    "headers": {
+      "mechanism": "public/_headers copied to dist/_headers; worker Response for /health",
+      "indexHtmlCache": "no-cache",
+      "hashedAssetsCache": "public, max-age=31556952, immutable",
+      "defaultWorkersAssetCache": "public, max-age=0, must-revalidate + ETag",
+      "security": [
+        "X-Content-Type-Options: nosniff",
+        "Referrer-Policy: strict-origin-when-cross-origin",
+        "CSP allow self + WebGL + wasm-unsafe-eval + blob workers",
+        "COOP/COEP off unless Three.js smoke passes"
+      ]
+    },
+    "health": {
+      "path": "/health",
+      "gameState": false,
+      "pii": false
+    },
+    "localParity": "npx wrangler dev --port 8787 after vite build",
+    "vitePreview": "extra-not-a-substitute",
+    "liveDeploy": {
+      "allowed": false,
+      "requires": ["LIVE_DEPLOY_REQUESTED=true", "wrangler whoami succeeds"],
+      "blocker": "LIVE_DEPLOY_REQUESTED is false; stop after dry-run"
+    },
+    "docsFetched": [
+      "https://developers.cloudflare.com/workers/static-assets/",
+      "https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/",
+      "https://developers.cloudflare.com/workers/wrangler/configuration/",
+      "https://developers.cloudflare.com/workers/static-assets/headers/"
+    ]
+  },
+  "scope": {
+    "in": [
+      "BOOT-S00",
+      "HUB-S00",
+      "P-S00",
+      "P-S01",
+      "P-S02",
+      "P-S03",
+      "P-S04",
+      "P-S05",
+      "P-S06",
+      "W-S00",
+      "W-S01",
+      "W-S02",
+      "W-S03",
+      "W-S04",
+      "W-S05",
+      "C1-S00",
+      "C1-S01",
+      "C1-S02",
+      "C1-S03",
+      "C1-S04",
+      "C1-S05",
+      "C1-S06",
+      "C1-S07",
+      "C1-S08",
+      "C2-STUB"
+    ],
+    "outPlayable": [
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C6",
+      "C7",
+      "FINAL"
+    ],
+    "outSystems": [
+      "card-quiz-critical-path",
+      "red-x-fail-screens",
+      "knowledge-score",
+      "wet-lab-howto",
+      "merR-pmer-dTomato-password",
+      "aptamer-public-route",
+      "player-sample-diagnose-enforce-approve",
+      "environmental-release",
+      "zero-risk-claims",
+      "developer-voice-disclaimers",
+      "accounts-chat-telemetry",
+      "kv-d1-r2",
+      "live-deploy-this-request"
+    ]
+  },
+  "durationMinutes": {
+    "bootHub": [1, 3],
+    "prologue": [8, 10],
+    "workshopOptional": [12, 15],
+    "chapter1": [35, 50],
+    "p0WithWorkshop": [55, 75],
+    "p0WithoutWorkshop": [45, 60]
+  },
+  "tools": [
+    {
+      "id": "flowLens",
+      "name": { "zhHant": "流路透鏡", "en": "Flow Lens" },
+      "unlockScene": "P-S02",
+      "verbs": ["hold-charge", "release-pulse", "trace-direction", "read-occlusion", "spend-battery"],
+      "mustInclude": ["pulse", "direction", "occlusion", "battery", "false-bright-dead-lines"],
+      "mustNot": ["answer-highlighter", "permanent-wallhack", "first-pickup-definition-text"],
+      "notes": "First prologue pulse is free. Longer hold increases range, drain, and recovery."
+    },
+    {
+      "id": "tether",
+      "name": { "zhHant": "連接工具", "en": "Tether" },
+      "unlockScene": "P-S03",
+      "verbs": ["grab", "pull", "push", "rotate", "insert", "cut", "snap", "park"],
+      "mustInclude": ["weight", "inertia", "collision", "shape-sockets", "drop-recovery"],
+      "mustNot": ["2d-card-drag-critical-path"]
+    },
+    {
+      "id": "sealedBioRig",
+      "name": { "zhHant": "封閉生命模組／封閉探頭", "en": "Sealed Bio-Rig / sealed probe" },
+      "unlockScene": "C1-S00",
+      "slots": ["sense", "regulate", "output"],
+      "verbs": ["sense", "regulate", "output", "external-port-service"],
+      "mustInclude": ["shape-or-sound-or-fill-animation", "sealed-shell", "failed-positive-control-blocks-unknown"],
+      "mustNot": ["sequences", "culture-conditions", "concentrations", "wet-lab-steps", "environmental-release"],
+      "reporterNeverColorAlone": true
+    }
+  ],
+  "loadouts": {
+    "c1": {
+      "pickOne": ["battery", "crash_shell"],
+      "wrongAnswer": false,
+      "bothCompletable": true,
+      "effects": {
+        "battery": ["more-pulses", "C1-S01-restart-from-wall-power-if-probe-shocked", "C1-S02-evac-short-lift"],
+        "crash_shell": ["probe-survives-shock", "C1-S02-evac-shorter-carry"]
+      }
+    }
+  },
+  "scenes": [
+    {
+      "id": "BOOT-S00",
+      "chapter": "title",
+      "name": { "zhHant": "標題／冷啟動", "en": "Title / cold start" },
+      "minutes": 0.5,
+      "goal30s": "開始、繼續或設定；首次進入暴雨，沒有世界觀牆",
+      "required": true,
+      "skippable": false,
+      "tools": [],
+      "persist": ["meta.hasSave", "settings.*"]
+    },
+    {
+      "id": "HUB-S00",
+      "chapter": "hub",
+      "name": { "zhHant": "研究站大廳", "en": "Station hub" },
+      "minutes": 2,
+      "goal30s": "走到中央桌兩個實體入口：河港或微觀工作坊",
+      "required": true,
+      "skippable": false,
+      "unlock": "prologueComplete",
+      "doors": {
+        "workshop": "W-S00",
+        "harbor": "C1-S00",
+        "factoryStub": "C2-STUB"
+      },
+      "persist": ["hub.unlocked"]
+    },
+    {
+      "id": "P-S00",
+      "chapter": "prologue",
+      "name": { "zhHant": "暴雨入站", "en": "Storm arrival" },
+      "minutes": 1,
+      "goal30s": "到防洪控制室；看見高處閘門與小岑橙燈",
+      "learns": ["move", "see-destination"],
+      "tools": ["move"],
+      "recover": ["safety-line-1.2s-no-death"],
+      "required": true
+    },
+    {
+      "id": "P-S01",
+      "chapter": "prologue",
+      "name": { "zhHant": "電梯死機", "en": "Dead lift" },
+      "minutes": 1,
+      "goal30s": "推開工具箱、爬維修梯",
+      "learns": ["interact", "low-climb"],
+      "tools": ["interact"],
+      "required": true
+    },
+    {
+      "id": "P-S02",
+      "chapter": "prologue",
+      "name": { "zhHant": "借來的透鏡", "en": "Borrowed lens" },
+      "minutes": 2,
+      "goal30s": "脈衝後跟隨會流動的線，不是最亮的死線",
+      "learns": ["scan", "trace"],
+      "tools": ["flowLens"],
+      "required": true,
+      "persist": ["player.tool.flowLens"]
+    },
+    {
+      "id": "P-S03",
+      "chapter": "prologue",
+      "name": { "zhHant": "斷掉的橋", "en": "Broken bridge" },
+      "minutes": 2,
+      "goal30s": "用 Tether 把板拉來、旋轉、扣進形狀座",
+      "learns": ["tether-carry", "shape-snap"],
+      "tools": ["tether"],
+      "required": true,
+      "persist": ["player.tool.tether"]
+    },
+    {
+      "id": "P-S04",
+      "chapter": "prologue",
+      "name": { "zhHant": "閘門下方", "en": "Under the gate" },
+      "minutes": 2,
+      "goal30s": "掃描找斷點，再搬開雜物並接回 relay",
+      "learns": ["combine-scan-tether"],
+      "tools": ["flowLens", "tether"],
+      "required": true
+    },
+    {
+      "id": "P-S05",
+      "chapter": "prologue",
+      "name": { "zhHant": "回頭跑", "en": "Run back" },
+      "minutes": [1, 2],
+      "goal30s": "沿白色脈衝撤離並啟動升降梯救出小岑",
+      "learns": ["evac", "fast-retry"],
+      "tools": ["flowLens", "tether"],
+      "timerSecondsStandard": 70,
+      "timerRelaxed": "no-hard-fail",
+      "required": true
+    },
+    {
+      "id": "P-S06",
+      "chapter": "prologue",
+      "name": { "zhHant": "天亮之前", "en": "Before dawn" },
+      "minutes": 1,
+      "goal30s": "標題出現；回 Hub 選河港或工作坊",
+      "learns": ["story-goal", "hub"],
+      "titleCard": "生命迴路：澄灣",
+      "required": true,
+      "persist": [
+        "prologueComplete",
+        "hub.unlocked",
+        "workshop.available",
+        "relationships.xiaocen.rescued"
+      ]
+    },
+    {
+      "id": "W-S00",
+      "chapter": "workshop",
+      "name": { "zhHant": "放大一萬倍", "en": "Zoom ten thousand" },
+      "minutes": 2,
+      "goal30s": "走進細胞模型，對準 cell → DNA → gene 包含關係",
+      "termsAfterAction": ["cell", "DNA", "gene"],
+      "tools": ["flowLens", "tether"],
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "persist": ["codex.cell", "codex.dnaGene"]
+    },
+    {
+      "id": "W-S01",
+      "chapter": "workshop",
+      "name": { "zhHant": "保留下來的軌道", "en": "The track that stays" },
+      "minutes": 2,
+      "goal30s": "讓讀取頭做出可帶走的 RNA，DNA 留在原位",
+      "termsAfterAction": ["RNA", "transcription"],
+      "tools": ["tether"],
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "persist": ["codex.transcription"]
+    },
+    {
+      "id": "W-S02",
+      "chapter": "workshop",
+      "name": { "zhHant": "會折起來的產物", "en": "The folding product" },
+      "minutes": 2,
+      "goal30s": "把折好的 protein 放進門鎖；RNA 形狀不合",
+      "termsAfterAction": ["protein", "translation"],
+      "tools": ["tether"],
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "persist": ["codex.translation"]
+    },
+    {
+      "id": "W-S03",
+      "chapter": "workshop",
+      "name": { "zhHant": "閘門與報告燈", "en": "Gate and reporter" },
+      "minutes": 3,
+      "goal30s": "開煙霧，追訊號，把燈換成形狀旗",
+      "termsAfterAction": ["input", "regulator", "promoter", "reporter", "output"],
+      "tools": ["flowLens", "tether"],
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "persist": ["codex.promoter", "codex.reporter"]
+    },
+    {
+      "id": "W-S04",
+      "chapter": "workshop",
+      "name": { "zhHant": "先測設備", "en": "Test the instrument first" },
+      "minutes": 3,
+      "goal30s": "太陽通道暗時不可解讀問號；修好再跑",
+      "termsAfterAction": ["negative control", "positive control", "valid run"],
+      "tools": ["flowLens", "tether", "sealedBioRig"],
+      "failedPositiveBlocksUnknown": true,
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "persist": ["codex.controls"]
+    },
+    {
+      "id": "W-S05",
+      "chapter": "workshop",
+      "name": { "zhHant": "你剛才做的循環", "en": "The loop you just ran" },
+      "minutes": [1, 2],
+      "goal30s": "看見定義問題→設計→測試→修正，不是背名字",
+      "termsAfterAction": ["synthetic biology", "DBTL"],
+      "required": false,
+      "skippable": true,
+      "qualificationGate": false,
+      "persist": ["workshop.complete"]
+    },
+    {
+      "id": "C1-S00",
+      "chapter": "c1",
+      "name": { "zhHant": "河港還在睡", "en": "Harbor still asleep" },
+      "minutes": 3,
+      "goal30s": "帶封閉探頭去東岸追第一次訊號；選電池或抗撞外殼",
+      "tools": ["flowLens", "tether", "sealedBioRig"],
+      "dialogueFork": {
+        "workshop.complete": "C1-S00-D003",
+        "workshop.incomplete": "C1-S00-D003A"
+      },
+      "required": true,
+      "persist": ["c1.loadout", "player.tool.sealedProbe"]
+    },
+    {
+      "id": "C1-S01",
+      "chapter": "c1",
+      "name": { "zhHant": "第一條紅線", "en": "First red line" },
+      "minutes": 6,
+      "goal30s": "旋轉身體，用三角形密度找脈衝方向並搬運探頭",
+      "tools": ["flowLens", "tether", "sealedBioRig"],
+      "reporter": ["triangle-fill", "not-color-only"],
+      "required": true,
+      "persist": ["c1.firstTraceRecovered"]
+    },
+    {
+      "id": "C1-S02",
+      "chapter": "c1",
+      "name": { "zhHant": "全部都紅", "en": "Everything reads max" },
+      "minutes": 5,
+      "goal30s": "親身試轉身、離位、關環境 relay；然後整機撤回",
+      "mustTryBeforeFlip": ["turn", "leave-spot", "kill-env-relay"],
+      "tools": ["flowLens", "sealedBioRig"],
+      "required": true,
+      "persist": ["c1.invalidRunExperienced", "evidence.failedRunRetained"]
+    },
+    {
+      "id": "C1-S03",
+      "chapter": "c1",
+      "name": { "zhHant": "先證明它看得見", "en": "Prove it can see" },
+      "minutes": 6,
+      "goal30s": "月亮暗、太陽亮之後，問號才開放",
+      "failedPositiveBlocksUnknown": true,
+      "tools": ["flowLens", "tether", "sealedBioRig"],
+      "uiNeverShows": ["100%準確"],
+      "required": true,
+      "persist": ["c1.controlsRestored", "evidence.controlRunBeforeClaim"]
+    },
+    {
+      "id": "C1-S04",
+      "chapter": "c1",
+      "name": { "zhHant": "第二次進入", "en": "Second entry" },
+      "minutes": 7,
+      "goal30s": "用兩個 beacon 加手持探頭交出可進入的交疊區",
+      "validStrategies": ["wide-fast", "far-tight"],
+      "tools": ["flowLens", "tether", "sealedBioRig"],
+      "required": true,
+      "persist": ["c1.sourceZoneMarked"]
+    },
+    {
+      "id": "C1-S05",
+      "chapter": "c1",
+      "name": { "zhHant": "陳姨的路", "en": "Aunt Chen's walk" },
+      "minutes": 5,
+      "goal30s": "讓居民在棚下看得見、聽得到，並知道下一步與更新責任",
+      "mustChange": ["reporter-shape-sound", "notification-rule"],
+      "passRequires": {
+        "c1.accessibilityOutput": "shape_audio",
+        "c1.notificationRule": "municipal_update_with_timestamp"
+      },
+      "tools": ["sealedBioRig"],
+      "required": true,
+      "persist": [
+        "c1.accessibilityOutput",
+        "c1.notificationRule",
+        "evidence.userFeedbackChangedPrototype"
+      ]
+    },
+    {
+      "id": "C1-S06",
+      "chapter": "c1",
+      "name": { "zhHant": "閘門背後", "en": "Behind the sluice" },
+      "minutes": 6,
+      "goal30s": "開門送確認隊無人車；玩家不接觸未知物",
+      "tools": ["flowLens", "tether", "sealedBioRig"],
+      "modulesIntroducedByFunction": ["latch"],
+      "playerTouchesUnknown": false,
+      "required": true,
+      "persist": ["player.tool.modules"]
+    },
+    {
+      "id": "C1-S07",
+      "chapter": "c1",
+      "name": { "zhHant": "說到證據為止", "en": "Only as far as the evidence" },
+      "minutes": 4,
+      "goal30s": "用地圖圖層公開已知與未知，並放置一種監測模型",
+      "missingLayers": ["全河安全", "已完成清理"],
+      "monitoringModels": ["fixed_station", "portable_kits"],
+      "claimMustNotExceedEvidence": true,
+      "required": true,
+      "persist": [
+        "c1.publicMapPublished",
+        "c1.monitoringModel",
+        "world.harbor.monitoringModel",
+        "c1.unresolved"
+      ]
+    },
+    {
+      "id": "C1-S08",
+      "chapter": "c1",
+      "name": { "zhHant": "城市回聲", "en": "City echo" },
+      "minutes": 2,
+      "goal30s": "看見自己造成的三種改變；第一次失效留在牆上",
+      "recapNotScore": [
+        "controls-before-unknown",
+        "chen-shape-sound-update",
+        "monitoring-model-changed-harbor"
+      ],
+      "nextChapterHook": "停線",
+      "required": true,
+      "persist": ["c1.complete"]
+    },
+    {
+      "id": "C2-STUB",
+      "chapter": "c2",
+      "name": { "zhHant": "停線（未開放）", "en": "Stop-line (not open)" },
+      "minutes": 0,
+      "goal30s": "誠實標示尚未開放，不載入工廠關卡",
+      "playable": false,
+      "required": false,
+      "honestStub": true
+    }
+  ],
+  "saveFields": {
+    "storage": "localStorage",
+    "key": "life-circuit-chengwan.save.v1",
+    "schemaVersion": 1,
+    "migrateLegacyCardSave": false,
+    "legacyRetiredKeys": ["preComplete", "preSkipped"],
+    "noPii": true,
+    "fields": [
+      { "path": "schemaVersion", "type": "number", "default": 1 },
+      { "path": "savedAt", "type": "string" },
+      { "path": "locale", "type": "\"zh-Hant\"", "default": "zh-Hant" },
+      { "path": "settings.relaxedTimer", "type": "boolean", "default": false },
+      { "path": "settings.reducedMotion", "type": "boolean", "default": false },
+      { "path": "settings.subtitleScale", "type": "number", "default": 1 },
+      { "path": "settings.fov", "type": "number" },
+      { "path": "settings.vibration", "type": "boolean", "default": true },
+      { "path": "settings.holdAlternatives", "type": "boolean", "default": false },
+      { "path": "player.tool.flowLens", "type": "boolean", "default": false },
+      { "path": "player.tool.tether", "type": "boolean", "default": false },
+      { "path": "player.tool.sealedProbe", "type": "boolean", "default": false },
+      { "path": "player.tool.scanRange", "type": "number" },
+      { "path": "player.tool.tetherStrength", "type": "number" },
+      { "path": "player.tool.modules", "type": "string[]", "default": [] },
+      { "path": "player.tool.battery", "type": "number", "range": [0, 1] },
+      { "path": "c1.loadout", "type": "\"battery\" | \"crash_shell\" | null", "default": null },
+      { "path": "prologueComplete", "type": "boolean", "default": false },
+      { "path": "hub.unlocked", "type": "boolean", "default": false },
+      { "path": "workshop.available", "type": "boolean", "default": false },
+      { "path": "workshop.complete", "type": "boolean", "default": false, "skipLeavesFalse": true },
+      { "path": "workshop.resumeScene", "type": "string | null", "default": null },
+      { "path": "c1.firstTraceRecovered", "type": "boolean", "default": false },
+      { "path": "c1.invalidRunExperienced", "type": "boolean", "default": false },
+      { "path": "c1.controlsRestored", "type": "boolean", "default": false },
+      { "path": "c1.sourceZoneMarked", "type": "boolean", "default": false },
+      { "path": "c1.accessibilityOutput", "type": "\"color_only\" | \"shape_audio\" | null", "default": null },
+      { "path": "c1.notificationRule", "type": "\"none\" | \"municipal_update_with_timestamp\" | null", "default": null },
+      { "path": "c1.monitoringModel", "type": "\"fixed_station\" | \"portable_kits\" | null", "default": null },
+      { "path": "c1.publicMapPublished", "type": "boolean", "default": false },
+      { "path": "c1.complete", "type": "boolean", "default": false },
+      {
+        "path": "c1.unresolved",
+        "type": "string[]",
+        "afterC1MustInclude": ["confirmation_result", "long_term_monitoring"]
+      },
+      { "path": "player.codex.terms", "type": "string[]", "default": [] },
+      { "path": "world.harbor.monitoringModel", "type": "\"fixed_station\" | \"portable_kits\" | null" },
+      { "path": "world.factory.supplyModel", "type": "stub-only" },
+      { "path": "world.switch.repairModel", "type": "stub-only" },
+      { "path": "world.data.selectedPerformance", "type": "stub-only" },
+      { "path": "world.recycling.containmentModel", "type": "stub-only" },
+      { "path": "world.supply.transitionModel", "type": "stub-only" },
+      { "path": "world.platform.accessModel", "type": "stub-only" },
+      { "path": "relationships.characterMemory", "type": "object", "noAffinityNumber": true },
+      { "path": "evidence.runHistory", "type": "array", "retainFirstFailure": true },
+      { "path": "evidence.unresolved", "type": "string[]" },
+      { "path": "evidence.controlRunBeforeClaim", "type": "boolean", "qaOnly": true },
+      { "path": "evidence.failedRunRetained", "type": "boolean", "qaOnly": true },
+      { "path": "evidence.userFeedbackChangedPrototype", "type": "boolean", "qaOnly": true },
+      { "path": "evidence.claimMatchesObservedRange", "type": "boolean", "qaOnly": true }
+    ]
+  },
+  "scienceBoundaries": {
+    "mainlineTerms": [
+      "cell",
+      "DNA",
+      "gene",
+      "RNA",
+      "protein",
+      "promoter",
+      "regulator",
+      "reporter",
+      "input",
+      "output",
+      "control",
+      "replicate",
+      "containment",
+      "biosafety",
+      "biosecurity",
+      "stakeholder",
+      "pilot"
+    ],
+    "notPasswords": ["MerR", "Pmer", "dTomato"],
+    "layersDoNotMix": [
+      "mechanism-literature",
+      "team-proposal",
+      "team-experiment",
+      "story-fiction",
+      "teaching-simulation"
+    ],
+    "p0Maturity": ["STORY_PROTOTYPE", "TEACHING_SIMULATION"],
+    "playerNever": ["sample", "diagnose", "enforce", "approve-deployment"],
+    "failedPositiveControl": "unknown-unreadable-until-repaired",
+    "screeningIsNot": ["confirmation", "cleanup", "identity"],
+    "noEnvironmentalRelease": true,
+    "noZeroRisk": true,
+    "aptamerPublicRoute": false,
+    "developerVoiceInHud": false,
+    "legacyClaimRegister": "safety-wording-only"
+  },
+  "funGate": {
+    "bothGatesRequired": true,
+    "learningOnlyCannotShip": true,
+    "funOnlyIsNotThisGame": true,
+    "criteria": [
+      { "id": "F1", "name": "30s-visible-goal" },
+      { "id": "F2", "name": "90s-spatial-verb" },
+      { "id": "F3", "name": "skill-ceiling" },
+      { "id": "F4", "name": "readable-failure" },
+      { "id": "F5", "name": "no-exhaustive-click" },
+      { "id": "F6", "name": "knowledge-unlocks-ability" },
+      { "id": "F7", "name": "npc-changes-design" },
+      { "id": "F8", "name": "claim-le-evidence" },
+      { "id": "F9", "name": "two-defensible-paths" },
+      { "id": "F10", "name": "delay-can-succeed" }
+    ],
+    "verticalSliceN": 5,
+    "verticalSlicePass": {
+      "prologueGoal30s": 4,
+      "firstTraceNoClickAll": 4,
+      "volunteerCheckInstrument": 3,
+      "screeningVsConfirm": 4,
+      "describeAsCardsOrGuess": 0
+    }
+  },
+  "learningGate": {
+    "order": [
+      "visible-problem",
+      "old-skill-fails",
+      "new-method-is-a-verb",
+      "transfer",
+      "world-remembers",
+      "codex-names"
+    ],
+    "p0MustPass": [
+      "failed-positive-blocks-unknown",
+      "cannot-publish-river-safe-or-cleaned",
+      "chen-walk-changes-output-and-notification",
+      "two-monitoring-models-change-world",
+      "first-invalid-run-retained",
+      "workshop-skip-not-a-gate",
+      "no-named-part-password",
+      "player-not-an-authority"
+    ]
+  },
+  "budgets": {
+    "source": "Adapted from legacy TDD performance numbers where they do not conflict. P0 duration is the new script, not the old 30-minute card slice. Numbers are targets until measured on named lab PCs.",
+    "fps": {
+      "schoolIntegratedGpuMin": 30,
+      "midTarget": 60,
+      "failIfP95FrameMsOver": 33.3
+    },
+    "memory": {
+      "browserTargetMb": 512,
+      "textureGpuEstimateMb": 180,
+      "audioDecodedMb": 40,
+      "localStorageSaveMb": 2
+    },
+    "downloadCachedMb": {
+      "shellJsCssLocale": 3,
+      "hubIncremental": 4,
+      "prologueIncremental": 8,
+      "workshopIncremental": 6,
+      "c1Incremental": 16,
+      "p0TotalCached": 35,
+      "individualCriticalAsset": 4,
+      "note": "Greybox must fit. Art pass needs ADR if total exceeds 35 MB compressed cached."
+    },
+    "draw": {
+      "drawCallsWarning": 250,
+      "shadows": "one-directional-or-baked"
+    },
+    "content": {
+      "voLineMaxSeconds": 12,
+      "subtitleLargeScale": true,
+      "noEssentialTextInTextures": true
+    },
+    "accessibility": {
+      "relaxedTimer": true,
+      "reducedMotion": true,
+      "keyboardAndMouse": true,
+      "colorPlusShapeOrSound": true,
+      "holdMashAimAlternatives": true
+    }
+  },
+  "privacy": {
+    "noNamesSchoolsHealthPhotos": true,
+    "noChat": true,
+    "noRemoteTelemetry": true,
+    "noWorkshopPii": true
+  },
+  "gaps": [
+    "No named Science/Safety sign-off in claim register §14",
+    "Runtime skeleton exists; remaining P0 scenes are destination greybox, not full puzzles",
+    "New script has no Cloudflare appendix; hosting follows official Workers docs listed above",
+    "WebGL-less full 2D clone is not P0 unless lab PCs demand it; must not black-screen",
+    "COOP/COEP unverified",
+    "Chapters 2–Final playable content out of scope"
+  ]
+}

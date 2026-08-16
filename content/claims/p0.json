@@ -1,0 +1,1828 @@
+{
+  "id": "life-circuit-chengwan-p0-claims",
+  "title": {
+    "zhHant": "生命迴路：澄灣 P0 科學宣稱",
+    "enInternal": "Life Circuit: Chengwan P0 claims"
+  },
+  "version": "2026-08-15-p0",
+  "localeDefault": "zh-Hant",
+  "englishIsSignedLocale": false,
+  "companionDoc": "docs/claims/p0-claims.md",
+  "scriptAuthority": "Life_Circuit_Chengwan_Full_Game_Script_v1",
+  "legacyReference": {
+    "path": "20_SOURCE_AND_CLAIM_REGISTER.md",
+    "use": "safety-wording-maturity-tags-player-not-authority-only",
+    "doNotRestore": [
+      "card-quiz-critical-path",
+      "developer-voice-hud-disclaimers",
+      "merR-pmer-dTomato-password",
+      "aptamer-public-route",
+      "science.limit.notMeasurement-mercury-hud"
+    ]
+  },
+  "authorityOrder": [
+    "team-science-safety-signoff-if-present",
+    "Life_Circuit_Chengwan_Full_Game_Script_v1",
+    "legacy-20_SOURCE_AND_CLAIM_REGISTER-safety-wording-only",
+    "legacy-GDD-TDD-if-no-conflict"
+  ],
+  "signOff": {
+    "namedTeamScienceLead": null,
+    "namedSafety": null,
+    "namedEducationHp": null,
+    "syntheticBiologyPiP0Wording": {
+      "role": "Synthetic Biology PI",
+      "date": "2026-08-15",
+      "decision": "Approved with limits",
+      "scope": "P0 implementation copy for title, hub, prologue, optional workshop, chapter 1",
+      "doesNotSign": [
+        "public-igem-educational-efficacy",
+        "field-utility",
+        "calibration-or-lod",
+        "team-data",
+        "environmental-release",
+        "deployment-approval"
+      ]
+    },
+    "publicIgemEfficacyOrFieldUtility": "blocked"
+  },
+  "layersDoNotMix": [
+    "MECHANISM",
+    "TEAM_PROPOSAL",
+    "TEAM_DATA",
+    "STORY_PROTOTYPE",
+    "TEACHING_SIMULATION"
+  ],
+  "p0DefaultPresentation": ["STORY_PROTOTYPE", "TEACHING_SIMULATION"],
+  "maturityTags": {
+    "MECHANISM": {
+      "zhHant": "文獻機制",
+      "definition": "可遷移的一般機制或入門生物學；仍須寫 context",
+      "p0Public": "allowed-with-approved-wording"
+    },
+    "TEAM_PROPOSAL": {
+      "zhHant": "團隊設計提案（尚待驗證）",
+      "definition": "團隊想測試的設計，不代表已工作",
+      "p0Public": "omit-from-player-mainline"
+    },
+    "TEAM_DATA": {
+      "zhHant": "團隊實驗資料",
+      "definition": "有方法、版本、原始資料、分析與限制",
+      "p0Public": "forbidden-none-signed"
+    },
+    "STORY_PROTOTYPE": {
+      "zhHant": "故事原型（虛構）",
+      "definition": "為敘事而設的封閉裝置、河港警報、確認隊流程",
+      "p0Public": "allowed-as-world-object-not-instrument-catalog"
+    },
+    "TEACHING_SIMULATION": {
+      "zhHant": "教學模擬",
+      "definition": "玩法用的相對狀態、幾何交疊、月亮／太陽 dock",
+      "p0Public": "all-readouts-permanently-this-layer"
+    },
+    "UNVERIFIED": {
+      "zhHant": "未驗證",
+      "definition": "資料或 context 不足",
+      "p0Public": "no-affirmative-claim"
+    },
+    "NOT_APPROVED": {
+      "zhHant": "未核准公開",
+      "definition": "科學、Safety 或來源不足",
+      "p0Public": "do-not-ship"
+    }
+  },
+  "claimStatuses": [
+    "Approved",
+    "Approved with limits",
+    "Needs source",
+    "NOT_APPROVED",
+    "Retired-P0-mainline"
+  ],
+  "numericPolicy": {
+    "inventedAssayNumbers": false,
+    "approvedScientificNumbers": [],
+    "allowedGameFeel": [
+      "relative-low",
+      "relative-mid",
+      "relative-high",
+      "relative-fluctuating",
+      "triangle-fill",
+      "pulse-density",
+      "overlap-geometry-small-enough",
+      "moon-dark-sun-bright",
+      "session-run-clock",
+      "gameplay-evac-timer",
+      "safety-rope-timing",
+      "narrative-zoom-ten-thousand",
+      "narrative-confirm-time-differs-by-zone-width"
+    ],
+    "forbiddenUnitsAndSpecs": [
+      "nM",
+      "µM",
+      "ug/L",
+      "µg/L",
+      "ppb",
+      "ppm",
+      "CFU",
+      "RFU-calibration",
+      "LOD",
+      "LOQ",
+      "dynamic-range-number",
+      "ON-OFF-ratio",
+      "fold-change",
+      "T90",
+      "sensor-response-time-spec",
+      "fluorophore-maturation-minutes-as-spec",
+      "accurate-to-N-meters-as-sensor-spec"
+    ],
+    "rule": "Number plus scientific unit requires Claim ID and real source. P0 has neither. Gameplay clocks must not be relabeled as sensor specs."
+  },
+  "playerNever": ["sample", "diagnose", "enforce", "approve-deployment", "touch-unknown", "environmental-release"],
+  "screeningIsNot": ["confirmation", "cleanup", "identity", "safe-river"],
+  "failedPositiveControl": "unknown-unreadable-until-repaired",
+  "reporterNeverColorAlone": true,
+  "developerVoiceInHud": false,
+  "workshopIsQualificationGate": false,
+  "namedCasesNotPasswords": ["MerR", "Pmer", "dTomato", "Hg2+", "aptamer"],
+  "aptamerPublicRoute": false,
+  "noEnvironmentalRelease": true,
+  "noZeroRisk": true,
+  "mainlineTerms": [
+    "cell",
+    "DNA",
+    "gene",
+    "RNA",
+    "protein",
+    "promoter",
+    "regulator",
+    "reporter",
+    "input",
+    "output",
+    "control",
+    "replicate",
+    "containment",
+    "biosafety",
+    "biosecurity",
+    "stakeholder",
+    "pilot"
+  ],
+  "p0OperatedTerms": [
+    "cell",
+    "DNA",
+    "gene",
+    "RNA",
+    "protein",
+    "promoter",
+    "regulator",
+    "reporter",
+    "input",
+    "output",
+    "control",
+    "stakeholder",
+    "screening"
+  ],
+  "p0LightOrStubTerms": {
+    "containment": "sealed-kit-and-no-release-world-rule",
+    "biosafety": "codex-stub-only",
+    "biosecurity": "not-operated",
+    "replicate": "fluctuating-unknown-not-a-gate",
+    "pilot": "chen-monitoring-trial-not-final-pilot"
+  },
+  "worldRules": [
+    {
+      "id": "P0-RULE-001",
+      "status": "Approved",
+      "rule": "Sealed Bio-Rig / sealed probe stays closed. External service ports only. No sequences, culture conditions, concentrations, or wet-lab how-to.",
+      "scenes": ["C1-S00", "C1-S01", "C1-S02", "C1-S03"]
+    },
+    {
+      "id": "P0-RULE-002",
+      "status": "Approved",
+      "rule": "Failed positive / sun reference keeps unknown / question-mark unread and unusable as evidence until moon-low and sun-high are restored.",
+      "scenes": ["W-S04", "C1-S03"],
+      "hardGate": true
+    },
+    {
+      "id": "P0-RULE-003",
+      "status": "Approved",
+      "rule": "First invalid run is written to evidence.runHistory and cannot be deleted. Station wall keeps the event.",
+      "scenes": ["C1-S02", "C1-S03", "C1-S08"]
+    },
+    {
+      "id": "P0-RULE-004",
+      "status": "Approved",
+      "rule": "Public map opens only obtained valid layers. 全河安全 and 已完成清理 show 目前沒有資料圖層.",
+      "scenes": ["C1-S07"],
+      "missingLayers": ["全河安全", "已完成清理"],
+      "missingLayerCopy": "目前沒有資料圖層"
+    },
+    {
+      "id": "P0-RULE-005",
+      "status": "Approved",
+      "rule": "Player does not sample, open the unknown, publish official identity, enforce, or approve deployment. Confirmation rover enters; lab publishes formal result later.",
+      "scenes": ["C1-S00", "C1-S06", "C1-S07"]
+    },
+    {
+      "id": "P0-RULE-006",
+      "status": "Approved",
+      "rule": "Reporter output must include shape, sound, or fill animation. Chen walk pass requires shape+sound AND municipal update with timestamp.",
+      "scenes": ["C1-S01", "C1-S05"],
+      "passRequires": {
+        "c1.accessibilityOutput": "shape_audio",
+        "c1.notificationRule": "municipal_update_with_timestamp"
+      }
+    },
+    {
+      "id": "P0-RULE-007",
+      "status": "Approved",
+      "rule": "Readouts use relative states only: low / mid / high / fluctuating, triangle fill, pulse density. No real units, LOD, concentration, or calibration curve.",
+      "scenes": ["*"]
+    },
+    {
+      "id": "P0-RULE-008",
+      "status": "Approved",
+      "rule": "After repair, UI never shows 100% 準確. Show only two control states and this-run session clock.",
+      "scenes": ["C1-S03"],
+      "uiNeverShows": ["100%準確", "100% 準確", "已校準"]
+    },
+    {
+      "id": "P0-RULE-009",
+      "status": "Approved",
+      "rule": "Both monitoring models complete the chapter and change harbor plus Hub far-view. Not a moral score.",
+      "scenes": ["C1-S07", "C1-S08"],
+      "models": ["fixed_station", "portable_kits"]
+    },
+    {
+      "id": "P0-RULE-010",
+      "status": "Approved",
+      "rule": "Workshop is skippable with no qualification warning and does not lock Chapter 1. Only forks 林博士 living vs formal phrasing.",
+      "scenes": ["HUB-S00", "C1-S00"],
+      "dialogueFork": {
+        "workshop.complete": "C1-S00-D003",
+        "workshop.incomplete": "C1-S00-D003A"
+      }
+    },
+    {
+      "id": "P0-RULE-011",
+      "status": "Approved",
+      "rule": "Mainline must not present MerR, Pmer, dTomato, Hg²⁺, or aptamer as a gate or as the probe's identity.",
+      "scenes": ["*"]
+    },
+    {
+      "id": "P0-RULE-012",
+      "status": "Approved",
+      "rule": "No environmental release of a living system. No zero-risk or fully-safe claims.",
+      "scenes": ["*"]
+    }
+  ],
+  "codex": [
+    {
+      "id": "cell",
+      "unlock": "codex.cell",
+      "afterScene": "W-S00",
+      "zhHant": "細胞是有邊界的生命單位；你剛走進的是放大模型。"
+    },
+    {
+      "id": "dnaGene",
+      "unlock": "codex.dnaGene",
+      "afterScene": "W-S00",
+      "zhHant": "DNA 是保存資訊的長軌。gene 是其上可被使用的一段，不是另一條東西。"
+    },
+    {
+      "id": "transcription",
+      "unlock": "codex.transcription",
+      "afterScene": "W-S01",
+      "zhHant": "細胞沿 DNA 讀取，做出一份可帶走的 RNA；DNA 留在原位。這步叫 transcription。"
+    },
+    {
+      "id": "translation",
+      "unlock": "codex.translation",
+      "afterScene": "W-S02",
+      "zhHant": "細胞按 RNA 的資訊製作 protein，並折成能做事的形狀。這步叫 translation。"
+    },
+    {
+      "id": "input",
+      "unlock": "codex.input",
+      "afterScene": "W-S03",
+      "zhHant": "Input 是裝置感到的條件；感測把它變成內部訊號。"
+    },
+    {
+      "id": "regulator",
+      "unlock": "codex.regulator",
+      "afterScene": "W-S03",
+      "zhHant": "Regulator 依感測結果，改變下游能不能通過。"
+    },
+    {
+      "id": "promoter",
+      "unlock": "codex.promoter",
+      "afterScene": "W-S03",
+      "zhHant": "Promoter 是決定下游資訊何時被使用的閘門。"
+    },
+    {
+      "id": "reporter",
+      "unlock": "codex.reporter",
+      "afterScene": "W-S03",
+      "zhHant": "Reporter 把系統狀態變成可見、可聽或可摸的 output；它不自動說出輸入的全部細節。"
+    },
+    {
+      "id": "output",
+      "unlock": "codex.output",
+      "afterScene": "W-S03",
+      "zhHant": "Output 是系統對外顯示的結果；換顯示方式不必等於換了感測邏輯。"
+    },
+    {
+      "id": "controls",
+      "unlock": "codex.controls",
+      "afterScene": "W-S04",
+      "zhHant": "Negative control 應保持低輸出；positive control 應給出高輸出。它們判斷這次運行能不能讀。"
+    },
+    {
+      "id": "validRun",
+      "unlock": "codex.validRun",
+      "afterScene": "W-S04",
+      "zhHant": "已知暗與已知亮都正確時，未知結果才有意思。Positive 失效時，未知不可讀。"
+    },
+    {
+      "id": "screening",
+      "unlock": "codex.screening",
+      "afterScene": "C1-S07",
+      "zhHant": "篩查用來縮小搜索範圍。身分、影響範圍與清理要另走確認與權責流程。"
+    }
+  ],
+  "approvedScriptLines": [
+    {
+      "id": "W-S00-D001",
+      "claimIds": ["P0-BIO-001", "P0-BIO-002"],
+      "zhHant": "你現在站在一個放大的細胞模型裡。那條長軌是 DNA，細胞把很多資訊保存在上面。"
+    },
+    {
+      "id": "W-S00-D003",
+      "claimIds": ["P0-BIO-003"],
+      "zhHant": "對。gene 是 DNA 上的一段。先記住位置關係，名稱之後才有用。"
+    },
+    {
+      "id": "W-S01-D001",
+      "claimIds": ["P0-BIO-002", "P0-BIO-004"],
+      "zhHant": "看清楚：DNA 留在原位。機器沿它讀取，做出一份新的 RNA。"
+    },
+    {
+      "id": "W-S01-D002",
+      "claimIds": ["P0-BIO-004"],
+      "zhHant": "不是 DNA 變成 RNA，是多了一份可以帶走的副本。"
+    },
+    {
+      "id": "W-S01-D003",
+      "claimIds": ["P0-BIO-004"],
+      "zhHant": "正是。這一步叫 transcription。"
+    },
+    {
+      "id": "W-S02-D001",
+      "claimIds": ["P0-BIO-005"],
+      "zhHant": "這個環按 RNA 的資訊製作一條 protein。這一步叫 translation。"
+    },
+    {
+      "id": "W-S02-D002",
+      "claimIds": ["P0-BIO-006"],
+      "zhHant": "DNA 保存，RNA 帶消息，protein 去做事。"
+    },
+    {
+      "id": "W-S02-D003",
+      "claimIds": ["P0-BIO-007"],
+      "zhHant": "這只是基本模型，但已足夠讓我們開始設計輸入和輸出。"
+    },
+    {
+      "id": "W-S03-D001",
+      "claimIds": ["P0-SYS-001", "P0-SYS-002"],
+      "zhHant": "煙霧是 input。感應部分改變 regulator，promoter 決定下游資訊何時被使用。"
+    },
+    {
+      "id": "W-S03-D002",
+      "claimIds": ["P0-SYS-003"],
+      "zhHant": "最後那面旗是 reporter——它報告前面的系統發生了甚麼。"
+    },
+    {
+      "id": "W-S03-D003",
+      "claimIds": ["P0-SYS-003"],
+      "zhHant": "對。Reporter 讓狀態可被看見，但它不會自動告訴你輸入的所有細節。"
+    },
+    {
+      "id": "W-S04-D002",
+      "claimIds": ["P0-CTRL-002", "P0-CTRL-003"],
+      "zhHant": "所以我們現在不能相信問號。先證明設備有能力給出兩種已知結果。"
+    },
+    {
+      "id": "W-S04-D003",
+      "claimIds": ["P0-CTRL-001"],
+      "zhHant": "月亮通道是 negative control；太陽通道是 positive control。它們不是裝飾，是這次運行能否解讀的條件。"
+    },
+    {
+      "id": "W-S04-D004",
+      "claimIds": ["P0-CTRL-002"],
+      "zhHant": "不是「問號暗，所以答案是沒有」；而是「設備連應該亮的東西都看不到」。"
+    },
+    {
+      "id": "W-S05-D001",
+      "claimIds": ["P0-BIO-009"],
+      "zhHant": "你先定義問題，再設計、建構、測試，從失敗中修正。當我們用工程方式設計生物系統，便是在做 synthetic biology。"
+    },
+    {
+      "id": "W-S05-D002",
+      "claimIds": ["P0-BIO-010"],
+      "zhHant": "所以名字不是通關密碼。真正有用的是知道改一個條件，哪一段會跟著改。"
+    },
+    {
+      "id": "C1-S00-D003",
+      "claimIds": ["P0-SYS-007"],
+      "requires": "workshop.complete",
+      "zhHant": "這是封閉探頭。裡面的感測部分接到 regulator，再由 promoter 控制 reporter 輸出。"
+    },
+    {
+      "id": "C1-S00-D003A",
+      "claimIds": ["P0-SYS-007"],
+      "requires": "workshop.incomplete",
+      "zhHant": "這是封閉探頭。前端感到目標，中央決定是否放行訊號，尾端把結果顯示出來。"
+    },
+    {
+      "id": "C1-S00-D004",
+      "claimIds": ["P0-MEAS-001", "P0-ROLE-001"],
+      "zhHant": "它只替我們縮小搜索範圍。你負責帶回完整裝置和路線紀錄；郭工負責確認。"
+    },
+    {
+      "id": "C1-S01-D003",
+      "claimIds": ["P0-MEAS-003"],
+      "zhHant": "別把死魚照片當成答案。這條河每次暴雨都有垃圾沖下來，來源可能不止一個。"
+    },
+    {
+      "id": "C1-S02-D002",
+      "claimIds": ["P0-CTRL-005"],
+      "zhHant": "先停。若工具在任何地方都給同一答案，我們不能用它帶隊。"
+    },
+    {
+      "id": "C1-S03-D001",
+      "claimIds": ["P0-CTRL-003"],
+      "zhHant": "先別碰問號。月亮應該暗，太陽應該亮；只有它們都正常，未知結果才有意思。"
+    },
+    {
+      "id": "C1-S03-D003",
+      "claimIds": ["P0-CTRL-004"],
+      "zhHant": "這兩個已知狀態就是 controls。它們回答的不是河裡有甚麼，而是這次運行能不能被解讀。"
+    },
+    {
+      "id": "C1-S03-D004",
+      "claimIds": ["P0-CTRL-006"],
+      "zhHant": "把第一次失效留在紀錄裡。刪掉它，不會令第二次更可靠。"
+    },
+    {
+      "id": "C1-S04-D001",
+      "claimIds": ["P0-MEAS-002"],
+      "zhHant": "我不需要一個紅點。我需要一個人員能安全進入的範圍。"
+    },
+    {
+      "id": "C1-S05-D004",
+      "claimIds": ["P0-SYS-005"],
+      "zhHant": "換 reporter 不會改變感測邏輯，但可以改變人怎樣收到 output。"
+    },
+    {
+      "id": "C1-S06-D001",
+      "claimIds": ["P0-ROLE-002"],
+      "zhHant": "你們開門，我們送車。裡面由確認隊處理。"
+    },
+    {
+      "id": "C1-S06-D005",
+      "claimIds": ["P0-MEAS-005", "P0-ROLE-002"],
+      "zhHant": "車已進入。搜索區和你們的路線吻合；正式結果稍後由實驗室發布。"
+    },
+    {
+      "id": "C1-S07-D001",
+      "claimIds": ["P0-COMM-002"],
+      "zhHant": "我會報道工具幫忙縮小搜索區，也會把第一次失效和確認尚未完成放在同一頁。"
+    },
+    {
+      "id": "C1-S07-D002",
+      "claimIds": ["P0-MEAS-005"],
+      "zhHant": "確認隊已封鎖舊閘後的來源區。物質身分和影響範圍由正式分析更新。"
+    },
+    {
+      "id": "C1-S07-D003",
+      "claimIds": ["P0-HP-003"],
+      "zhHant": "公告上有時間、有下一步，也看得到誰能暫停設備。這次我願意讓試行繼續。"
+    },
+    {
+      "id": "C1-S07-D004",
+      "claimIds": ["P0-SYS-003"],
+      "zhHant": "Reporter 給我們可見 output；它沒有替所有未知作答。"
+    },
+    {
+      "id": "C1-S08-D001",
+      "claimIds": ["P0-MON-003"],
+      "zhHant": "我們第一次出去想找一個紅點，最後帶回來的是一套會承認失效的方法。"
+    }
+  ],
+  "claims": [
+    {
+      "id": "P0-LAYER-001",
+      "family": "layer",
+      "maturity": null,
+      "presentation": "internal",
+      "status": "Approved",
+      "scenes": [],
+      "surfaces": ["internal"],
+      "approvedWording": {
+        "zhHant": "文獻機制、團隊提案、團隊實驗、故事裝置、教學模擬不是同一件事。"
+      },
+      "limits": ["內部／教師資料。不要讓角色朗讀分層講義"],
+      "forbiddenWording": ["把探頭讀數稱為團隊實驗結果", "實驗結果"],
+      "legacyMap": []
+    },
+    {
+      "id": "P0-LAYER-002",
+      "family": "layer",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["*"],
+      "surfaces": ["internal", "readout_watermark"],
+      "approvedWording": {
+        "zhHant": "澄灣的封閉探頭與河港讀數是故事裡的教學裝置。"
+      },
+      "limits": [
+        "只在內部、截圖保護或可能被誤認為實驗室數據的讀數上標 教學模擬",
+        "不要在 HUD 當章節講課"
+      ],
+      "forbiddenWording": ["本裝置已獲監管批准", "現場即時確認污染", "實驗結果"],
+      "legacyMap": ["SIM-001", "SIM-003"]
+    },
+    {
+      "id": "P0-LAYER-003",
+      "family": "layer",
+      "maturity": "TEAM_DATA",
+      "presentation": null,
+      "status": "NOT_APPROVED",
+      "scenes": [],
+      "surfaces": [],
+      "approvedWording": { "zhHant": "" },
+      "limits": ["P0 沒有簽核數據包"],
+      "forbiddenWording": ["團隊已測得", "TEAM_DATA"],
+      "legacyMap": ["HG-TEAM-004", "HG-TEAM-005"]
+    },
+    {
+      "id": "P0-BIO-001",
+      "family": "bio",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["W-S00"],
+      "surfaces": ["dialogue", "codex"],
+      "nameAfterAction": ["cell"],
+      "approvedWording": {
+        "zhHant": "你現在站在一個放大的細胞模型裡。",
+        "codex": "細胞是有邊界的生命單位；你剛走進的是放大模型。"
+      },
+      "limits": [
+        "入門尺度",
+        "模型不是某一真實物種的完整解剖",
+        "放大一萬倍是演出不是顯微術規格"
+      ],
+      "forbiddenWording": ["這就是真實細胞的精確剖面", "所有生命只有一種細胞"],
+      "legacyMap": ["BIO-FOUND-001"],
+      "sources": ["SCRIPT-v1 W-S00", "BIO-FOUND-001"]
+    },
+    {
+      "id": "P0-BIO-002",
+      "family": "bio",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["W-S00", "W-S01"],
+      "surfaces": ["dialogue", "codex"],
+      "nameAfterAction": ["DNA"],
+      "approvedWording": {
+        "zhHant": "那條長軌是 DNA，細胞把很多資訊保存在上面。DNA 留在原位。"
+      },
+      "limits": ["DNA 是保存資訊的分子", "不要說成整座細胞"],
+      "forbiddenWording": ["DNA 被拆走去做 RNA", "DNA 變成 RNA"],
+      "legacyMap": ["BIO-FOUND-002", "BIO-FOUND-003"],
+      "sources": ["SCRIPT-v1 W-S00 W-S01", "BIO-CENTRAL-DOGMA-MISCONCEPTION"]
+    },
+    {
+      "id": "P0-BIO-003",
+      "family": "bio",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["W-S00"],
+      "surfaces": ["dialogue", "codex"],
+      "nameAfterAction": ["gene"],
+      "approvedWording": {
+        "zhHant": "gene 是 DNA 上的一段。先記住位置關係，名稱之後才有用。"
+      },
+      "limits": ["產物可以是 RNA 或 protein", "本模型接著做 protein", "名稱不是通關密碼"],
+      "forbiddenWording": ["gene 是另一條獨立的東西", "把某個專名當密碼"],
+      "legacyMap": ["BIO-FOUND-002"],
+      "sources": ["SCRIPT-v1 W-S00"]
+    },
+    {
+      "id": "P0-BIO-004",
+      "family": "bio",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["W-S01"],
+      "surfaces": ["dialogue", "codex"],
+      "nameAfterAction": ["RNA", "transcription"],
+      "approvedWording": {
+        "zhHant": "不是 DNA 變成 RNA，是多了一份可以帶走的副本。"
+      },
+      "limits": ["箭頭是資訊流", "原 DNA 保留", "先做出副本再命名 transcription"],
+      "forbiddenWording": ["DNA 變成 RNA", "DNA 物質直接變成 RNA"],
+      "legacyMap": ["BIO-FOUND-003"],
+      "sources": ["SCRIPT-v1 W-S01", "BIO-CENTRAL-DOGMA-MISCONCEPTION"]
+    },
+    {
+      "id": "P0-BIO-005",
+      "family": "bio",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["W-S02"],
+      "surfaces": ["dialogue", "codex"],
+      "nameAfterAction": ["protein", "translation"],
+      "approvedWording": {
+        "zhHant": "這個環按 RNA 的資訊製作一條 protein。"
+      },
+      "limits": ["基本模型", "真實調控更複雜", "先折疊再命名 translation"],
+      "forbiddenWording": ["RNA 物質直接變成 protein", "密碼表背誦通關"],
+      "legacyMap": ["BIO-FOUND-003"],
+      "sources": ["SCRIPT-v1 W-S02", "BIO-CENTRAL-DOGMA-MISCONCEPTION"]
+    },
+    {
+      "id": "P0-BIO-006",
+      "family": "bio",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["W-S02"],
+      "surfaces": ["dialogue", "codex"],
+      "approvedWording": {
+        "zhHant": "DNA 保存，RNA 帶消息，protein 去做事。"
+      },
+      "limits": ["口訣是關係，不是完整組學"],
+      "forbiddenWording": ["一個細胞只有這三樣", "protein 就是藥", "細胞本身就是成品"],
+      "legacyMap": ["BIO-FOUND-003"],
+      "sources": ["SCRIPT-v1 W-S02"]
+    },
+    {
+      "id": "P0-BIO-007",
+      "family": "bio",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["W-S02"],
+      "surfaces": ["dialogue"],
+      "approvedWording": {
+        "zhHant": "這只是基本模型，但已足夠讓我們開始設計輸入和輸出。"
+      },
+      "limits": ["承認簡化"],
+      "forbiddenWording": ["你已學會全部分子生物學"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 W-S02"]
+    },
+    {
+      "id": "P0-BIO-008",
+      "family": "bio",
+      "maturity": "TEACHING_SIMULATION",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["W-S00"],
+      "surfaces": ["world"],
+      "approvedWording": {
+        "zhHant": "對準 cell、DNA、gene 的包含關係，門才打開。"
+      },
+      "limits": ["空間關係，不是分數", "不是三選一考卷"],
+      "forbiddenWording": ["卡牌排序通關"],
+      "legacyMap": ["EDU-DESIGN-001"],
+      "sources": ["SCRIPT-v1 W-S00"]
+    },
+    {
+      "id": "P0-BIO-009",
+      "family": "bio",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["W-S05"],
+      "surfaces": ["dialogue"],
+      "nameAfterAction": ["synthetic biology"],
+      "approvedWording": {
+        "zhHant": "你先定義問題，再設計、建構、測試，從失敗中修正。當我們用工程方式設計生物系統，便是在做 synthetic biology。"
+      },
+      "limits": ["先做完循環再命名", "名字不是通關密碼", "不宣稱團隊已完成真實 DBTL 驗證"],
+      "forbiddenWording": ["背出 DBTL 就能過關", "團隊已驗證此循環"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 W-S05"]
+    },
+    {
+      "id": "P0-BIO-010",
+      "family": "bio",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["W-S05"],
+      "surfaces": ["dialogue"],
+      "approvedWording": {
+        "zhHant": "真正有用的是知道改一個條件，哪一段會跟著改。"
+      },
+      "limits": ["可遷移思維"],
+      "forbiddenWording": ["專案元件名當密碼"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 W-S05"]
+    },
+    {
+      "id": "P0-SYS-001",
+      "family": "system",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["W-S03", "C1-S00"],
+      "surfaces": ["dialogue", "codex"],
+      "nameAfterAction": ["input", "sensor"],
+      "approvedWording": {
+        "zhHant": "煙霧是 input。",
+        "living": "前端感到目標。"
+      },
+      "limits": ["先操作再命名", "input 不是答案"],
+      "forbiddenWording": ["感應器已辨認污染物身分"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 W-S03", "SCRIPT-v1 C1-S00-D003A"]
+    },
+    {
+      "id": "P0-SYS-002",
+      "family": "system",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["W-S03", "C1-S00"],
+      "surfaces": ["dialogue", "codex"],
+      "nameAfterAction": ["regulator", "promoter"],
+      "approvedWording": {
+        "zhHant": "感應部分改變 regulator，promoter 決定下游資訊何時被使用。",
+        "living": "中央決定是否放行訊號。"
+      },
+      "limits": [
+        "入門抽象，不是特定拓樸",
+        "regulator 不永遠等於 repressor",
+        "不背 MerR／Pmer"
+      ],
+      "forbiddenWording": ["只要把某蛋白放在 promoter 前就會啟動", "MerR", "Pmer"],
+      "legacyMap": ["BIO-FOUND-004"],
+      "sources": ["SCRIPT-v1 W-S03"]
+    },
+    {
+      "id": "P0-SYS-003",
+      "family": "system",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["W-S03", "C1-S07"],
+      "surfaces": ["dialogue", "codex", "public_map"],
+      "nameAfterAction": ["reporter", "output"],
+      "approvedWording": {
+        "zhHant": "Reporter 讓狀態可被看見，但它不會自動告訴你輸入的所有細節。"
+      },
+      "limits": ["需要表達與可見輸出", "可有短暫延遲", "延遲不是校準 T90"],
+      "forbiddenWording": ["一亮就等於濃度數字", "reporter 已確認河裡是甚麼", "準確濃度"],
+      "legacyMap": ["HG-MECH-005", "HG-MECH-006"],
+      "sources": ["SCRIPT-v1 W-S03", "SCRIPT-v1 C1-S07-D004"]
+    },
+    {
+      "id": "P0-SYS-004",
+      "family": "system",
+      "maturity": "TEACHING_SIMULATION",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["W-S03", "C1-S01", "C1-S05"],
+      "surfaces": ["world", "hud"],
+      "approvedWording": {
+        "zhHant": "Reporter 必須有形狀、聲音或填充動畫，不能只有顏色。"
+      },
+      "limits": ["可及性與科學同一規則"],
+      "forbiddenWording": ["只靠紅／綠判斷狀態"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 accessibility", "SCRIPT-v1 C1-S05"]
+    },
+    {
+      "id": "P0-SYS-005",
+      "family": "system",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["C1-S05"],
+      "surfaces": ["dialogue"],
+      "approvedWording": {
+        "zhHant": "換 reporter 不會改變感測邏輯，但可以改變人怎樣收到 output。"
+      },
+      "limits": ["輸出通道不是分析結論"],
+      "forbiddenWording": ["換燈就等於換了一種已驗證檢測方法"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 C1-S05-D004"]
+    },
+    {
+      "id": "P0-SYS-006",
+      "family": "system",
+      "maturity": "TEACHING_SIMULATION",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["P-S02", "C1-S01", "C1-S06"],
+      "surfaces": ["dialogue", "world"],
+      "approvedWording": {
+        "zhHant": "找會流動的那條，不要找最亮的。壞線也會反光。"
+      },
+      "limits": ["亮度不等於方向", "城市燈不是來源答案", "殘留訊號可以亮而不動"],
+      "forbiddenWording": ["最亮就是正確來源"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 P-S02", "SCRIPT-v1 C1-S06"]
+    },
+    {
+      "id": "P0-SYS-007",
+      "family": "system",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["C1-S00"],
+      "surfaces": ["dialogue"],
+      "approvedWording": {
+        "zhHant": "這是封閉探頭。裡面的感測部分接到 regulator，再由 promoter 控制 reporter 輸出。",
+        "living": "這是封閉探頭。前端感到目標，中央決定是否放行訊號，尾端把結果顯示出來。"
+      },
+      "limits": ["故事裝置的功能槽", "不是團隊 construct 圖", "工作坊未完成必須用 living 句"],
+      "forbiddenWording": ["此探頭即團隊 MerR–Pmer–dTomato 系統且已工作"],
+      "legacyMap": ["SIM-003", "HG-TEAM-001"],
+      "sources": ["SCRIPT-v1 C1-S00-D003", "SCRIPT-v1 C1-S00-D003A"]
+    },
+    {
+      "id": "P0-SYS-008",
+      "family": "system",
+      "maturity": "TEACHING_SIMULATION",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["P-S02", "C1-S01", "C1-S02", "C1-S06"],
+      "surfaces": ["world"],
+      "approvedWording": {
+        "zhHant": "訊號可被遮擋、背景、裝置故障或錯誤參考扭曲。"
+      },
+      "limits": ["透鏡不是答案高亮器"],
+      "forbiddenWording": ["掃一下就得到正確來源"],
+      "legacyMap": ["HG-MECH-006"],
+      "sources": ["SCRIPT-v1 Flow Lens"]
+    },
+    {
+      "id": "P0-CTRL-001",
+      "family": "control",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["W-S04", "C1-S03"],
+      "surfaces": ["dialogue", "codex"],
+      "nameAfterAction": ["negative control", "positive control"],
+      "approvedWording": {
+        "zhHant": "月亮通道是 negative control；太陽通道是 positive control。它們不是裝飾，是這次運行能否解讀的條件。"
+      },
+      "limits": [
+        "圖示先於術語",
+        "低輸出不是絕對零表達",
+        "月亮／太陽不是河水答案"
+      ],
+      "forbiddenWording": ["完全沒有轉錄", "完全沒有表達", "月亮太陽已證明河裡有甚麼"],
+      "legacyMap": ["HG-MECH-008"],
+      "sources": ["SCRIPT-v1 W-S04", "SCRIPT-v1 C1-S03"]
+    },
+    {
+      "id": "P0-CTRL-002",
+      "family": "control",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["W-S04", "C1-S03"],
+      "surfaces": ["dialogue", "world"],
+      "hardGate": true,
+      "approvedWording": {
+        "zhHant": "不是「問號暗，所以答案是沒有」；而是「設備連應該亮的東西都看不到」。"
+      },
+      "limits": ["failed positive 使 unknown 不可讀"],
+      "forbiddenWording": ["全暗＝河裡沒有東西"],
+      "legacyMap": ["HG-MECH-008"],
+      "sources": ["SCRIPT-v1 W-S04-D004"]
+    },
+    {
+      "id": "P0-CTRL-003",
+      "family": "control",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["C1-S03", "W-S04"],
+      "surfaces": ["dialogue", "world"],
+      "hardGate": true,
+      "approvedWording": {
+        "zhHant": "先別碰問號。月亮應該暗，太陽應該亮；只有它們都正常，未知結果才有意思。"
+      },
+      "limits": ["先修設備再解讀未知"],
+      "forbiddenWording": ["問號與失效太陽同時當證據"],
+      "legacyMap": ["HG-MECH-008"],
+      "sources": ["SCRIPT-v1 C1-S03-D001"]
+    },
+    {
+      "id": "P0-CTRL-004",
+      "family": "control",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["C1-S03"],
+      "surfaces": ["dialogue", "codex"],
+      "approvedWording": {
+        "zhHant": "這兩個已知狀態就是 controls。它們回答的不是河裡有甚麼，而是這次運行能不能被解讀。"
+      },
+      "limits": ["一次 run 的可讀性，不是環境結論"],
+      "forbiddenWording": ["controls 已證明污染", "controls 已證明安全"],
+      "legacyMap": ["HG-MECH-008", "HG-MECH-009"],
+      "sources": ["SCRIPT-v1 C1-S03-D003"]
+    },
+    {
+      "id": "P0-CTRL-005",
+      "family": "control",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["C1-S02"],
+      "surfaces": ["dialogue", "world"],
+      "approvedWording": {
+        "zhHant": "若工具在任何地方都給同一答案，我們不能用它帶隊。"
+      },
+      "limits": ["飽和輸出是失效，不是全域高濃度圖"],
+      "forbiddenWording": ["整條河都是最高濃度"],
+      "legacyMap": ["HG-MECH-006"],
+      "sources": ["SCRIPT-v1 C1-S02-D002"]
+    },
+    {
+      "id": "P0-CTRL-006",
+      "family": "control",
+      "maturity": "TEACHING_SIMULATION",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["C1-S03", "C1-S08"],
+      "surfaces": ["dialogue", "world", "save"],
+      "approvedWording": {
+        "zhHant": "把第一次失效留在紀錄裡。刪掉它，不會令第二次更可靠。"
+      },
+      "limits": ["evidence.runHistory 不可刪"],
+      "forbiddenWording": ["自動清除失敗只留漂亮結果"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 C1-S03-D004"]
+    },
+    {
+      "id": "P0-CTRL-007",
+      "family": "control",
+      "maturity": "TEACHING_SIMULATION",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["C1-S03"],
+      "surfaces": ["hud"],
+      "approvedWording": {
+        "zhHant": "只顯示兩個 control 狀態與本次運行時間。"
+      },
+      "limits": ["運行時間是會話時鐘，不是 T90"],
+      "forbiddenWording": ["100% 準確", "100%準確", "已校準", "validated"],
+      "legacyMap": ["SIM-002"],
+      "sources": ["SCRIPT-v1 C1-S03 feedback"]
+    },
+    {
+      "id": "P0-MEAS-001",
+      "family": "measurement",
+      "maturity": "MECHANISM",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S00"],
+      "surfaces": ["dialogue"],
+      "approvedWording": {
+        "zhHant": "它只替我們縮小搜索範圍。你負責帶回完整裝置和路線紀錄；郭工負責確認。"
+      },
+      "limits": ["篩查不是確認、清理或身分"],
+      "forbiddenWording": ["玩家已證實河流受污染", "採樣瓶", "A/B/C/D"],
+      "legacyMap": ["HG-MECH-009", "SIM-004", "ROLE-002"],
+      "sources": ["SCRIPT-v1 C1-S00-D004"]
+    },
+    {
+      "id": "P0-MEAS-002",
+      "family": "measurement",
+      "maturity": "MECHANISM",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["C1-S04"],
+      "surfaces": ["dialogue", "world"],
+      "approvedWording": {
+        "zhHant": "我不需要一個紅點。我需要一個人員能安全進入的範圍。"
+      },
+      "limits": ["交疊區是值得確認的範圍"],
+      "forbiddenWording": ["單一紅點就是物質身分"],
+      "legacyMap": ["HG-MECH-009"],
+      "sources": ["SCRIPT-v1 C1-S04-D001"]
+    },
+    {
+      "id": "P0-MEAS-003",
+      "family": "measurement",
+      "maturity": "MECHANISM",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S01"],
+      "surfaces": ["dialogue"],
+      "approvedWording": {
+        "zhHant": "別把死魚照片當成答案。這條河每次暴雨都有垃圾沖下來，來源可能不止一個。"
+      },
+      "limits": ["魚、氣味、油膜是觀察，不是污染證明"],
+      "forbiddenWording": ["死魚等於已確認毒物種類"],
+      "legacyMap": ["SIM-005"],
+      "sources": ["SCRIPT-v1 C1-S01-D003"]
+    },
+    {
+      "id": "P0-MEAS-004",
+      "family": "measurement",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved with limits",
+      "scenes": ["C1-S01"],
+      "surfaces": ["dialogue"],
+      "approvedWording": {
+        "zhHant": "市場有人說昨晚聞到金屬味，也有人只聞到柴油。我先把兩種說法都記下。"
+      },
+      "limits": ["傳聞不是分析", "不把金屬味寫成汞已確認"],
+      "forbiddenWording": ["汞", "Hg²⁺", "Hg++", "已確認是重金屬"],
+      "legacyMap": ["HG-MECH-009"],
+      "sources": ["SCRIPT-v1 C1-S01-D002"]
+    },
+    {
+      "id": "P0-MEAS-005",
+      "family": "measurement",
+      "maturity": "MECHANISM",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S06", "C1-S07"],
+      "surfaces": ["dialogue", "public_map"],
+      "approvedWording": {
+        "zhHant": "確認隊已封鎖舊閘後的來源區。物質身分和影響範圍由正式分析更新。"
+      },
+      "limits": ["c1.unresolved 必須包含 confirmation_result"],
+      "forbiddenWording": ["身分已由探頭確定"],
+      "legacyMap": ["ROLE-002", "HG-MECH-009"],
+      "sources": ["SCRIPT-v1 C1-S07-D002"]
+    },
+    {
+      "id": "P0-MEAS-006",
+      "family": "measurement",
+      "maturity": "TEACHING_SIMULATION",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["C1-S01", "C1-S03", "C1-S04"],
+      "surfaces": ["hud"],
+      "approvedWording": {
+        "zhHant": "低／中／高／波動。三角形越密，方向越接近。"
+      },
+      "limits": ["無真實單位", "密度是方向不是濃度"],
+      "forbiddenWording": ["準確濃度", "任意單位當真實校準"],
+      "legacyMap": ["SIM-002", "HG-MECH-006"],
+      "sources": ["SCRIPT-v1 C1-S01"]
+    },
+    {
+      "id": "P0-MEAS-007",
+      "family": "measurement",
+      "maturity": "TEACHING_SIMULATION",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved with limits",
+      "scenes": ["C1-S03"],
+      "surfaces": ["world", "hud"],
+      "approvedWording": {
+        "zhHant": "問號可以是中等、帶波動的輸出。"
+      },
+      "limits": ["波動教不確定性", "不是 replicate 研究", "不發明 n=3"],
+      "forbiddenWording": ["n=3 已達統計顯著", "必須是有或沒有"],
+      "legacyMap": ["SIM-002"],
+      "sources": ["SCRIPT-v1 C1-S03 unknown dock"]
+    },
+    {
+      "id": "P0-MEAS-008",
+      "family": "measurement",
+      "maturity": "MECHANISM",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S07"],
+      "surfaces": ["public_map"],
+      "hardGate": true,
+      "approvedWording": {
+        "zhHant": "篩查訊號不是污染物身分，也不是清理完成。"
+      },
+      "limits": ["以缺圖層呈現，不訓斥"],
+      "forbiddenWording": ["全河安全", "已完成清理", "證實污染"],
+      "legacyMap": ["HG-MECH-009", "COMM-001"],
+      "sources": ["SCRIPT-v1 C1-S07"]
+    },
+    {
+      "id": "P0-MEAS-009",
+      "family": "measurement",
+      "maturity": "TEACHING_SIMULATION",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["C1-S04"],
+      "surfaces": ["world"],
+      "approvedWording": {
+        "zhHant": "接受較寬範圍或走遠收窄，兩者皆可；只改變確認時間，不變分數。"
+      },
+      "limits": ["兩路皆通關"],
+      "forbiddenWording": ["較窄就是科學上更正確所以加分"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 C1-S04"]
+    },
+    {
+      "id": "P0-ROLE-001",
+      "family": "role",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S00", "HUB-S00"],
+      "surfaces": ["dialogue", "internal"],
+      "approvedWording": {
+        "zhHant": "玩家是澄灣研究站的系統跑手：追蹤、搬運、接駁、撤離，把完整裝置與路線帶回。"
+      },
+      "limits": ["不是監管、醫師、執法或診斷官員"],
+      "forbiddenWording": ["你已批准部署", "你已診斷污染", "你已下令清理"],
+      "legacyMap": ["ROLE-001"],
+      "sources": ["SCRIPT-v1 player bible", "SCRIPT-v1 C1-S00"]
+    },
+    {
+      "id": "P0-ROLE-002",
+      "family": "role",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S06"],
+      "surfaces": ["dialogue", "world"],
+      "approvedWording": {
+        "zhHant": "你們開門，我們送車。裡面由確認隊處理。"
+      },
+      "limits": ["玩家不接觸未知物", "正式結果由實驗室發布"],
+      "forbiddenWording": ["玩家進閘後採樣", "開殼"],
+      "legacyMap": ["ROLE-002", "SIM-004"],
+      "sources": ["SCRIPT-v1 C1-S06-D001"]
+    },
+    {
+      "id": "P0-ROLE-003",
+      "family": "role",
+      "maturity": null,
+      "presentation": "world_rule",
+      "status": "Approved",
+      "scenes": ["*"],
+      "surfaces": ["world"],
+      "approvedWording": {
+        "zhHant": "玩家永不採樣、診斷、執法或批准部署。"
+      },
+      "limits": ["硬規則"],
+      "forbiddenWording": ["採樣瓶", "診斷報告按鈕", "部署批准鈕"],
+      "legacyMap": ["ROLE-001", "ROLE-002"],
+      "sources": ["P0 contract", "SCRIPT-v1"]
+    },
+    {
+      "id": "P0-SAFE-001",
+      "family": "safety",
+      "maturity": "MECHANISM",
+      "presentation": "world_rule",
+      "status": "Approved",
+      "scenes": ["*"],
+      "surfaces": ["world", "internal"],
+      "approvedWording": {
+        "zhHant": "安全措施降低風險，不能保證零風險。"
+      },
+      "limits": ["用封閉殼、權限、停止鈕呈現", "不要 HUD 講課"],
+      "forbiddenWording": ["完全安全", "零風險", "科學證明安全"],
+      "legacyMap": ["SAFE-001"],
+      "sources": ["legacy SAFE-001", "SCRIPT-v1 copy guardrails"]
+    },
+    {
+      "id": "P0-SAFE-002",
+      "family": "safety",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "world_rule",
+      "status": "Approved",
+      "scenes": ["C1-S00", "C1-S03", "C1-S06"],
+      "surfaces": ["world"],
+      "approvedWording": {
+        "zhHant": "封閉探頭只在受控設備與外部接口維修；不開殼、不釋放活體。"
+      },
+      "limits": ["無濕實驗 how-to"],
+      "forbiddenWording": ["培養條件", "濃度配方", "序列", "環境釋放"],
+      "legacyMap": ["SAFE-001", "SIM-003"],
+      "sources": ["SCRIPT-v1 Sealed Bio-Rig"]
+    },
+    {
+      "id": "P0-SAFE-003",
+      "family": "safety",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S08"],
+      "surfaces": ["world", "save"],
+      "approvedWording": {
+        "zhHant": "通關不是可部署。第一章結束仍保留確認結果與長期監測未知。"
+      },
+      "limits": ["c1.unresolved 含 confirmation_result 與 long_term_monitoring"],
+      "forbiddenWording": ["遊戲通關即表示可現場部署"],
+      "legacyMap": ["SAFE-002"],
+      "sources": ["SCRIPT-v1 C1-S07 C1-S08"]
+    },
+    {
+      "id": "P0-SAFE-004",
+      "family": "safety",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved with limits",
+      "scenes": ["C1-S07", "C1-S08"],
+      "surfaces": ["world"],
+      "approvedWording": {
+        "zhHant": "兩種監測模型都有可看見的停止按鈕與公開更新板。"
+      },
+      "limits": ["停止權是試行條件"],
+      "forbiddenWording": ["居民無理取鬧", "把停止權藏起來"],
+      "legacyMap": ["COMM-002"],
+      "sources": ["SCRIPT-v1 C1-S08"]
+    },
+    {
+      "id": "P0-SAFE-005",
+      "family": "safety",
+      "maturity": null,
+      "presentation": "internal",
+      "status": "Approved",
+      "scenes": [],
+      "surfaces": ["internal"],
+      "approvedWording": {
+        "zhHant": "P0 不展開 biosecurity 或 dual-use 操作細節。"
+      },
+      "limits": ["C7 不在範圍", "高後果能力資料不出現"],
+      "forbiddenWording": ["可執行 misuse", "病原", "毒素", "危險序列"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 C7 not in P0", "legacy future dual-use note"]
+    },
+    {
+      "id": "P0-COMM-001",
+      "family": "communication",
+      "maturity": "TEACHING_SIMULATION",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S05", "C1-S07"],
+      "surfaces": ["public_map", "world"],
+      "approvedWording": {
+        "zhHant": "公開介面分開：目前看見、仍不知道、誰在確認、何時更新。"
+      },
+      "limits": ["少一項，陳姨試走就出現具體混亂"],
+      "forbiddenWording": ["只有標題紅色警報、無下一步"],
+      "legacyMap": ["COMM-001"],
+      "sources": ["SCRIPT-v1 C1-S05 public comms"]
+    },
+    {
+      "id": "P0-COMM-002",
+      "family": "communication",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S07"],
+      "surfaces": ["dialogue"],
+      "approvedWording": {
+        "zhHant": "我會報道工具幫忙縮小搜索區，也會把第一次失效和確認尚未完成放在同一頁。"
+      },
+      "limits": ["記者不是恐慌反派"],
+      "forbiddenWording": ["刪失效只留成功"],
+      "legacyMap": ["COMM-001", "SIM-005"],
+      "sources": ["SCRIPT-v1 C1-S07-D001"]
+    },
+    {
+      "id": "P0-COMM-003",
+      "family": "communication",
+      "maturity": "TEACHING_SIMULATION",
+      "presentation": "TEACHING_SIMULATION",
+      "status": "Approved",
+      "scenes": ["C1-S07"],
+      "surfaces": ["public_map"],
+      "approvedWording": {
+        "zhHant": "目前沒有資料圖層"
+      },
+      "limits": ["不訓斥", "不扣分", "不紅叉"],
+      "forbiddenWording": ["錯誤！你不該這樣主張"],
+      "legacyMap": ["COMM-001"],
+      "sources": ["SCRIPT-v1 C1-S07"]
+    },
+    {
+      "id": "P0-COMM-004",
+      "family": "communication",
+      "maturity": null,
+      "presentation": "hud_rule",
+      "status": "Approved",
+      "scenes": ["*"],
+      "surfaces": ["hud"],
+      "approvedWording": {
+        "zhHant": "任務句先有動詞和物件。限制用世界規則呈現。"
+      },
+      "limits": ["開發者腔不得進玩家 UI"],
+      "forbiddenWording": [
+        "完成這個練習不代表",
+        "完成練習不代表",
+        "本章涉及",
+        "這是教學故事",
+        "這不是指引"
+      ],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 appendix E"]
+    },
+    {
+      "id": "P0-HP-001",
+      "family": "human_practices",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S04", "C1-S05"],
+      "surfaces": ["dialogue", "world"],
+      "nameAfterAction": ["stakeholder"],
+      "approvedWording": {
+        "zhHant": "不是居民替我們選答案，是她知道地圖漏了甚麼。"
+      },
+      "limits": ["居民是 stakeholder", "兩個監測模型都合理"],
+      "forbiddenWording": ["無知", "反科學群眾"],
+      "legacyMap": ["COMM-002", "SIM-005"],
+      "sources": ["SCRIPT-v1 C1-S04-D004"]
+    },
+    {
+      "id": "P0-HP-002",
+      "family": "human_practices",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S05"],
+      "surfaces": ["world"],
+      "hardGate": true,
+      "approvedWording": {
+        "zhHant": "現在我看得見形狀、聽得到短聲，也知道去哪裡查更新。這才是一個可用的警報。"
+      },
+      "limits": ["必須改 output 且改 notification"],
+      "forbiddenWording": ["對話後原型不變"],
+      "legacyMap": ["COMM-001"],
+      "sources": ["SCRIPT-v1 C1-S05-D005"]
+    },
+    {
+      "id": "P0-HP-003",
+      "family": "human_practices",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved with limits",
+      "scenes": ["C1-S07"],
+      "surfaces": ["dialogue"],
+      "approvedWording": {
+        "zhHant": "公告上有時間、有下一步，也看得到誰能暫停設備。這次我願意讓試行繼續。"
+      },
+      "limits": [
+        "這是監測警報試行",
+        "不是批准環境釋放",
+        "不是終章 pilot／no-pilot"
+      ],
+      "forbiddenWording": ["居民已批准部署活體檢測器"],
+      "legacyMap": ["SAFE-002"],
+      "sources": ["SCRIPT-v1 C1-S07-D003"]
+    },
+    {
+      "id": "P0-HP-004",
+      "family": "human_practices",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S07", "C1-S08"],
+      "surfaces": ["world", "dialogue"],
+      "approvedWording": {
+        "zhHant": "固定站較重、連續供電、品質較一致；覆蓋少，單點故障影響較大。"
+      },
+      "limits": ["不是唯一正解"],
+      "forbiddenWording": ["固定站 100% 可靠", "完全安全"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 C1-S07 monitoring"]
+    },
+    {
+      "id": "P0-HP-005",
+      "family": "human_practices",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S07", "C1-S08"],
+      "surfaces": ["world", "dialogue"],
+      "approvedWording": {
+        "zhHant": "流動套件覆蓋多、可快速移動；需要充電、回收、版本和訓練。"
+      },
+      "limits": ["不是唯一正解"],
+      "forbiddenWording": ["流動套件已是現場確認工具"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 C1-S07 monitoring"]
+    },
+    {
+      "id": "P0-MON-001",
+      "family": "monitoring",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S07", "C1-S08", "HUB-S00"],
+      "surfaces": ["world"],
+      "approvedWording": {
+        "zhHant": "固定站與流動套件都是完整結局；河港與 Hub 遠景必須不同。"
+      },
+      "limits": ["兩者都保留停止鈕與更新板"],
+      "forbiddenWording": ["其中一路是失敗結局"],
+      "legacyMap": [],
+      "sources": ["SCRIPT-v1 C1-S07 C1-S08"]
+    },
+    {
+      "id": "P0-MON-002",
+      "family": "monitoring",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved",
+      "scenes": ["C1-S07", "C1-S08"],
+      "surfaces": ["save", "public_map"],
+      "approvedWording": {
+        "zhHant": "仍不知道：確認結果、長期監測。"
+      },
+      "limits": ["未知連到下一步，不是免責聲明"],
+      "forbiddenWording": ["河港問題已完全解決"],
+      "legacyMap": ["SAFE-002"],
+      "sources": ["SCRIPT-v1 c1.unresolved"]
+    },
+    {
+      "id": "P0-MON-003",
+      "family": "monitoring",
+      "maturity": "STORY_PROTOTYPE",
+      "presentation": "STORY_PROTOTYPE",
+      "status": "Approved with limits",
+      "scenes": ["C1-S08"],
+      "surfaces": ["dialogue"],
+      "approvedWording": {
+        "zhHant": "我們第一次出去想找一個紅點，最後帶回來的是一套會承認失效的方法。"
+      },
+      "limits": ["方法不是已驗證現場儀器"],
+      "forbiddenWording": ["我們已有可部署的確認方法"],
+      "legacyMap": ["SIM-003"],
+      "sources": ["SCRIPT-v1 C1-S08-D001"]
+    },
+    {
+      "id": "P0-NAMED-001",
+      "family": "named",
+      "maturity": null,
+      "presentation": "internal",
+      "status": "Approved",
+      "scenes": ["*"],
+      "surfaces": ["internal"],
+      "approvedWording": {
+        "zhHant": "主線與過關不要求 MerR、Pmer、dTomato 或任何專案專名。"
+      },
+      "limits": ["named cases 不是密碼"],
+      "forbiddenWording": ["MerR", "Pmer", "dTomato"],
+      "legacyMap": ["HG-MECH-001"],
+      "sources": ["SCRIPT-v1 opening science boundary"]
+    },
+    {
+      "id": "P0-NAMED-002",
+      "family": "named",
+      "maturity": null,
+      "presentation": "internal",
+      "status": "Approved",
+      "scenes": ["C1-S01"],
+      "surfaces": ["internal"],
+      "approvedWording": {
+        "zhHant": "P0 不把河港紅色訊號鑑定為汞。"
+      },
+      "limits": ["金屬味保持未證實觀察"],
+      "forbiddenWording": ["Hg²⁺", "Hg++", "汞檢測", "汞污染已確認"],
+      "legacyMap": ["HG-MECH-009"],
+      "sources": ["SCRIPT-v1 C1 has no mercury identity"]
+    },
+    {
+      "id": "P0-NAMED-003",
+      "family": "named",
+      "maturity": "TEAM_PROPOSAL",
+      "presentation": null,
+      "status": "Retired-P0-mainline",
+      "scenes": [],
+      "surfaces": [],
+      "approvedWording": { "zhHant": "" },
+      "limits": ["舊兩轉錄單元提案不得標成玩家手上的探頭"],
+      "forbiddenWording": ["團隊已建立可工作的汞感測器", "此探頭即 Pconst-merR + Pmer-dTomato"],
+      "legacyMap": ["HG-TEAM-001", "HG-TEAM-002", "HG-TEAM-003"],
+      "sources": ["legacy TEAM-PDF-2026-INTRO p.1-2"]
+    },
+    {
+      "id": "P0-NAMED-004",
+      "family": "named",
+      "maturity": "MECHANISM",
+      "presentation": null,
+      "status": "Retired-P0-mainline",
+      "scenes": [],
+      "surfaces": ["internal"],
+      "approvedWording": { "zhHant": "" },
+      "limits": [
+        "舊 MerR 機制句可留在團隊內部檔",
+        "不進 P0 玩家 UI",
+        "未來可選 Codex 須另簽且不得當密碼、不得給未提供的 spacer 或性能數字"
+      ],
+      "forbiddenWording": ["MerR 在所有系統都像普通開關", "完全沒有 dTomato"],
+      "legacyMap": ["HG-MECH-001", "HG-MECH-002", "HG-MECH-003", "HG-MECH-004", "HG-MECH-005", "HG-MECH-006"],
+      "sources": ["legacy EXT-MERR-1990", "legacy EXT-MERR-REVIEW-2022"]
+    },
+    {
+      "id": "P0-NAMED-005",
+      "family": "named",
+      "maturity": "TEAM_DATA",
+      "presentation": null,
+      "status": "NOT_APPROVED",
+      "scenes": [],
+      "surfaces": [],
+      "approvedWording": { "zhHant": "" },
+      "limits": ["無數據包"],
+      "forbiddenWording": ["detects low levels", "rapid", "accurate", "selective", "real-world ready"],
+      "legacyMap": ["HG-TEAM-004", "HG-TEAM-005", "HG-MECH-007"],
+      "sources": []
+    },
+    {
+      "id": "P0-APT-001",
+      "family": "aptamer",
+      "maturity": "TEAM_PROPOSAL",
+      "presentation": null,
+      "status": "NOT_APPROVED",
+      "scenes": [],
+      "surfaces": [],
+      "approvedWording": { "zhHant": "" },
+      "limits": ["expression platform 未定義"],
+      "forbiddenWording": ["aptamer", "riboswitch", "hairpin blocks transcription"],
+      "legacyMap": ["APT-004", "APT-005", "APT-006"],
+      "sources": ["legacy TEAM-PDF p.4-5", "EXT-RIBOSWITCH-2013"]
+    },
+    {
+      "id": "P0-BLOCK-001",
+      "family": "blocked",
+      "maturity": null,
+      "presentation": null,
+      "status": "NOT_APPROVED",
+      "scenes": [],
+      "surfaces": [],
+      "approvedWording": { "zhHant": "" },
+      "limits": ["成效需要本遊戲自己的測試與具名簽核"],
+      "forbiddenWording": ["本遊戲已證明能教會所有零背景玩家"],
+      "legacyMap": ["EDU-DESIGN-001"],
+      "sources": ["legacy EDU-WWC-2007 note: design rationale ≠ proven efficacy"]
+    },
+    {
+      "id": "P0-BLOCK-002",
+      "family": "blocked",
+      "maturity": null,
+      "presentation": null,
+      "status": "NOT_APPROVED",
+      "scenes": [],
+      "surfaces": [],
+      "approvedWording": { "zhHant": "" },
+      "limits": [],
+      "forbiddenWording": ["即時檢測", "已驗證", "可部署", "準確濃度", "高度靈敏", "高度選擇性", "field-ready"],
+      "legacyMap": ["HG-TEAM-005"],
+      "sources": []
+    },
+    {
+      "id": "P0-BLOCK-003",
+      "family": "blocked",
+      "maturity": null,
+      "presentation": null,
+      "status": "NOT_APPROVED",
+      "scenes": [],
+      "surfaces": [],
+      "approvedWording": { "zhHant": "" },
+      "limits": [],
+      "forbiddenWording": ["證實污染", "批准清理", "宣布全河安全", "玩家證實"],
+      "legacyMap": ["HG-MECH-009", "ROLE-002"],
+      "sources": []
+    }
+  ],
+  "bannedPhrases": {
+    "certaintyAndSafety": [
+      "完全安全",
+      "零風險",
+      "必定",
+      "科學證明安全",
+      "沒有任何風險",
+      "保證安全",
+      "100%準確",
+      "100% 準確",
+      "100% 安全"
+    ],
+    "identityDeploymentPerformance": [
+      "證實污染",
+      "確認污染",
+      "已確認河水受污染",
+      "即時檢測",
+      "準確濃度",
+      "高度靈敏",
+      "高度選擇性",
+      "可現場部署",
+      "批准部署",
+      "已完成清理",
+      "全河安全",
+      "field-ready",
+      "real-world ready",
+      "已校準"
+    ],
+    "performanceEnglishAsClaim": ["works", "validated", "proven"],
+    "mechanismOverclaim": [
+      "完全沒有轉錄",
+      "完全沒有表達",
+      "DNA 變成 RNA",
+      "RNA 變成 protein",
+      "亮度就是方向",
+      "紅色越亮等於濃度"
+    ],
+    "namedPartPasswords": [
+      "MerR",
+      "Pmer",
+      "dTomato",
+      "Hg²⁺",
+      "Hg2+",
+      "Hg++",
+      "汞檢測",
+      "aptamer"
+    ],
+    "developerVoice": [
+      "完成練習不代表",
+      "完成這個練習不代表",
+      "本章涉及",
+      "這是教學故事",
+      "這不是指引",
+      "太棒了！你理解了"
+    ],
+    "authorityTheft": [
+      "你已診斷",
+      "你已執法",
+      "你已批准清理",
+      "你已批准部署",
+      "玩家證實"
+    ]
+  },
+  "lint": {
+    "cannotReplaceHumanReview": true,
+    "playerSurfaces": ["hud", "dialogue", "codex", "public_map", "world"],
+    "rules": [
+      {
+        "id": "LINT-001",
+        "if": "player-facing text matches bannedPhrases",
+        "then": "fail"
+      },
+      {
+        "id": "LINT-002",
+        "if": "number plus scientific unit without claimId and source",
+        "then": "fail"
+      },
+      {
+        "id": "LINT-003",
+        "if": "TEAM_DATA tag without signed data package",
+        "then": "fail"
+      },
+      {
+        "id": "LINT-004",
+        "if": "meter or exportable chart missing teaching-simulation relative state",
+        "then": "fail"
+      },
+      {
+        "id": "LINT-005",
+        "if": "aptamer or riboswitch on player surface",
+        "then": "fail"
+      },
+      {
+        "id": "LINT-006",
+        "if": "MerR or Pmer or dTomato used as gate or probe identity",
+        "then": "fail"
+      },
+      {
+        "id": "LINT-007",
+        "if": "unknown dock usable while positive control failed",
+        "then": "fail"
+      },
+      {
+        "id": "LINT-008",
+        "if": "public map can publish 全河安全 or 已完成清理",
+        "then": "fail"
+      },
+      {
+        "id": "LINT-009",
+        "if": "reporter is color-only",
+        "then": "fail"
+      },
+      {
+        "id": "LINT-010",
+        "if": "developer-voice phrase on hud or task line",
+        "then": "fail"
+      },
+      {
+        "id": "LINT-011",
+        "if": "mechanism sentence says 沒有訊號 instead of 低輸出",
+        "then": "review"
+      },
+      {
+        "id": "LINT-012",
+        "if": "post-repair UI contains 100%",
+        "then": "fail"
+      },
+      {
+        "id": "LINT-013",
+        "if": "workshop skip shows qualification warning or blocks C1",
+        "then": "fail"
+      },
+      {
+        "id": "LINT-014",
+        "if": "scientific claim sentence not in this file",
+        "then": "fail-or-hold-for-pi"
+      }
+    ]
+  },
+  "readoutWatermark": {
+    "when": "still-image-or-export-could-be-mistaken-for-lab-data",
+    "zhHant": "教學模擬",
+    "placement": "on-that-readout-only",
+    "not": "chapter-lecture-or-boot-disclaimer"
+  },
+  "qaBehavioralEvidence": {
+    "notPlayerBadges": true,
+    "flags": [
+      {
+        "path": "evidence.controlRunBeforeClaim",
+        "pass": "Unknown stayed locked until moon+sun valid"
+      },
+      {
+        "path": "evidence.failedRunRetained",
+        "pass": "First saturated run remains in history and on the wall"
+      },
+      {
+        "path": "evidence.userFeedbackChangedPrototype",
+        "pass": "Chen walk wrote shape_audio and municipal_update_with_timestamp"
+      },
+      {
+        "path": "evidence.claimMatchesObservedRange",
+        "pass": "Public map has no safe-river or cleanup layer"
+      }
+    ]
+  },
+  "sceneIndex": {
+    "BOOT-S00": ["P0-COMM-004", "P0-NAMED-001"],
+    "HUB-S00": ["P0-RULE-010", "P0-ROLE-001", "P0-MON-001"],
+    "P-S00": [],
+    "P-S01": [],
+    "P-S02": ["P0-SYS-006", "P0-SYS-008"],
+    "P-S03": [],
+    "P-S04": [],
+    "P-S05": [],
+    "P-S06": [],
+    "W-S00": ["P0-BIO-001", "P0-BIO-002", "P0-BIO-003", "P0-BIO-008"],
+    "W-S01": ["P0-BIO-002", "P0-BIO-004"],
+    "W-S02": ["P0-BIO-005", "P0-BIO-006", "P0-BIO-007"],
+    "W-S03": ["P0-SYS-001", "P0-SYS-002", "P0-SYS-003", "P0-SYS-004"],
+    "W-S04": ["P0-CTRL-001", "P0-CTRL-002", "P0-CTRL-003", "P0-RULE-002"],
+    "W-S05": ["P0-BIO-009", "P0-BIO-010"],
+    "C1-S00": ["P0-SYS-007", "P0-MEAS-001", "P0-ROLE-001", "P0-SAFE-002"],
+    "C1-S01": ["P0-SYS-004", "P0-SYS-006", "P0-MEAS-003", "P0-MEAS-004", "P0-MEAS-006"],
+    "C1-S02": ["P0-CTRL-005", "P0-CTRL-006"],
+    "C1-S03": ["P0-CTRL-001", "P0-CTRL-002", "P0-CTRL-003", "P0-CTRL-004", "P0-CTRL-006", "P0-CTRL-007", "P0-MEAS-007"],
+    "C1-S04": ["P0-MEAS-002", "P0-MEAS-009", "P0-HP-001"],
+    "C1-S05": ["P0-SYS-005", "P0-COMM-001", "P0-HP-002"],
+    "C1-S06": ["P0-SYS-006", "P0-ROLE-002", "P0-MEAS-005"],
+    "C1-S07": ["P0-MEAS-005", "P0-MEAS-008", "P0-COMM-001", "P0-COMM-002", "P0-COMM-003", "P0-HP-003", "P0-HP-004", "P0-HP-005", "P0-MON-001"],
+    "C1-S08": ["P0-CTRL-006", "P0-MON-002", "P0-MON-003", "P0-SAFE-003", "P0-SAFE-004"],
+    "C2-STUB": []
+  },
+  "legacyDisposition": {
+    "BIO-FOUND-001": "adapted-as-P0-BIO-001-model-only-bacteria-vs-human-not-a-gate",
+    "BIO-FOUND-002": "adapted-as-P0-BIO-002-P0-BIO-003",
+    "BIO-FOUND-003": "adapted-as-P0-BIO-004-P0-BIO-005-P0-BIO-006",
+    "BIO-FOUND-004": "light-touch-via-P0-SYS-002-not-three-part-construct-password",
+    "HG-MECH-001-to-006": "Retired-P0-mainline-internal-only",
+    "HG-MECH-007": "NOT_APPROVED-no-team-data",
+    "HG-MECH-008": "adapted-as-P0-CTRL-family-without-mercury",
+    "HG-MECH-009": "adapted-as-P0-MEAS-001-and-P0-MEAS-008-without-mercury-hud",
+    "HG-TEAM-001-to-005": "not-player-facing",
+    "APT-004": "NOT_APPROVED",
+    "SAFE-001": "adapted-as-P0-SAFE-001-world-rule-not-hud-lecture",
+    "SAFE-002": "adapted-as-P0-SAFE-003",
+    "ROLE-001-002": "adapted-as-P0-ROLE-family-systems-runner",
+    "COMM-001-002": "adapted-as-P0-COMM-and-P0-HP",
+    "SIM-001-to-005": "adapted-as-P0-LAYER-002-and-measurement-family",
+    "science.limit.notMeasurement": "do-not-paste-mercury-disclaimer-into-P0-hud"
+  },
+  "outOfScopeChapters": ["C2", "C3", "C4", "C5", "C6", "C7", "FINAL"],
+  "gaps": [
+    "No named Science/Safety signature; this file is PI implementation wording, not a public-release stamp",
+    "No team data package",
+    "Optional named-case Codex not included in P0",
+    "Aptamer route remains NOT_APPROVED",
+    "replicate, played biosafety-vs-biosecurity, and final pilot are out of P0",
+    "English locale is not signed; enInternal is implementer gloss only"
+  ]
+}

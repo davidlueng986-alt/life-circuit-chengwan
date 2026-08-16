@@ -1,0 +1,20 @@
+# Workers static-assets custom headers.
+# https://developers.cloudflare.com/workers/static-assets/headers/
+# Applies to asset responses only. /health headers are set in src/worker.ts.
+# `/` does not match SPA fallbacks such as /hub; `/*` does.
+
+/*
+  Cache-Control: no-cache
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; child-src 'self' blob:; img-src 'self' data: blob:; media-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';
+
+/index.html
+  Cache-Control: no-cache
+
+# Detach the /* no-cache value, then set hashed-file cache (joined headers otherwise).
+/assets/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31556952, immutable

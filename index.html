@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>生命迴路：澄灣</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="world" aria-label="澄灣三維場景"></canvas>
+
+      <div id="hud" hidden>
+        <div id="help-card">
+          <p class="help-title">操作（不會鎖滑鼠）</p>
+          <p><kbd>W A S D</kbd> 走路　或點左下螢幕按鈕　<kbd>按住左鍵拖曳</kbd> 轉頭</p>
+          <p><kbd>E</kbd> 互動／繼續對白　<kbd>Q</kbd> 掃描　<kbd>F</kbd> 抓取　<kbd>C</kbd> 詞彙卡</p>
+          <p class="help-soft">地上發光環＋名稱＝可以互動。橙燈／光柱＝說話的人。對白按「繼續」。觸控可直接點按鈕。</p>
+        </div>
+        <div id="crosshair" aria-hidden="true"></div>
+        <div id="nav-cluster">
+          <div id="minimap" aria-label="現場簡圖">
+            <canvas id="minimap-draw" width="168" height="168"></canvas>
+            <p id="minimap-caption">簡圖 · 橙三角＝目標</p>
+          </div>
+          <div id="compass" aria-hidden="true">
+            <span class="cmp-n">北</span>
+            <span class="cmp-e">東</span>
+            <span class="cmp-s">南</span>
+            <span class="cmp-w">西</span>
+            <b id="compass-needle">▲</b>
+          </div>
+          <p id="objective-chip"></p>
+          <p id="speaker-chip" hidden></p>
+          <p id="relaxed-badge">寬鬆時間 · 沒有倒數壓力</p>
+        </div>
+        <div id="scan-veil" hidden>
+          <p id="scan-title">掃描中</p>
+          <p id="scan-sub">地上光環＋名稱＝可互動。對準後放開 Q 放出脈衝。</p>
+        </div>
+        <h1 id="task-line" class="hud-task" aria-live="polite"></h1>
+        <div id="tool-cluster">
+          <div
+            id="lens-battery"
+            hidden
+            role="meter"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="100"
+            aria-label="透鏡電量"
+          ></div>
+          <div id="rig-output" hidden>
+            <span id="rig-triangle"><i id="rig-fill"></i></span>
+            <span class="rig-caption">探頭方向</span>
+          </div>
+          <div
+            id="storm-clock"
+            hidden
+            role="meter"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="100"
+            aria-label="水位線"
+          ></div>
+          <dl id="hud-legend">
+            <div><dt class="lg-amber"></dt><dd>透鏡電量（環越滿越多）</dd></div>
+            <div><dt class="lg-tri"></dt><dd>探頭方向（三角越高越近）</dd></div>
+            <div><dt class="lg-ring"></dt><dd>地上光環＋名稱＝可互動</dd></div>
+            <div><dt class="lg-sos"></dt><dd>橙燈＝控制室／說話的人</dd></div>
+          </dl>
+        </div>
+        <p id="interact-prompt" hidden>
+          <kbd id="interact-bind">E</kbd>
+          <span id="interact-verb"></span>
+          <span id="interact-stack" hidden></span>
+          <span id="interact-hold" hidden></span>
+        </p>
+        <ul id="interact-list" hidden></ul>
+        <div id="recover-veil" hidden></div>
+        <aside id="dialogue" aria-live="polite" aria-atomic="true" hidden>
+          <p id="dialogue-chip" hidden></p>
+          <div class="dialogue-row">
+            <img id="dialogue-face" alt="" hidden width="88" height="88" />
+            <div class="dialogue-main">
+              <p class="dialogue-speaker">
+                <span class="radio-glyph" hidden aria-hidden="true"></span>
+                <span class="speaker-name"></span>
+              </p>
+              <p class="dialogue-line" data-line-id=""></p>
+              <p id="dialogue-gloss" hidden></p>
+            </div>
+          </div>
+          <div id="dialogue-dots" aria-hidden="true"></div>
+          <button type="button" id="dialogue-next">繼續 · E</button>
+        </aside>
+        <div id="touch-pad" aria-label="螢幕操作">
+          <div class="pad-move">
+            <button type="button" data-move="w">W 前</button>
+            <button type="button" data-move="a">A 左</button>
+            <button type="button" data-move="s">S 後</button>
+            <button type="button" data-move="d">D 右</button>
+          </div>
+          <div class="pad-look">
+            <button type="button" data-look="up">抬頭</button>
+            <button type="button" data-look="left">左轉</button>
+            <button type="button" data-look="right">右轉</button>
+            <button type="button" data-look="down">低頭</button>
+          </div>
+          <div class="pad-acts">
+            <button type="button" data-act="go" class="btn-play">朝黃線走</button>
+            <button type="button" data-act="e">E 互動</button>
+            <button type="button" data-act="q">Q 掃描</button>
+            <button type="button" data-act="f">F 抓取</button>
+          </div>
+        </div>
+        <section id="workbench" hidden>
+          <h2 id="workbench-title"></h2>
+          <div id="workbench-body"></div>
+        </section>
+        <aside id="recap" hidden>
+          <ul id="recap-list"></ul>
+        </aside>
+        <p id="title-card" hidden>生命迴路：澄灣</p>
+        <p id="hud-live" class="visually-hidden" aria-live="polite"></p>
+      </div>
+
+      <div id="title-screen">
+        <div class="title-sky" aria-hidden="true"></div>
+        <div class="title-hero" aria-hidden="true"></div>
+        <div class="title-plate">
+          <p class="title-kicker">iGEM 教育冒險 · 澄灣研究站</p>
+          <div class="title-logo" aria-hidden="true"></div>
+          <h1 class="title-name" id="title-name">生命迴路：澄灣</h1>
+          <p class="title-logline">暴風雨夜，沿著橙燈走到控制室。地上發光環＝可互動。沒有測驗倒數，滑鼠也不會被鎖住。</p>
+          <p id="title-corrupt" hidden></p>
+          <nav class="title-nav" aria-label="標題">
+            <button type="button" id="btn-new" class="btn-play">開始冒險</button>
+            <button type="button" id="btn-continue" class="btn-continue" disabled>繼續上次</button>
+            <button type="button" id="btn-settings" class="btn-ghost">設定 · 寬鬆時間已開</button>
+          </nav>
+          <p class="title-hint">WASD 走路 · 按住左鍵拖曳轉頭 · E 互動。寬鬆時間與可互動列表預設開啟。</p>
+        </div>
+      </div>
+
+      <nav id="debug-select" hidden aria-label="除錯場景"></nav>
+
+      <dialog id="pause" aria-labelledby="pause-title">
+        <h2 id="pause-title">暫停</h2>
+        <button type="button" id="pause-resume" class="btn-play">繼續</button>
+        <button type="button" id="pause-settings" class="btn-ghost">設定</button>
+        <button type="button" id="pause-codex">詞彙對照卡</button>
+        <button type="button" id="pause-leave-workshop" hidden>離開工作坊</button>
+        <button type="button" id="pause-hub" hidden>回到研究站</button>
+        <button type="button" id="pause-title-btn">回到標題</button>
+      </dialog>
+
+      <dialog id="settings" aria-labelledby="settings-title">
+        <h2 id="settings-title">設定</h2>
+        <label class="set-row">
+          <span>寬鬆時間</span>
+          <input type="checkbox" id="set-relaxed" checked />
+        </label>
+        <label class="set-row">
+          <span>減少動態</span>
+          <input type="checkbox" id="set-motion" />
+        </label>
+        <label class="set-row">
+          <span>點按代替長按</span>
+          <input type="checkbox" id="set-hold" />
+        </label>
+        <label class="set-row">
+          <span>震動</span>
+          <input type="checkbox" id="set-vibrate" checked />
+        </label>
+        <label class="set-row">
+          <span>高對比</span>
+          <input type="checkbox" id="set-contrast" />
+        </label>
+        <label class="set-row">
+          <span>列出可互動物件</span>
+          <input type="checkbox" id="set-list" checked />
+        </label>
+        <label class="set-row">
+          <span>字幕大小 <em id="set-sub-label">標準</em></span>
+          <input type="range" id="set-sub" min="1" max="2" step="0.25" value="1" />
+        </label>
+        <label class="set-row">
+          <span>介面文字</span>
+          <input type="range" id="set-ui" min="1" max="2" step="0.25" value="1" />
+        </label>
+        <label class="set-row">
+          <span>視野</span>
+          <input type="range" id="set-fov" min="50" max="90" step="1" value="62" />
+        </label>
+        <button type="button" id="settings-close">關閉</button>
+      </dialog>
+
+      <dialog id="codex" aria-labelledby="codex-title">
+        <h2 id="codex-title">詞彙</h2>
+        <ul id="codex-list"></ul>
+        <button type="button" id="codex-close">關閉</button>
+      </dialog>
+
+      <dialog id="confirm-new" aria-labelledby="confirm-title">
+        <h2 id="confirm-title">重新開始</h2>
+        <p>會覆蓋本機進度。確定？</p>
+        <button type="button" id="confirm-yes">確定</button>
+        <button type="button" id="confirm-no">返回</button>
+      </dialog>
+
+      <dialog id="webgl-fail" aria-labelledby="webgl-fail-title">
+        <h2 id="webgl-fail-title">無法啟動 3D</h2>
+        <p>這個瀏覽器沒有可用的立體畫面。可改用其他瀏覽器，或檢查硬體加速。</p>
+        <button type="button" id="webgl-settings">設定</button>
+        <button type="button" id="webgl-retry">重試</button>
+      </dialog>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

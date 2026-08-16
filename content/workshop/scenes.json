@@ -1,0 +1,79 @@
+{
+  "authority": "Life_Circuit_Chengwan_Full_Game_Script_v1",
+  "locale": "zh-Hant",
+  "chapter": "workshop",
+  "name": { "zhHant": "微觀工作坊" },
+  "optional": true,
+  "qualificationGate": false,
+  "skipWarning": false,
+  "leave": {
+    "anySafePad": true,
+    "resumeField": "workshop.resumeScene",
+    "completeOnlyOn": "W-S05"
+  },
+  "science": {
+    "presentation": "teaching_simulation",
+    "transcription": "copy-not-consume",
+    "translation": "protein-fits-lock-rna-does-not",
+    "failedPositiveBlocksUnknown": true,
+    "nameAfterAction": true,
+    "noPartPassword": ["MerR", "Pmer", "dTomato"],
+    "playerNever": ["sample", "diagnose", "enforce", "approve-deployment"]
+  },
+  "scenes": [
+    {
+      "id": "W-S00",
+      "name": "放大一萬倍",
+      "space": "ws.scale_well",
+      "next": "W-S01",
+      "gate": "aim-cell-then-dna-then-gene",
+      "lines": ["W-S00-D001", "W-S00-D002", "W-S00-D003"],
+      "codexAfter": ["cell", "dnaGene"]
+    },
+    {
+      "id": "W-S01",
+      "name": "保留下來的軌道",
+      "space": "ws.reader_bench",
+      "next": "W-S02",
+      "gate": "seat-rna-copy-dna-stays",
+      "lines": ["W-S01-D001", "W-S01-D002", "W-S01-D003"],
+      "codexAfter": ["transcription"]
+    },
+    {
+      "id": "W-S02",
+      "name": "會折起來的產物",
+      "space": "ws.fold_ring",
+      "next": "W-S03",
+      "gate": "protein-turns-lock",
+      "lines": ["W-S02-D001", "W-S02-D002", "W-S02-D003"],
+      "codexAfter": ["translation"]
+    },
+    {
+      "id": "W-S03",
+      "name": "閘門與報告燈",
+      "space": "ws.smoke_hall",
+      "next": "W-S04",
+      "gate": "dark-run-then-smoke-trace-then-flag",
+      "lines": ["W-S03-D001", "W-S03-D002", "W-S03-D003"],
+      "codexAfter": ["input", "regulator", "promoter", "reporter", "output"]
+    },
+    {
+      "id": "W-S04",
+      "name": "先測設備",
+      "space": "ws.ref_lanes",
+      "next": "W-S05",
+      "gate": "valid-moon-sun-before-unknown",
+      "lines": ["W-S04-D001", "W-S04-D002", "W-S04-D003", "W-S04-D004"],
+      "codexAfter": ["controls", "validRun"]
+    },
+    {
+      "id": "W-S05",
+      "name": "你剛才做的循環",
+      "space": "ws.shrink_desk",
+      "next": "HUB-S00",
+      "gate": "watch-replay-walk-hub",
+      "lines": ["W-S05-D001", "W-S05-D002", "W-S05-D003"],
+      "persist": ["workshop.complete"]
+    }
+  ]
+}

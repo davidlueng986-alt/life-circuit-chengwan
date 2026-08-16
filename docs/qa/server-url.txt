@@ -1,0 +1,23 @@
+http://127.0.0.1:8787
+
+# Local deploy-parity origin (wrangler dev, not vite).
+# date: 2026-08-15
+# command: npx wrangler dev --port 8787 --ip 127.0.0.1
+# wrangler: 4.123.0
+# workerd: local assets + src/worker.ts
+# live_deploy_requested: false
+
+GET /        200 text/html; charset=utf-8  Cache-Control: no-cache
+             title=生命迴路：澄灣  #world  #title-screen  #btn-new
+             script=./assets/index-CMSfCCzy.js  css=./assets/index-DxyTvIel.css
+GET /health  200 application/json; charset=utf-8  Cache-Control: no-store
+             {"ok":true,"service":"life-circuit-chengwan","gameState":false}
+GET /hub     200 text/html (SPA fallback, same ETag as /)  Cache-Control: no-cache
+GET /assets/index-CMSfCCzy.js   200 text/javascript  Cache-Control: public, max-age=31556952, immutable
+GET /assets/index-DxyTvIel.css  200 text/css         Cache-Control: public, max-age=31556952, immutable
+GET /favicon.svg                200 image/svg+xml    Cache-Control: no-cache
+
+Health + HTML CSP: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:
+COOP/COEP: off
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
