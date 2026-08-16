@@ -4,6 +4,7 @@ import { P_LINE } from "../../content/prologue/ids";
 import { P05_LAYOUT as L } from "../../content/prologue/layout";
 import { P05 } from "../../content/prologue/script";
 import { addSolidBox, boxMesh } from "../../engine/greybox";
+import { addVoxelFloor, addVoxelVolume } from "../../engine/voxels";
 import type { Aabb } from "../../engine/collision";
 import type { GameScene } from "../types";
 import {
@@ -40,10 +41,10 @@ export function createEvacRun(): GameScene {
       voice.startRumble();
       voice.setLayers(3);
 
-      addSolidBox(ctx.root, ctx.world, 4.2, 0.4, 6.4, 0x2a3036, 0, -0.2, 9.2);
-      addSolidBox(ctx.root, ctx.world, 3.4, 0.4, 18.4, 0x2a3036, L.corridorMouth.x, -0.2, -1.4);
-      addSolidBox(ctx.root, ctx.world, 0.24, 2.3, 18.4, 0x1a2127, L.corridorMouth.x - 1.75, 1.05, -1.4);
-      addSolidBox(ctx.root, ctx.world, 0.24, 2.3, 18.4, 0x1a2127, L.corridorMouth.x + 1.75, 1.05, -1.4);
+      addVoxelFloor(ctx.root, ctx.world, 4.2, 6.4, 0x2a3036, 0, 9.2);
+      addVoxelFloor(ctx.root, ctx.world, 3.4, 18.4, 0x2a3036, L.corridorMouth.x, -1.4);
+      addVoxelVolume(ctx.root, ctx.world, 0.24, 2.3, 18.4, 0x1a2127, L.corridorMouth.x - 1.75, 1.05, -1.4);
+      addVoxelVolume(ctx.root, ctx.world, 0.24, 2.3, 18.4, 0x1a2127, L.corridorMouth.x + 1.75, 1.05, -1.4);
       addSolidBox(ctx.root, ctx.world, 2.2, 0.12, 0.7, 0x6a6560, -0.2, 0.55, 5.7);
       const lifted = boxMesh(1.15, 0.12, 0.7, 0x8a8f86, -0.15, 0.72, 5.65);
       lifted.rotation.x = 0.62;
@@ -168,13 +169,18 @@ export function createEvacRun(): GameScene {
         ctx.hud.setTask(TASK["P-S05-run"] ?? "");
       }
 
-      if (raising) {
+      const liftFocus = ctx.interact.focused?.id === "lift";
+      const holdingLift = liftFocus && (ctx.input.interactHeld || ctx.interact.hold01 > 0);
+      if (leverSeated && holdingLift) raising = true;
+      if (raising && holdingLift) {
         raiseT += dt;
         if (xiaocen) xiaocen.position.y = THREE.MathUtils.lerp(L.xiaocen.y, 0.05, Math.min(1, raiseT / 1.6));
         if (raiseT > 1.7 && flags.take("up")) {
           ctx.say(P_LINE.nowRun);
           ctx.completeAndGo();
         }
+      } else if (raising && !holdingLift && raiseT > 0.05 && raiseT < 1.7 && flags.take("lift-pause")) {
+        ctx.hud.announce("還要按住。小岑停在半空，再按一次。");
       }
     },
     unmount() {

@@ -11,7 +11,10 @@ const TINT: Record<NpcKind, { shell: number; strap: number }> = {
   generic: { shell: 0x3a444c, strap: 0xe0a03a },
 };
 
-/** Same skeleton as the player runner; swap colours only. */
+const SHIRT = 0x3d5c58;
+const STRAP = 0xe0a03a;
+
+/** Same Steve skeleton as the player; recolour shirt + strap only. */
 export function createNpc(kind: NpcKind, sit = false): THREE.Group {
   const root = createRunnerAvatar();
   root.name = `npc-${kind}`;
@@ -20,14 +23,16 @@ export function createNpc(kind: NpcKind, sit = false): THREE.Group {
     if (!(child instanceof THREE.Mesh)) return;
     const mat = child.material;
     if (!(mat instanceof THREE.MeshStandardMaterial)) return;
-    if (child.name.startsWith("leg") || child.name === "hip") return;
-    if (child.name.startsWith("arm")) return;
-    if (mat.emissive.getHex() > 0 && mat.color.getHex() === 0xe0a03a) {
-      mat.color.setHex(tint.strap);
-      mat.emissive.setHex(tint.strap);
+    const hex = mat.color.getHex();
+    if (hex === SHIRT) {
+      mat.color.setHex(tint.shell);
       return;
     }
-    if (child.geometry instanceof THREE.CapsuleGeometry) mat.color.setHex(tint.shell);
+    if (hex === STRAP || child.name === "strap") {
+      mat.color.setHex(tint.strap);
+      mat.emissive.setHex(tint.strap);
+      mat.emissiveIntensity = Math.max(mat.emissiveIntensity, 0.35);
+    }
   });
   if (sit) {
     root.rotation.x = 0.28;

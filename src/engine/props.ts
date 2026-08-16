@@ -167,6 +167,179 @@ export function citySkyline(z = -22): THREE.Group {
   return group;
 }
 
+/** Quest prop: wall-mounted hook gun. Only this (not the wall) is the pretty mesh. */
+export function tetherHolster(): THREE.Group {
+  const group = new THREE.Group();
+  group.name = "tether-holster";
+  const plate = boxMesh(0.08, 1.05, 0.62, 0x2a3238, 0.12, 0, 0);
+  const body = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.09, 0.12, 0.72, 12),
+    surf(0x8fd4cf, { metalness: 0.42, roughness: 0.28, emissive: 0x3a8884, emissiveIntensity: 0.85 }),
+  );
+  body.rotation.z = Math.PI / 2;
+  body.position.set(-0.18, 0.1, 0);
+  const muzzle = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.05, 0.07, 0.16, 10),
+    surf(0xe0a03a, { metalness: 0.45, roughness: 0.28, emissive: 0xc9861a, emissiveIntensity: 0.7 }),
+  );
+  muzzle.rotation.z = Math.PI / 2;
+  muzzle.position.set(-0.58, 0.1, 0);
+  const hook = new THREE.Mesh(
+    new THREE.TorusGeometry(0.16, 0.038, 8, 16, Math.PI * 1.15),
+    surf(0xffc14a, { metalness: 0.5, roughness: 0.24, emissive: 0xc9861a, emissiveIntensity: 0.8 }),
+  );
+  hook.position.set(-0.72, 0.1, 0);
+  hook.rotation.y = Math.PI / 2;
+  const grip = boxMesh(0.08, 0.28, 0.1, 0x2a241c, -0.02, -0.22, 0);
+  const lamp = playPoint(0x8fd4cf, 1.6, 4.5, 1.2);
+  lamp.position.set(-0.4, 0.18, 0.1);
+  const halo = new THREE.Mesh(
+    new THREE.TorusGeometry(0.42, 0.035, 8, 20),
+    new THREE.MeshBasicMaterial({
+      color: 0x8fd4cf,
+      transparent: true,
+      opacity: 0.85,
+      depthWrite: false,
+      fog: false,
+      toneMapped: false,
+    }),
+  );
+  halo.rotation.y = Math.PI / 2;
+  halo.position.set(-0.05, 0.08, 0);
+  group.add(plate, body, muzzle, hook, grip, lamp, halo);
+  return group;
+}
+
+export function heroLens(): THREE.Group {
+  const group = new THREE.Group();
+  group.name = "hero-lens";
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(0.42, 0.12, 0.56),
+    surf(0xc9861a, { roughness: 0.32, metalness: 0.28, emissive: 0xffb020, emissiveIntensity: 1.05 }),
+  );
+  const glass = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.13, 0.13, 0.05, 18),
+    surf(0x7ec8c3, { roughness: 0.12, metalness: 0.15, emissive: 0x3a8884, emissiveIntensity: 0.9 }),
+  );
+  glass.rotation.x = Math.PI / 2;
+  glass.position.set(0, 0.09, 0.04);
+  const button = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.075, 0.075, 0.05, 16),
+    new THREE.MeshBasicMaterial({ color: 0x8fd4cf }),
+  );
+  button.position.set(0.12, 0.09, -0.14);
+  const lamp = playPoint(0xffc14a, 1.4, 3.4, 1.2);
+  lamp.position.set(0, 0.16, 0);
+  group.add(body, glass, button, lamp);
+  return group;
+}
+
+export function heroPlate(kind: "chevron" | "notch"): THREE.Group {
+  const group = new THREE.Group();
+  group.name = `plate-${kind}`;
+  const heavy = kind === "notch";
+  const slab = new THREE.Mesh(
+    new THREE.BoxGeometry(1.22, heavy ? 0.16 : 0.11, 0.78),
+    surf(heavy ? 0x6a6560 : 0x9aa08c, {
+      roughness: 0.38,
+      metalness: 0.32,
+      emissive: heavy ? 0x3a3834 : 0x4a5040,
+      emissiveIntensity: 0.22,
+    }),
+  );
+  if (kind === "chevron") {
+    const peg = new THREE.Mesh(
+      new THREE.ConeGeometry(0.16, 0.22, 3),
+      surf(0x8fd4cf, { emissive: 0x3a8884, emissiveIntensity: 0.85, metalness: 0.35, roughness: 0.3 }),
+    );
+    peg.position.set(0, 0.16, 0);
+    group.add(slab, peg);
+  } else {
+    const cut = new THREE.Mesh(
+      new THREE.BoxGeometry(0.28, 0.1, 0.18),
+      surf(0x1a1c18, { roughness: 0.7 }),
+    );
+    cut.position.set(0, 0.1, 0.22);
+    const bar = new THREE.Mesh(
+      new THREE.BoxGeometry(0.24, 0.08, 0.16),
+      surf(0xe0a03a, { emissive: 0xc9861a, emissiveIntensity: 0.7, metalness: 0.4, roughness: 0.3 }),
+    );
+    bar.position.set(0, 0.14, 0);
+    group.add(slab, cut, bar);
+  }
+  return group;
+}
+
+export function heroSeat(kind: "chevron" | "notch"): THREE.Group {
+  const group = new THREE.Group();
+  group.name = `seat-${kind}`;
+  const base = boxMesh(0.85, 0.12, 0.85, 0x2a3238, 0, 0, 0);
+  if (kind === "chevron") {
+    const mark = new THREE.Mesh(
+      new THREE.ConeGeometry(0.22, 0.28, 3),
+      surf(0x8fd4cf, { emissive: 0x3a8884, emissiveIntensity: 0.95, metalness: 0.25, roughness: 0.35 }),
+    );
+    mark.position.set(0, 0.18, 0);
+    group.add(base, mark);
+  } else {
+    const mark = new THREE.Mesh(
+      new THREE.BoxGeometry(0.34, 0.1, 0.22),
+      surf(0xe0a03a, { emissive: 0xc9861a, emissiveIntensity: 0.85, metalness: 0.25, roughness: 0.35 }),
+    );
+    mark.position.set(0, 0.12, 0);
+    const bite = new THREE.Mesh(
+      new THREE.BoxGeometry(0.16, 0.12, 0.16),
+      surf(0x121416, { roughness: 0.8 }),
+    );
+    bite.position.set(0.18, 0.08, 0.18);
+    group.add(base, mark, bite);
+  }
+  return group;
+}
+
+export function heroRelay(tint = 0x8aa0b8): THREE.Group {
+  const group = new THREE.Group();
+  group.name = "hero-relay";
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(0.38, 0.38, 0.38),
+    surf(tint, { roughness: 0.36, metalness: 0.38, emissive: tint, emissiveIntensity: 0.28 }),
+  );
+  const pin = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.055, 0.055, 0.28, 10),
+    surf(0xe0a03a, { metalness: 0.5, roughness: 0.28, emissive: 0xc9861a, emissiveIntensity: 0.55 }),
+  );
+  pin.rotation.z = Math.PI / 2;
+  pin.position.set(0.28, 0, 0);
+  const gem = new THREE.Mesh(
+    new THREE.OctahedronGeometry(0.08),
+    surf(0x8fd4cf, { emissive: 0x3a8884, emissiveIntensity: 0.9, roughness: 0.2 }),
+  );
+  gem.position.set(0, 0.24, 0);
+  group.add(body, pin, gem);
+  return group;
+}
+
+export function heroProbe(): THREE.Group {
+  const group = new THREE.Group();
+  group.name = "hero-probe";
+  const body = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.09, 0.12, 0.48, 10),
+    surf(0x6a7068, { metalness: 0.4, roughness: 0.32 }),
+  );
+  const tip = new THREE.Mesh(
+    new THREE.ConeGeometry(0.1, 0.18, 8),
+    surf(0xc44a3a, { emissive: 0xc44a3a, emissiveIntensity: 0.55, metalness: 0.3, roughness: 0.35 }),
+  );
+  tip.position.y = 0.32;
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(0.14, 0.02, 8, 16),
+    surf(0x8fd4cf, { emissive: 0x3a8884, emissiveIntensity: 0.7 }),
+  );
+  ring.rotation.x = Math.PI / 2;
+  group.add(body, tip, ring);
+  return group;
+}
+
 export function educationPlaque(title: string, body: string): THREE.Mesh {
   const map = paintSign(title, body, 640, 280);
   return new THREE.Mesh(

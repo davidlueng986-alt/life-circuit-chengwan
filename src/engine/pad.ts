@@ -51,6 +51,24 @@ export function bindTouchPad(input: Input): void {
     () => input.holdPadTether(true),
     () => input.holdPadTether(false),
   );
+  hold(
+    root.querySelector("[data-act='jump']"),
+    () => {
+      input.padJump = true;
+    },
+    () => {
+      input.padJump = false;
+    },
+  );
+  hold(
+    root.querySelector("[data-act='sprint']"),
+    () => {
+      input.keys.add("ShiftLeft");
+    },
+    () => {
+      input.keys.delete("ShiftLeft");
+    },
+  );
 
   const go = root.querySelector("[data-act='go']");
   if (go instanceof HTMLElement) {

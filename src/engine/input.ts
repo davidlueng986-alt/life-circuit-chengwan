@@ -22,6 +22,7 @@ export class Input {
   padZ = 0;
   lookPadX = 0;
   lookPadY = 0;
+  padJump = false;
   private canvas: HTMLCanvasElement;
   private tetherToggle = false;
   private dragLook = false;
@@ -30,6 +31,8 @@ export class Input {
   private downAt = 0;
   private interactBuf = 0;
   private tetherBuf = 0;
+  private lastForwardAt = 0;
+  private sprintLatch = false;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -101,6 +104,8 @@ export class Input {
     this.padZ = 0;
     this.lookPadX = 0;
     this.lookPadY = 0;
+    this.padJump = false;
+    this.sprintLatch = false;
   }
 
   requestLook(): void {
@@ -113,6 +118,20 @@ export class Input {
     }
     this.lookArmed = false;
     this.dragLook = false;
+  }
+
+  jumping(): boolean {
+    return this.keys.has("Space") || this.padJump;
+  }
+
+  sprinting(): boolean {
+    return (
+      this.sprintLatch ||
+      this.keys.has("ShiftLeft") ||
+      this.keys.has("ShiftRight") ||
+      this.keys.has("ControlLeft") ||
+      this.keys.has("ControlRight")
+    );
   }
 
   axis(): { x: number; z: number } {
@@ -165,8 +184,15 @@ export class Input {
   }
 
   private onKeyDown = (event: KeyboardEvent): void => {
-    if (event.repeat || this.typing(event)) return;
+    if (this.typing(event)) return;
+    if (event.code === "Space" || event.code === "Tab" || event.code === "KeyF") event.preventDefault();
+    if (event.repeat) return;
     this.keys.add(event.code);
+    if (event.code === "KeyW" || event.code === "ArrowUp") {
+      const now = performance.now();
+      if (now - this.lastForwardAt < 280) this.sprintLatch = true;
+      this.lastForwardAt = now;
+    }
     if (event.code === "KeyE") {
       this.interactPressed = true;
       this.interactHeld = true;
@@ -194,6 +220,7 @@ export class Input {
       this.lensReleased = true;
     }
     if (event.code === "KeyF") this.releaseTetherKey();
+    if (event.code === "KeyW" || event.code === "ArrowUp") this.sprintLatch = false;
   };
 
   private onMouseMove = (event: MouseEvent): void => {

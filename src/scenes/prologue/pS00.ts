@@ -4,6 +4,7 @@ import { P00_LAYOUT as L } from "../../content/prologue/layout";
 import { P00 } from "../../content/prologue/script";
 import { PROMPT, TASK } from "../../content/copy";
 import { addSolidBox, placeSolid, playPoint } from "../../engine/greybox";
+import { addAmberBlocks, addGlassWater, addVoxelVolume, pulseAmber } from "../../engine/voxels";
 import { makeWorldLabel } from "../../engine/worldHints";
 import type { GameScene } from "../types";
 import {
@@ -33,6 +34,8 @@ export function createStormArrival(): GameScene {
   let idle = 0;
   let wrong = 0;
   let doorMesh: THREE.Mesh | null = null;
+  let amber: THREE.Mesh[] = [];
+  let gate: ReturnType<typeof addGate3> | null = null;
 
   return {
     id: "P-S00",
@@ -45,25 +48,25 @@ export function createStormArrival(): GameScene {
 
       addDeck(ctx, 14, 10, 0.4, 0);
       addDeck(ctx, 3.6, 26, L.spineX, 11.2);
-      addSolidBox(ctx.root, ctx.world, 3.2, 0.2, 0.7, 0x4a535c, L.spineX, 0.1, L.pipeZ);
-      addSolidBox(ctx.root, ctx.world, 0.16, 1.05, 26, 0x1a2127, L.spineX - 1.7, 0.52, 11.2);
-      addSolidBox(ctx.root, ctx.world, 0.16, 1.05, 26, 0x1a2127, L.spineX + 1.7, 0.52, 11.2);
+      addVoxelVolume(ctx.root, ctx.world, 3.2, 0.2, 0.7, 0x4a535c, L.spineX, 0.1, L.pipeZ);
+      addVoxelVolume(ctx.root, ctx.world, 0.16, 1.05, 26, 0x1a2127, L.spineX - 1.7, 0.52, 11.2);
+      addVoxelVolume(ctx.root, ctx.world, 0.16, 1.05, 26, 0x1a2127, L.spineX + 1.7, 0.52, 11.2);
       addAmberSpine(ctx, L.spineX + 1.05, 1.2, 21.5);
+      amber = addAmberBlocks(ctx.root, L.spineX + 0.05, 1.2, 21.8);
 
-      addSolidBox(ctx.root, ctx.world, 5.2, 3.2, 0.35, 0x2a241c, 6.6, 1.4, -2.4);
-      addSolidBox(ctx.root, ctx.world, 5.2, 3.2, 0.35, 0x2a241c, 6.6, 1.4, 2.4);
-      addSolidBox(ctx.root, ctx.world, 0.35, 3.2, 5.2, 0x2a241c, 9.2, 1.4, 0);
-      addSolidBox(ctx.root, ctx.world, 4.6, 0.4, 4.8, 0x2a241c, 7.2, -0.2, 0);
-      addSolidBox(ctx.root, ctx.world, 0.18, 2.3, 1.45, 0x2a241c, L.indoorDoor.x, 1.15, -1.55);
-      addSolidBox(ctx.root, ctx.world, 0.18, 2.3, 1.45, 0x2a241c, L.indoorDoor.x, 1.15, 1.55);
+      addVoxelVolume(ctx.root, ctx.world, 5.2, 3.2, 0.35, 0x2a241c, 6.6, 1.4, -2.4);
+      addVoxelVolume(ctx.root, ctx.world, 5.2, 3.2, 0.35, 0x2a241c, 6.6, 1.4, 2.4);
+      addVoxelVolume(ctx.root, ctx.world, 0.35, 3.2, 5.2, 0x2a241c, 9.2, 1.4, 0);
+      addVoxelVolume(ctx.root, ctx.world, 4.6, 0.4, 4.8, 0x2a241c, 7.2, -0.2, 0);
+      addVoxelVolume(ctx.root, ctx.world, 0.18, 2.3, 1.45, 0x2a241c, L.indoorDoor.x, 1.15, -1.55);
+      addVoxelVolume(ctx.root, ctx.world, 0.18, 2.3, 1.45, 0x2a241c, L.indoorDoor.x, 1.15, 1.55);
       doorMesh = addSolidBox(ctx.root, ctx.world, 0.18, 2.3, 1.5, 0x3a2e22, L.indoorDoor.x, 1.15, 0);
       const warm = playPoint(0xffd08a, 1.8, 8, 1.1);
       warm.position.set(7.4, 1.9, 0);
       const alcoveFill = playPoint(0x9ec0d2, 1.1, 7, 1.15);
       alcoveFill.position.set(8.2, 2.2, 1.4);
       ctx.root.add(warm, alcoveFill);
-      const map = addSolidBox(ctx.root, ctx.world, 0.06, 1.1, 1.6, 0x2a2620, 9.02, 1.5, 0);
-      map.name = "wall-map";
+      addSolidBox(ctx.root, ctx.world, 0.06, 1.1, 1.6, 0x2a2620, 9.02, 1.5, 0).name = "wall-map";
       const wallPlan = makeWallPlan();
       wallPlan.position.set(8.94, 1.52, 0);
       wallPlan.rotation.y = -Math.PI / 2;
@@ -73,13 +76,21 @@ export function createStormArrival(): GameScene {
       ctx.root.add(indoorTag);
 
       const glass = new THREE.Mesh(
-        new THREE.BoxGeometry(0.07, 1.35, 2.5),
-        new THREE.MeshLambertMaterial({ color: 0x6f8a99, transparent: true, opacity: 0.28 }),
+        new THREE.BoxGeometry(0.07, 1.55, 2.8),
+        new THREE.MeshPhysicalMaterial({
+          color: 0x6f8a99,
+          transparent: true,
+          opacity: 0.22,
+          transmission: 0.4,
+          roughness: 0.08,
+          metalness: 0.05,
+        }),
       );
-      glass.position.set(L.spineX - 1.68, 1.15, L.glassZ);
+      glass.position.set(L.spineX - 1.68, 1.2, L.glassZ);
       ctx.root.add(glass);
+      addGlassWater(ctx.root, 6, 8, -8.4, -2.35, L.glassZ + 2);
 
-      addGate3(ctx.root, L.gate.x, L.gate.y, L.gate.z);
+      gate = addGate3(ctx.root, L.gate.x, L.gate.y, L.gate.z);
       sos = addSosBeacon(ctx.root, L.sos.x, L.sos.y, L.sos.z);
       addXiaocenFigure(ctx.root, L.xiaocen.x, L.xiaocen.y, L.xiaocen.z);
       const gateTag = makeWorldLabel("三號閘", "防洪控制室在橙燈上方");
@@ -101,8 +112,8 @@ export function createStormArrival(): GameScene {
       water = addWaterChannel(ctx.root, -10, -3.15, 18);
       water.setDir(-1);
 
-      addSolidBox(ctx.root, ctx.world, 3.6, 0.4, 3.6, 0x2a3036, L.lift.x, -0.2, L.lift.z);
-      addSolidBox(ctx.root, ctx.world, 1.7, 2.5, 1.7, 0x1b1f24, L.lift.x, 1.1, L.lift.z + 0.7);
+      addVoxelVolume(ctx.root, ctx.world, 3.6, 0.4, 3.6, 0x2a3036, L.lift.x, -0.2, L.lift.z);
+      addVoxelVolume(ctx.root, ctx.world, 1.7, 2.5, 1.7, 0x1b1f24, L.lift.x, 1.1, L.lift.z + 0.7);
       const cage = new THREE.Mesh(
         new THREE.BoxGeometry(1.5, 2.1, 0.08),
         new THREE.MeshLambertMaterial({ color: 0x2a3038, transparent: true, opacity: 0.45 }),
@@ -110,22 +121,13 @@ export function createStormArrival(): GameScene {
       cage.position.set(L.lift.x, 1.15, L.lift.z - 0.15);
       ctx.root.add(cage);
 
-      ctx.world.addTrigger(
-        "indoor",
-        new THREE.Vector3(6.5, 0, -1.6),
-        new THREE.Vector3(9.1, 2.4, 1.6),
-      );
+      ctx.world.addTrigger("indoor", new THREE.Vector3(6.5, 0, -1.6), new THREE.Vector3(9.1, 2.4, 1.6));
       ctx.world.addTrigger(
         "lift",
         new THREE.Vector3(L.lift.x - 1.4, 0, L.lift.z - 1.5),
         new THREE.Vector3(L.lift.x + 1.4, 2.4, L.lift.z + 1.6),
       );
-      ctx.world.addHazard(
-        "channel",
-        "water",
-        new THREE.Vector3(-36, -9, -8),
-        new THREE.Vector3(16, -0.55, 48),
-      );
+      ctx.world.addHazard("channel", "water", new THREE.Vector3(-36, -9, -8), new THREE.Vector3(16, -0.55, 48));
       ctx.world.killY = -2.2;
       ctx.world.addAnchor("spawn", 0, 0, 0);
       ctx.world.addAnchor("pipe", L.spineX, 0.2, L.pipeZ);
@@ -170,6 +172,7 @@ export function createStormArrival(): GameScene {
       tickSceneRain(rain, dt);
       water?.tick(dt);
       sos?.tick(elapsed);
+      pulseAmber(amber, elapsed, wrong > 1.2);
 
       if (!controlled) {
         ctx.player.position.set(L.spawn.x, L.spawn.y, L.spawn.z);
@@ -206,12 +209,15 @@ export function createStormArrival(): GameScene {
         ctx.root.add(route);
       }
       if (hits.includes("lift")) ctx.completeAndGo();
+      if (gate && !ctx.reducedMotion) gate.spin(dt * 0.04);
     },
     unmount() {
       rain = null;
       sos = null;
       water = null;
       doorMesh = null;
+      amber = [];
+      gate = null;
       voice.dispose();
     },
   };

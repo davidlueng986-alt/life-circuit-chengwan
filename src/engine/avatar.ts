@@ -1,14 +1,38 @@
 import * as THREE from "three";
 import { surf } from "./greybox";
 
-function limb(radius: number, length: number, color: number, name: string): THREE.Mesh {
-  const mesh = new THREE.Mesh(new THREE.CapsuleGeometry(radius, length, 8, 12), surf(color, { roughness: 0.62, metalness: 0.12 }));
-  mesh.name = name;
+function px(color: number): THREE.MeshStandardMaterial {
+  return surf(color, { roughness: 0.92, metalness: 0.02, flat: true });
+}
+
+function box(w: number, h: number, d: number, color: number, x: number, y: number, z: number, name?: string): THREE.Mesh {
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), px(color));
+  mesh.position.set(x, y, z);
   mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  if (name) mesh.name = name;
   return mesh;
 }
 
-/** ~4k-tri runner. Far LOD is a 3-part stand-in. */
+function limb(
+  w: number,
+  h: number,
+  d: number,
+  color: number,
+  x: number,
+  pivotY: number,
+  z: number,
+  name: string,
+): THREE.Group {
+  const group = new THREE.Group();
+  group.name = name;
+  group.position.set(x, pivotY, z);
+  const mesh = box(w, h, d, color, 0, -h * 0.5, 0);
+  group.add(mesh);
+  return group;
+}
+
+/** Minecraft-style 6-part figure. Units ≈ Steve (1.8m). Limbs pivot at shoulder / hip. */
 export function createRunnerAvatar(): THREE.Group {
   const root = new THREE.Group();
   root.name = "runner";
@@ -19,98 +43,48 @@ export function createRunnerAvatar(): THREE.Group {
   far.name = "lod-far";
   far.visible = false;
 
-  const shell = 0x3a4e58;
-  const dark = 0x161c20;
-  const skin = 0x6a5644;
+  const skin = 0xc2a07a;
+  const shirt = 0x3d5c58;
+  const pants = 0x2a3338;
+  const strap = 0xe0a03a;
 
-  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.23, 0.58, 10, 16), surf(shell, { roughness: 0.58, metalness: 0.2, kind: "plastic" }));
-  torso.position.y = 1.08;
-  torso.castShadow = true;
-  near.add(torso);
-
-  const harness = new THREE.Mesh(
-    new THREE.BoxGeometry(0.52, 0.07, 0.32),
-    surf(0xe0a03a, { roughness: 0.45, metalness: 0.28, emissive: 0xc9861a, emissiveIntensity: 0.32 }),
-  );
-  harness.position.set(0, 1.2, 0.04);
-  near.add(harness);
-
-  const pack = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.36, 0.16), surf(dark, { roughness: 0.7, kind: "metal" }));
-  pack.position.set(0, 1.12, -0.25);
-  pack.castShadow = true;
-  near.add(pack);
-  const packGlow = new THREE.Mesh(
-    new THREE.BoxGeometry(0.18, 0.04, 0.02),
-    surf(0x7ec8c3, { emissive: 0x7ec8c3, emissiveIntensity: 0.9, roughness: 0.35 }),
-  );
-  packGlow.position.set(0, 1.22, -0.33);
+  near.add(box(0.5, 0.5, 0.5, skin, 0, 1.55, 0, "head"));
+  const visor = box(0.52, 0.12, 0.12, 0x7ec8c3, 0, 1.58, 0.22, "visor");
+  visor.material = surf(0x7ec8c3, { roughness: 0.3, metalness: 0.2, emissive: 0x3a8884, emissiveIntensity: 0.45, flat: true });
+  near.add(visor);
+  near.add(box(0.5, 0.75, 0.28, shirt, 0, 1.025, 0, "torso"));
+  near.add(box(0.52, 0.08, 0.32, strap, 0, 1.18, 0.02, "strap"));
+  near.add(box(0.28, 0.32, 0.12, 0x161c20, 0, 1.1, -0.2, "pack"));
+  const packGlow = box(0.16, 0.04, 0.03, 0x8fd4cf, 0, 1.2, -0.26, "pack-glow");
+  packGlow.material = surf(0x8fd4cf, { emissive: 0x8fd4cf, emissiveIntensity: 0.9, flat: true });
   near.add(packGlow);
 
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.16, 18, 16), surf(skin, { roughness: 0.72 }));
-  head.position.y = 1.6;
-  head.castShadow = true;
-  near.add(head);
-  const hood = new THREE.Mesh(
-    new THREE.SphereGeometry(0.19, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.55),
-    surf(shell, { roughness: 0.6, kind: "plastic" }),
-  );
-  hood.position.set(0, 1.65, -0.02);
-  hood.rotation.x = 0.15;
-  near.add(hood);
-  const visor = new THREE.Mesh(
-    new THREE.BoxGeometry(0.24, 0.055, 0.09),
-    surf(0x7ec8c3, { roughness: 0.22, metalness: 0.45, emissive: 0x3a8884, emissiveIntensity: 0.4, opacity: 0.88 }),
-  );
-  visor.position.set(0, 1.6, 0.13);
-  near.add(visor);
-
-  const hip = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.16, 0.24), surf(dark, { roughness: 0.7 }));
-  hip.position.y = 0.7;
-  hip.name = "hip";
-  near.add(hip);
-
-  const armL = limb(0.055, 0.34, shell, "armL");
-  armL.position.set(-0.31, 1.14, 0);
-  armL.rotation.z = -0.16;
-  const armR = limb(0.055, 0.34, shell, "armR");
-  armR.position.set(0.31, 1.14, 0);
-  armR.rotation.z = 0.16;
-  const legL = limb(0.075, 0.42, dark, "legL");
-  legL.position.set(-0.12, 0.34, 0);
-  const legR = limb(0.075, 0.42, dark, "legR");
-  legR.position.set(0.12, 0.34, 0);
-  near.add(armL, armR, legL, legR);
-
-  for (const side of [-1, 1]) {
-    const boot = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.09, 0.24), surf(dark, { roughness: 0.55, metalness: 0.15 }));
-    boot.position.set(side * 0.12, 0.05, 0.04);
-    near.add(boot);
-  }
+  near.add(limb(0.25, 0.75, 0.25, shirt, -0.375, 1.4, 0, "armL"));
+  near.add(limb(0.25, 0.75, 0.25, shirt, 0.375, 1.4, 0, "armR"));
+  near.add(limb(0.25, 0.75, 0.25, pants, -0.125, 0.75, 0, "legL"));
+  near.add(limb(0.25, 0.75, 0.25, pants, 0.125, 0.75, 0, "legR"));
 
   const blob = new THREE.Mesh(
-    new THREE.CircleGeometry(0.4, 20),
-    new THREE.MeshBasicMaterial({ color: 0x050708, transparent: true, opacity: 0.42, depthWrite: false }),
+    new THREE.CircleGeometry(0.42, 12),
+    new THREE.MeshBasicMaterial({ color: 0x050708, transparent: true, opacity: 0.4, depthWrite: false }),
   );
   blob.rotation.x = -Math.PI / 2;
-  blob.position.y = 0.02;
+  blob.position.y = 0.01;
   blob.name = "blob-shadow";
   near.add(blob);
 
-  const farBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.26, 1.15, 4, 8), surf(shell, { roughness: 0.65 }));
-  farBody.position.y = 0.95;
-  const farHead = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 8), surf(skin, { roughness: 0.7 }));
-  farHead.position.y = 1.62;
-  far.add(farBody, farHead);
+  far.add(box(0.5, 1.5, 0.35, shirt, 0, 0.9, 0));
+  far.add(box(0.5, 0.5, 0.5, skin, 0, 1.55, 0));
 
   root.add(near, far);
   return root;
 }
 
-export function setAvatarLod(root: THREE.Group, far: boolean): void {
+export function setAvatarLod(root: THREE.Group, farOn: boolean): void {
   const near = root.getObjectByName("lod-near");
-  const lod = root.getObjectByName("lod-far");
-  if (near) near.visible = !far;
-  if (lod) lod.visible = far;
+  const far = root.getObjectByName("lod-far");
+  if (near) near.visible = !farOn;
+  if (far) far.visible = farOn;
 }
 
 export function createSafetyLine(): THREE.Line {

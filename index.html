@@ -23,9 +23,9 @@
       <div id="hud" hidden>
         <div id="help-card">
           <p class="help-title">操作（不會鎖滑鼠）</p>
-          <p><kbd>W A S D</kbd> 走路　或點左下螢幕按鈕　<kbd>按住左鍵拖曳</kbd> 轉頭</p>
-          <p><kbd>E</kbd> 互動／繼續對白　<kbd>Q</kbd> 掃描　<kbd>F</kbd> 抓取　<kbd>C</kbd> 詞彙卡</p>
-          <p class="help-soft">地上發光環＋名稱＝可以互動。橙燈／光柱＝說話的人。對白按「繼續」。觸控可直接點按鈕。</p>
+          <p><kbd>W A S D</kbd> 走路　<kbd>空白</kbd> 跳　<kbd>Shift</kbd> 或連按 W 衝刺　<kbd>按住左鍵拖曳</kbd> 轉頭</p>
+          <p><kbd>E</kbd> 摸面前的東西　<kbd>Q</kbd> 掃描　<kbd>F</kbd> 抓板（有工具後才有）　<kbd>C</kbd> 詞彙卡</p>
+          <p class="help-soft">準星對到發光環就能按。對白不會搶走 E。沒有測驗倒數。</p>
         </div>
         <div id="crosshair" aria-hidden="true"></div>
         <div id="nav-cluster">
@@ -118,6 +118,8 @@
               <button type="button" data-look="down">低頭</button>
             </div>
             <button type="button" data-act="go" class="btn-play">朝目標走</button>
+            <button type="button" data-act="jump">跳</button>
+            <button type="button" data-act="sprint">衝刺</button>
             <button type="button" data-act="e">E 互動</button>
             <button type="button" data-act="q">Q 掃描</button>
             <button type="button" data-act="f">F 抓取</button>

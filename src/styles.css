@@ -667,6 +667,13 @@ html[data-high-contrast="true"] .hud-task {
   pointer-events: none;
 }
 
+#crosshair[data-hot="1"] {
+  width: 18px;
+  height: 18px;
+  border-color: #8fd4cf;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 0 12px rgba(143, 212, 207, 0.55);
+}
+
 #nav-cluster {
   position: absolute;
   right: var(--safe-x);

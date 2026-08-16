@@ -195,6 +195,26 @@ export class TetherTool {
     this.owned = true;
   }
 
+  grabById(id: string): boolean {
+    if (!this.owned) return false;
+    if (this.heldId && this.heldId !== id) this.drop();
+    this.focusId = id;
+    this.tryGrab();
+    return this.heldId === id;
+  }
+
+  tintGhost(socketId: string, ok: boolean | null): void {
+    const socket = this.sockets.find((item) => item.id === socketId);
+    if (!socket) return;
+    socket.ghost.traverse((child) => {
+      if (!(child instanceof THREE.Mesh)) return;
+      const mat = child.material;
+      if (!(mat instanceof THREE.MeshBasicMaterial)) return;
+      if (ok === null) mat.color.setHex(0x8aa8b0);
+      else mat.color.setHex(ok ? 0x8fd4cf : 0xc44a3a);
+    });
+  }
+
   registerBody(spec: {
     id: string;
     object: THREE.Object3D;
@@ -606,6 +626,17 @@ export class TetherTool {
     }
     for (const item of this.sockets) {
       if (item !== socket) item.ghost.scale.setScalar(1);
+      item.ghost.traverse((child) => {
+        if (!(child instanceof THREE.Mesh)) return;
+        const mat = child.material;
+        if (!(mat instanceof THREE.MeshBasicMaterial)) return;
+        if (item !== socket) {
+          mat.color.setHex(0x8aa8b0);
+          return;
+        }
+        if (!held) return;
+        mat.color.setHex(held.shape === item.shape ? (fit.ok ? 0x8fd4cf : 0xe0a03a) : 0xc44a3a);
+      });
     }
   }
 

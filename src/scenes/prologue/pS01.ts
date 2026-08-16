@@ -4,8 +4,10 @@ import { P_LINE } from "../../content/prologue/ids";
 import { P01_LAYOUT as L } from "../../content/prologue/layout";
 import { addSolidBox, isLitMat, placeSolid, playPoint } from "../../engine/greybox";
 import { applyKind } from "../../engine/materials";
+import { lookFlat } from "../../engine/motorMath";
+import { addVoxelFloor, addVoxelVolume } from "../../engine/voxels";
 import { makeWorldLabel } from "../../engine/worldHints";
-import type { GameScene } from "../types";
+import type { GameScene, SceneContext } from "../types";
 import { addRelayMesh, onceFlags, stormShell, tickSceneRain } from "./kit";
 
 export function createDeadLift(): GameScene {
@@ -13,8 +15,9 @@ export function createDeadLift(): GameScene {
   let rain: THREE.Points | null = null;
   let crate: THREE.Mesh | null = null;
   let cratePos = new THREE.Vector3(L.crate.x, L.crate.y, L.crate.z);
-  let pushed = false;
+  let ladderReady = false;
   let climbed = false;
+  let nudgeHint = 0;
 
   return {
     id: "P-S01",
@@ -27,13 +30,13 @@ export function createDeadLift(): GameScene {
       crateLamp.position.set(L.crate.x, 1.7, L.crate.z);
       ctx.root.add(key, crateLamp);
 
-      addSolidBox(ctx.root, ctx.world, 10.4, 0.4, 10.4, 0x4a5560, 0, -0.2, 0);
-      addSolidBox(ctx.root, ctx.world, 10.4, 3.2, 0.4, 0x4e5c68, 0, 1.4, -5.1);
-      addSolidBox(ctx.root, ctx.world, 10.4, 3.2, 0.4, 0x4e5c68, 0, 1.4, 5.1);
-      addSolidBox(ctx.root, ctx.world, 0.4, 3.2, 10.4, 0x4e5c68, -5.2, 1.4, 0);
-      addSolidBox(ctx.root, ctx.world, 0.4, 3.2, 10.4, 0x4e5c68, 5.2, 1.4, 0);
+      addVoxelFloor(ctx.root, ctx.world, 10.4, 10.4, 0x4a5560, 0, 0);
+      addVoxelVolume(ctx.root, ctx.world, 10.4, 3.2, 0.4, 0x4e5c68, 0, 1.4, -5.1);
+      addVoxelVolume(ctx.root, ctx.world, 10.4, 3.2, 0.4, 0x4e5c68, 0, 1.4, 5.1);
+      addVoxelVolume(ctx.root, ctx.world, 0.4, 3.2, 10.4, 0x4e5c68, -5.2, 1.4, 0);
+      addVoxelVolume(ctx.root, ctx.world, 0.4, 3.2, 10.4, 0x4e5c68, 5.2, 1.4, 0);
 
-      addSolidBox(ctx.root, ctx.world, 1.9, 2.5, 1.9, 0x15191d, L.liftCage.x, 1.15, L.liftCage.z);
+      addVoxelVolume(ctx.root, ctx.world, 1.9, 2.5, 1.9, 0x15191d, L.liftCage.x, 1.15, L.liftCage.z);
       const door = new THREE.Mesh(
         new THREE.BoxGeometry(1.2, 2.1, 0.06),
         new THREE.MeshLambertMaterial({ color: 0x1b1f24 }),
@@ -52,17 +55,24 @@ export function createDeadLift(): GameScene {
         crateMat.emissive = new THREE.Color(0xc9861a);
         crateMat.emissiveIntensity = 0.42;
       }
-      const crateTag = makeWorldLabel("工具箱", "E 推開它");
+      const crateTag = makeWorldLabel("工具箱", "按住 E 往梯子推");
       crateTag.position.set(0, 0.92, 0);
       crate.add(crateTag);
       const crateHalo = new THREE.Mesh(
         new THREE.TorusGeometry(0.82, 0.07, 8, 28),
-        new THREE.MeshBasicMaterial({ color: 0xffc14a, fog: false, toneMapped: false, transparent: true, opacity: 0.85, depthWrite: false }),
+        new THREE.MeshBasicMaterial({
+          color: 0xffc14a,
+          fog: false,
+          toneMapped: false,
+          transparent: true,
+          opacity: 0.85,
+          depthWrite: false,
+        }),
       );
       crateHalo.rotation.x = -Math.PI / 2;
       crateHalo.position.y = -0.38;
       crate.add(crateHalo);
-      const ladderTag = makeWorldLabel("維修梯", "推開後再爬");
+      const ladderTag = makeWorldLabel("維修梯", "箱子擋住了，先推開");
       ladderTag.position.set(L.ladder.x, 2.4, L.ladder.z);
       ctx.root.add(ladderTag);
       const handle = new THREE.Mesh(
@@ -87,8 +97,8 @@ export function createDeadLift(): GameScene {
         ctx.root.add(rung);
       }
 
-      addSolidBox(ctx.root, ctx.world, 2.3, 0.28, 1.8, 0x2a3038, 3.4, 2.55, 2.45);
-      addSolidBox(ctx.root, ctx.world, 2.4, 1.6, 0.18, 0x12161a, 3.4, 3.3, 3.35);
+      addVoxelVolume(ctx.root, ctx.world, 2.3, 0.28, 1.8, 0x2a3038, 3.4, 2.55, 2.45);
+      addVoxelVolume(ctx.root, ctx.world, 2.4, 1.6, 0.18, 0x12161a, 3.4, 3.3, 3.35);
       const crack = new THREE.Mesh(
         new THREE.BoxGeometry(0.18, 1.5, 0.06),
         new THREE.MeshBasicMaterial({ color: 0x050608 }),
@@ -116,12 +126,15 @@ export function createDeadLift(): GameScene {
         position: cratePos.clone(),
         radius: 2.35,
         enabled: true,
-        onUse: () => shove(ctx),
+        onUse: () => nudge(ctx, 0.42),
       });
     },
-    update(_dt, ctx) {
-      tickSceneRain(rain, _dt);
-      if (climbed || !pushed) return;
+    update(dt, ctx) {
+      tickSceneRain(rain, dt);
+      if (ctx.interact.focused?.id === "crate" && ctx.input.interactHeld) {
+        nudge(ctx, 1.55 * dt);
+      }
+      if (climbed || !ladderReady) return;
       const hits = ctx.world.sampleTriggers(ctx.player.position);
       if (hits.includes("booth") || (ctx.player.position.y > 2.3 && ctx.player.position.z > 2.05)) {
         climbed = true;
@@ -131,22 +144,33 @@ export function createDeadLift(): GameScene {
     unmount() {
       rain = null;
       crate = null;
-      pushed = false;
+      ladderReady = false;
       climbed = false;
     },
   };
 
-  function shove(ctx: Parameters<GameScene["mount"]>[0]): void {
+  function nudge(ctx: SceneContext, step: number): void {
     if (!crate) return;
-    const target = pushed
-      ? new THREE.Vector3(L.cratePark.x + 0.35, L.cratePark.y, L.cratePark.z + 0.4)
-      : new THREE.Vector3(L.cratePark.x, L.cratePark.y, L.cratePark.z);
-    placeSolid(crate, target.x, target.y, target.z);
-    cratePos.copy(crate.position);
+    const look = lookFlat(ctx.camera.yaw);
+    const toPark = new THREE.Vector3(L.cratePark.x - cratePos.x, 0, L.cratePark.z - cratePos.z);
+    const along = look.x * toPark.x + look.z * toPark.z;
+    if (along < -0.05 && toPark.length() > 0.2) {
+      nudgeHint += 1;
+      if (nudgeHint === 1 || nudgeHint % 40 === 0) ctx.hud.announce("往梯子那一側推");
+      return;
+    }
+    const nx = THREE.MathUtils.clamp(cratePos.x + look.x * step, -4.2, 4.6);
+    const nz = THREE.MathUtils.clamp(cratePos.z + look.z * step, -4.2, 4.4);
+    cratePos.set(nx, L.crate.y, nz);
+    placeSolid(crate, cratePos.x, cratePos.y, cratePos.z);
     const item = ctx.interact.items.find((entry) => entry.id === "crate");
     if (item) item.position.copy(cratePos);
-    if (pushed) return;
-    pushed = true;
+    const cleared = cratePos.distanceTo(new THREE.Vector3(L.ladder.x, L.crate.y, L.ladder.z)) > 1.25;
+    if (cleared && !ladderReady) openLadder(ctx);
+  }
+
+  function openLadder(ctx: SceneContext): void {
+    ladderReady = true;
     ctx.hud.setTask(TASK["P-S01-ladder"] ?? "");
     if (flags.take("swim")) ctx.say(P_LINE.noSwim);
     ctx.world.addLadder(
@@ -154,11 +178,7 @@ export function createDeadLift(): GameScene {
       new THREE.Vector3(L.ladder.x - 0.35, 0, L.ladder.z - 0.35),
       new THREE.Vector3(L.ladder.x + 0.4, 2.9, L.ladder.z + 0.4),
     );
-    ctx.world.addTrigger(
-      "booth",
-      new THREE.Vector3(2.55, 2.2, 1.85),
-      new THREE.Vector3(4.45, 3.5, 3.35),
-    );
+    ctx.world.addTrigger("booth", new THREE.Vector3(2.55, 2.2, 1.85), new THREE.Vector3(4.45, 3.5, 3.35));
     ctx.interact.add({
       id: "ladder",
       prompt: PROMPT.climb,

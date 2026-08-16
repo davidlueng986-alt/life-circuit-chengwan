@@ -2,14 +2,15 @@ import * as THREE from "three";
 import { TASK } from "../../content/copy";
 import { P_LINE } from "../../content/prologue/ids";
 import { P04_LAYOUT as L } from "../../content/prologue/layout";
-import { addSolidBox, boxMesh, playPoint } from "../../engine/greybox";
+import { boxMesh, playPoint } from "../../engine/greybox";
+import { heroRelay } from "../../engine/props";
+import { addVoxelFloor, addVoxelVolume } from "../../engine/voxels";
 import { makeWorldLabel } from "../../engine/worldHints";
 import type { GameScene, SceneContext } from "../types";
 import {
   SceneVoice,
   addControlLamp,
   addGate3,
-  addRelayMesh,
   addSosBeacon,
   addWaterChannel,
   addXiaocenFigure,
@@ -44,12 +45,12 @@ export function createActuatorGallery(): GameScene {
       wash.position.set(-2.2, 2.8, -3.4);
       ctx.root.add(key, wash);
 
-      addSolidBox(ctx.root, ctx.world, 14.4, 0.4, 13, 0x4a5560, 0, -0.2, 0);
-      addSolidBox(ctx.root, ctx.world, 14.4, 3.6, 0.28, 0x4e5c68, 0, 1.6, -6.2);
-      addSolidBox(ctx.root, ctx.world, 0.28, 3.6, 13, 0x4e5c68, -7.2, 1.6, 0);
-      addSolidBox(ctx.root, ctx.world, 0.28, 3.6, 13, 0x4e5c68, 7.2, 1.6, 0);
-      addSolidBox(ctx.root, ctx.world, 5.2, 1.6, 0.12, 0x3a4650, 0, 2.15, -6.05);
-      addSolidBox(ctx.root, ctx.world, 4.2, 0.18, 1.6, 0x3a4650, -2.4, 1.55, -3.4);
+      addVoxelFloor(ctx.root, ctx.world, 14.4, 13, 0x4a5560, 0, 0);
+      addVoxelVolume(ctx.root, ctx.world, 14.4, 3.6, 0.28, 0x4e5c68, 0, 1.6, -6.2);
+      addVoxelVolume(ctx.root, ctx.world, 0.28, 3.6, 13, 0x4e5c68, -7.2, 1.6, 0);
+      addVoxelVolume(ctx.root, ctx.world, 0.28, 3.6, 13, 0x4e5c68, 7.2, 1.6, 0);
+      addVoxelVolume(ctx.root, ctx.world, 5.2, 1.6, 0.12, 0x3a4650, 0, 2.15, -6.05);
+      addVoxelVolume(ctx.root, ctx.world, 4.2, 0.18, 1.6, 0x3a4650, -2.4, 1.55, -3.4);
       ctx.world.addLadder(
         "cat",
         new THREE.Vector3(-4.1, 0, -3.7),
@@ -85,10 +86,13 @@ export function createActuatorGallery(): GameScene {
       ];
 
       const debris = boxMesh(1.15, 0.72, 0.85, 0x6a5340, L.debris.x, L.debris.y, L.debris.z);
-      const relayWrong = addRelayMesh(ctx.root, L.wrongHome.x, L.wrongHome.y, L.wrongHome.z, 0x8a6a3a);
-      const relayJam = addRelayMesh(ctx.root, L.jam.x, L.jam.y, L.jam.z, 0x6a5340);
-      const relayLoose = addRelayMesh(ctx.root, L.loose.x, L.loose.y, L.loose.z, 0x8aa0b8);
-      ctx.root.add(debris);
+      const relayWrong = heroRelay(0x8a6a3a);
+      relayWrong.position.set(L.wrongHome.x, L.wrongHome.y, L.wrongHome.z);
+      const relayJam = heroRelay(0x6a5340);
+      relayJam.position.set(L.jam.x, L.jam.y, L.jam.z);
+      const relayLoose = heroRelay(0x8aa0b8);
+      relayLoose.position.set(L.loose.x, L.loose.y, L.loose.z);
+      ctx.root.add(debris, relayWrong, relayJam, relayLoose);
       const wrongTag = makeWorldLabel("接錯的 relay", "搬到正確座");
       wrongTag.position.set(L.wrongHome.x, L.wrongHome.y + 0.7, L.wrongHome.z);
       const jamTag = makeWorldLabel("卡住的 relay", "先清雜物再接");
@@ -180,6 +184,23 @@ export function createActuatorGallery(): GameScene {
       ctx.hud.setTask(TASK["P-S04"] ?? "");
       ctx.say(P_LINE.findBreak);
       voice.startRumble();
+
+      const grab = (id: string, x: number, z: number, label: string) => {
+        ctx.interact.add({
+          id,
+          prompt: label,
+          position: new THREE.Vector3(x, 0, z),
+          radius: 1.5,
+          enabled: true,
+          onUse: () => {
+            ctx.tether.grabById(id === "grab-debris" ? "debris" : id.replace("grab-", ""));
+          },
+        });
+      };
+      grab("grab-debris", L.debris.x, L.debris.z, "按住 F 清雜物");
+      grab("grab-wrong", L.wrongHome.x, L.wrongHome.z, "按住 F 搬走接錯的");
+      grab("grab-jam", L.jam.x, L.jam.z, "按住 F 接回卡住的");
+      grab("grab-loose", L.loose.x, L.loose.z, "按住 F 壓回鬆脫的");
     },
     update(dt, ctx) {
       elapsed += dt;

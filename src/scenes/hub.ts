@@ -3,6 +3,8 @@ import { PROMPT, TASK } from "../content/copy";
 import type { SceneId } from "../content/ids";
 import { nextC1Scene, workshopEntry } from "../content/progress";
 import { HUB, addPlayLights, addSolidBox, applyFog, configureKeyShadow, lamp, playPoint } from "../engine/greybox";
+import { heroProbe } from "../engine/props";
+import { addVoxelFloor, addVoxelVolume } from "../engine/voxels";
 import { makeWorldLabel } from "../engine/worldHints";
 import type { GameScene } from "./types";
 
@@ -27,18 +29,23 @@ export function createHubScene(id: SceneId = "HUB-S00"): GameScene {
       workshopLamp.position.set(3.15, 2.15, 1.7);
       ctx.root.add(harborLamp, workshopLamp);
 
-      addSolidBox(ctx.root, ctx.world, 22, 0.4, 16, HUB.floor, 0, -0.2, 0);
-      addSolidBox(ctx.root, ctx.world, 22, 4, 0.4, HUB.wall, 0, 2, -8);
-      addSolidBox(ctx.root, ctx.world, 22, 4, 0.4, HUB.wall, 0, 2, 8);
-      addSolidBox(ctx.root, ctx.world, 0.4, 4, 16, HUB.wall, -11, 2, 0);
-      addSolidBox(ctx.root, ctx.world, 0.4, 4, 16, HUB.wall, 11, 2, 0);
+      addVoxelFloor(ctx.root, ctx.world, 22, 16, HUB.floor, 0, 0);
+      addVoxelVolume(ctx.root, ctx.world, 22, 4, 0.4, HUB.wall, 0, 2, -8);
+      addVoxelVolume(ctx.root, ctx.world, 22, 4, 0.4, HUB.wall, 0, 2, 8);
+      addVoxelVolume(ctx.root, ctx.world, 0.4, 4, 16, HUB.wall, -11, 2, 0);
+      addVoxelVolume(ctx.root, ctx.world, 0.4, 4, 16, HUB.wall, 11, 2, 0);
 
-      addSolidBox(ctx.root, ctx.world, 4.8, 0.7, 2.4, 0x4a4034, 0, 0.35, 0);
+      addVoxelVolume(ctx.root, ctx.world, 4.8, 0.7, 2.4, 0x4a4034, 0, 0.35, 0);
       const tableTag = makeWorldLabel("中央桌", "先組裝，再故意弄壞，再帶去現場");
       tableTag.position.set(0, 1.35, 0);
       ctx.root.add(tableTag);
-      const proto = addSolidBox(ctx.root, ctx.world, 0.42, 0.28, 0.28, 0x6a7068, 0.85, 0.85, 0.15);
+      const partA = addSolidBox(ctx.root, ctx.world, 0.22, 0.12, 0.22, 0x6a7068, -0.55, 0.82, 0.25);
+      const partB = addSolidBox(ctx.root, ctx.world, 0.18, 0.18, 0.18, 0x8aa0b8, 0.05, 0.86, -0.2);
+      const proto = heroProbe();
+      proto.position.set(0.85, 0.95, 0.15);
+      proto.visible = false;
       proto.name = "hub-proto";
+      ctx.root.add(proto);
       let protoState: "raw" | "built" | "broken" = "raw";
       ctx.interact.add({
         id: "proto",
@@ -49,11 +56,9 @@ export function createHubScene(id: SceneId = "HUB-S00"): GameScene {
         onUse: () => {
           if (protoState === "raw") {
             protoState = "built";
-            const mat = proto.material;
-            if (mat instanceof THREE.MeshStandardMaterial || mat instanceof THREE.MeshLambertMaterial) {
-              mat.emissive = new THREE.Color(0xc44a3a);
-              mat.emissiveIntensity = 0.85;
-            }
+            partA.visible = false;
+            partB.visible = false;
+            proto.visible = true;
             const item = ctx.interact.items.find((entry) => entry.id === "proto");
             if (item) item.prompt = "故意弄壞它（看第一次失效）";
             ctx.say("C1-S00-D001");
@@ -61,7 +66,8 @@ export function createHubScene(id: SceneId = "HUB-S00"): GameScene {
           }
           if (protoState === "built") {
             protoState = "broken";
-            proto.rotation.z = 0.45;
+            proto.rotation.z = 0.85;
+            proto.rotation.x = 0.35;
             ctx.save.c1.invalidRunExperienced = true;
             ctx.persist();
             const item = ctx.interact.items.find((entry) => entry.id === "proto");

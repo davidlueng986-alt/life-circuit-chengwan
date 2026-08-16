@@ -1,14 +1,1 @@
 https://life-circuit-chengwan.davidliang986.workers.dev
-
-# Live workers.dev origin (wrangler deploy).
-# date: 2026-08-16
-# cwd: C:\Users\daive\life-circuit-chengwan
-# commands: npm run build ; npx wrangler whoami ; npx wrangler deploy
-# build: vite v7.3.6 exit 0 — dist/assets/index-C90Y09Zz.js + index-DkX3D3J8.css
-# wrangler: 4.123.0
-# whoami: OAuth session present
-# LIVE_DEPLOY_REQUESTED: true (Release task)
-# worker: life-circuit-chengwan
-# version_id: 8db3cfbc-644c-4887-92d6-aef9820039e2
-# deploy: exit 0, no timeout, no retry
-# fun_gate: NOT PASSED — this file is the live URL only

@@ -3,6 +3,8 @@ import { PROMPT, TASK } from "../../content/copy";
 import { P_LINE } from "../../content/prologue/ids";
 import { P02_LAYOUT as L } from "../../content/prologue/layout";
 import { addSolidBox, boxMesh, playPoint } from "../../engine/greybox";
+import { heroLens } from "../../engine/props";
+import { addVoxelFloor, addVoxelVolume } from "../../engine/voxels";
 import { makeWorldLabel } from "../../engine/worldHints";
 import type { GameScene } from "../types";
 import {
@@ -24,13 +26,14 @@ export function createBorrowedLens(): GameScene {
   let dummy: THREE.Mesh | null = null;
   let lock: THREE.Mesh | null = null;
   let span: THREE.Mesh | null = null;
-  let lensMesh: THREE.Mesh | null = null;
+  let lensMesh: THREE.Group | null = null;
   let exitDoor: THREE.Mesh | null = null;
   let pulsedAt = -1;
   let seated = false;
   let unlocked = false;
   let elapsed = 0;
   let hinted = false;
+  let deadWalk = 0;
 
   return {
     id: "P-S02",
@@ -45,14 +48,14 @@ export function createBorrowedLens(): GameScene {
       ctx.camera.dist = 3.4;
       ctx.camera.pitch = -0.22;
 
-      addSolidBox(ctx.root, ctx.world, 11.2, 0.4, 14.6, 0x1c2228, 0, -0.2, 1.6);
-      addSolidBox(ctx.root, ctx.world, 8.6, 3.2, 0.35, 0x243038, -1.3, 1.4, -5.45);
-      addSolidBox(ctx.root, ctx.world, 11.2, 3.2, 0.35, 0x243038, 0, 1.4, 8.7);
-      addSolidBox(ctx.root, ctx.world, 0.35, 3.2, 14.6, 0x243038, -5.55, 1.4, 1.6);
-      addSolidBox(ctx.root, ctx.world, 0.35, 3.2, 14.6, 0x243038, 5.55, 1.4, 1.6);
+      addVoxelFloor(ctx.root, ctx.world, 11.2, 14.6, 0x1c2228, 0, 1.6);
+      addVoxelVolume(ctx.root, ctx.world, 8.6, 3.2, 0.35, 0x243038, -1.3, 1.4, -5.45);
+      addVoxelVolume(ctx.root, ctx.world, 11.2, 3.2, 0.35, 0x243038, 0, 1.4, 8.7);
+      addVoxelVolume(ctx.root, ctx.world, 0.35, 3.2, 14.6, 0x243038, -5.55, 1.4, 1.6);
+      addVoxelVolume(ctx.root, ctx.world, 0.35, 3.2, 14.6, 0x243038, 5.55, 1.4, 1.6);
       exitDoor = addSolidBox(ctx.root, ctx.world, 2.1, 2.4, 0.35, 0x2a3038, 4.15, 1.2, -5.45);
-      addSolidBox(ctx.root, ctx.world, 3.2, 0.4, 2.6, 0x2a3036, 4.1, -0.2, -6.9);
-      addSolidBox(ctx.root, ctx.world, 1.9, 0.72, 0.9, 0x4a4034, L.desk.x, 0.36, L.desk.z);
+      addVoxelVolume(ctx.root, ctx.world, 3.2, 0.4, 2.6, 0x2a3036, 4.1, -0.2, -6.9);
+      addVoxelVolume(ctx.root, ctx.world, 1.9, 0.72, 0.9, 0x4a4034, L.desk.x, 0.36, L.desk.z);
       const lampStem = boxMesh(0.06, 0.55, 0.06, 0x6a5a44, L.desk.x + 0.62, 0.95, L.desk.z + 0.12);
       const lampHead = new THREE.Mesh(
         new THREE.SphereGeometry(0.1, 10, 8),
@@ -61,30 +64,16 @@ export function createBorrowedLens(): GameScene {
       lampHead.position.set(L.desk.x + 0.42, 1.28, L.desk.z);
       ctx.root.add(lampStem, lampHead);
 
-      lensMesh = new THREE.Mesh(
-        new THREE.BoxGeometry(0.48, 0.14, 0.58),
-        new THREE.MeshStandardMaterial({
-          color: 0xc9861a,
-          emissive: 0xffb020,
-          emissiveIntensity: 1.15,
-          roughness: 0.35,
-          metalness: 0.28,
-        }),
-      );
+      lensMesh = heroLens();
       lensMesh.position.set(L.desk.x + 0.52, 0.88, L.desk.z + 0.18);
-      const button = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.085, 0.085, 0.055, 14),
-        new THREE.MeshBasicMaterial({ color: 0x7ec8c3 }),
-      );
-      button.position.set(0, 0.08, 0);
-      lensMesh.add(button);
       ctx.root.add(lensMesh);
-      const lensTag = makeWorldLabel("透鏡", "拾起後對牆按 Q");
+      const lensTag = makeWorldLabel("透鏡", "拾起後對牆按住 Q，放開");
       lensTag.position.set(L.desk.x + 0.52, 1.25, L.desk.z + 0.18);
       ctx.root.add(lensTag);
 
-      dead = addPipe(ctx.root, -2.5, L.deadY, L.wallZ, 5.1, 0.11, 0xc9a24a);
-      live = addPipe(ctx.root, -2.5, L.liveY, L.wallZ, 2.9, 0.08, 0x3a6a66);
+      dead = addPipe(ctx.root, -2.5, L.deadY, L.wallZ, 5.1, 0.11, 0x5a6054);
+      live = addPipe(ctx.root, -2.5, L.liveY, L.wallZ, 2.9, 0.08, 0x5a6054);
+      dummy = addPipe(ctx.root, -2.5, L.dummyY, L.wallZ, 4.6, 0.05, 0x5a6054);
       const deadTag = makeWorldLabel("最亮的線", "會反光，不是路");
       deadTag.position.set(0.2, L.deadY + 0.35, L.wallZ + 0.2);
       deadTag.visible = false;
@@ -94,11 +83,10 @@ export function createBorrowedLens(): GameScene {
       liveTag.visible = false;
       liveTag.name = "live-tag";
       ctx.root.add(deadTag, liveTag);
-      liveTail = addPipe(ctx.root, 0.4, L.liveY, L.wallZ, 2.2, 0.055, 0x3a6a66, "z");
+      liveTail = addPipe(ctx.root, 0.4, L.liveY, L.wallZ, 2.2, 0.055, 0x5a6054, "z");
       liveTail.rotation.set(0, 0, Math.PI / 2);
       liveTail.position.set(1.55, L.liveY, -4.2);
-      dummy = addPipe(ctx.root, -2.5, L.dummyY, L.wallZ, 4.6, 0.05, 0x3a4044);
-      addSolidBox(ctx.root, ctx.world, 1.45, 2.15, 0.22, 0x2a3036, L.panel.x, 1.15, L.panel.z);
+      addVoxelVolume(ctx.root, ctx.world, 1.45, 2.15, 0.22, 0x2a3036, L.panel.x, 1.15, L.panel.z);
       addRelayMesh(ctx.root, L.relay.x, L.relay.y, L.relay.z, 0x8aa0b8);
       lock = boxMesh(0.32, 0.52, 0.16, 0x4a4034, L.lock.x, L.lock.y, L.lock.z);
       ctx.root.add(lock);
@@ -193,6 +181,13 @@ export function createBorrowedLens(): GameScene {
         if (dummy) pulsePipe(dummy, "dummy", age);
       }
 
+      if (pulsedAt >= 0 && ctx.player.position.x < -0.4 && ctx.player.position.z < -3.6) {
+        deadWalk += _dt;
+        if (deadWalk > 1.1 && flags.take("dead-end")) {
+          ctx.hud.announce("這條最亮，可是已經熄了。回頭找會流動的。");
+        }
+      }
+
       const liveHit = ctx.flowLens.lastHits.find((hit) => hit.id.startsWith("live") && hit.lie === "live");
       if (liveHit) {
         const look = ctx.camera.lookDir();
@@ -202,7 +197,7 @@ export function createBorrowedLens(): GameScene {
         }
       }
 
-      if (unlocked && (ctx.player.position.z < -5.4 && ctx.player.position.x > 2.2)) {
+      if (unlocked && ctx.player.position.z < -5.4 && ctx.player.position.x > 2.2) {
         ctx.completeAndGo();
       }
     },
@@ -221,10 +216,16 @@ export function createBorrowedLens(): GameScene {
 
   function seat(ctx: Parameters<GameScene["mount"]>[0]): void {
     if (!ctx.flowLens.owned || seated) return;
-    if (pulsedAt < 0 && elapsed < 14) return;
+    if (pulsedAt < 0) {
+      ctx.hud.announce("先對牆放出脈衝，看哪一條還在流動。");
+      return;
+    }
     const behind = ctx.player.position.x > 1.2 && ctx.player.position.z < -1.8;
     const sawLive = ctx.flowLens.lastHits.some((hit) => hit.id.startsWith("live") && hit.lie === "live");
-    if (pulsedAt >= 0 && !behind && !sawLive) return;
+    if (!behind && !sawLive) {
+      ctx.hud.announce("跟流動的那條走到牆後。");
+      return;
+    }
     seated = true;
     if (lock) {
       const mat = lambertOf(lock);

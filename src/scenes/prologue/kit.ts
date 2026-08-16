@@ -14,6 +14,7 @@ import {
   tickRain,
   waterSheet,
 } from "../../engine/greybox";
+import { addVoxelFloor } from "../../engine/voxels";
 import { makeWorldLabel } from "../../engine/worldHints";
 import { citySkyline } from "../../engine/props";
 import { createNpc } from "../../engine/npc";
@@ -113,23 +114,36 @@ export function addGate3(
 ): { group: THREE.Group; setRise: (t01: number) => void; spin: (dt: number) => void } {
   const group = new THREE.Group();
   group.position.set(x, y, z);
-  const frame = new THREE.Mesh(
-    new THREE.BoxGeometry(16, 10, 1.15),
-    surf(0x2c343c, { roughness: 0.52, metalness: 0.42 }),
+  for (let i = -7; i <= 7; i += 2) {
+    const pillar = new THREE.Mesh(
+      new THREE.BoxGeometry(1.85, 10, 1.15),
+      surf(i % 4 === 1 ? 0x3a444c : 0x2c343c, { roughness: 0.88, metalness: 0.08, flat: true }),
+    );
+    pillar.position.set(i, 0, 0);
+    group.add(pillar);
+  }
+  const lintel = new THREE.Mesh(
+    new THREE.BoxGeometry(16.4, 1.2, 1.4),
+    surf(0x243038, { roughness: 0.86, metalness: 0.1, flat: true }),
   );
-  frame.position.y = 0;
-  group.add(frame);
+  lintel.position.y = 5.4;
+  group.add(lintel);
   const booth = new THREE.Mesh(
     new THREE.BoxGeometry(3.2, 2.2, 2.4),
-    new THREE.MeshLambertMaterial({ color: 0x2c343c }),
+    surf(0x2c343c, { roughness: 0.86, metalness: 0.08, flat: true }),
   );
   booth.position.set(5.4, 4.2, -1.2);
-  group.add(booth);
+  const boothWin = new THREE.Mesh(
+    new THREE.BoxGeometry(1.4, 0.7, 0.08),
+    new THREE.MeshBasicMaterial({ color: 0xff7a28 }),
+  );
+  boothWin.position.set(5.4, 4.35, -2.38);
+  group.add(booth, boothWin);
   const blades: THREE.Mesh[] = [];
   for (let i = 0; i < 5; i += 1) {
     const blade = new THREE.Mesh(
-      new THREE.BoxGeometry(14.4, 0.42, 0.28),
-      new THREE.MeshLambertMaterial({ color: 0x6a7380 }),
+      new THREE.BoxGeometry(14.4, 0.55, 0.32),
+      surf(0x6a7380, { roughness: 0.55, metalness: 0.28, flat: true }),
     );
     blade.position.set(0, -2.4 + i * 0.85, -0.7);
     group.add(blade);
@@ -496,7 +510,7 @@ export function addDeck(
   z: number,
   color = STORM.floor,
 ): THREE.Mesh {
-  return addSolidBox(ctx.root, ctx.world, w, 0.4, d, color, x, -0.2, z);
+  return addVoxelFloor(ctx.root, ctx.world, w, d, color, x, z);
 }
 
 export { addSolidBox, boxMesh, STORM };

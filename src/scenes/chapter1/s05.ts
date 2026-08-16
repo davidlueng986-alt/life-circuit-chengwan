@@ -3,6 +3,7 @@ import { C1_PROMPT } from "../../../content/chapter1/copy";
 import { C1_LAYOUT } from "../../../content/chapter1/layout";
 import { TASK } from "../../content/copy";
 import { addSolidBox } from "../../engine/greybox";
+import { createNpc } from "../../engine/npc";
 import type { GameScene, SceneContext } from "../types";
 import { addReporterStand, lightHarbor, mountEastShore, near, xyz } from "./kit";
 
@@ -13,7 +14,7 @@ export function createC1S05(): GameScene {
   let guessSaid = false;
   let deskSaid = false;
   let pass = false;
-  let chen: THREE.Mesh | null = null;
+  let chen: THREE.Object3D | null = null;
   let stand: THREE.Group | null = null;
   let board: THREE.Mesh | null = null;
   const path = [
@@ -35,17 +36,8 @@ export function createC1S05(): GameScene {
       board.visible = false;
       addSolidBox(ctx.root, ctx.world, 0.9, 1.1, 0.4, 0x3a322c, C1_LAYOUT.demoStand[0], 0.55, C1_LAYOUT.demoStand[2]);
 
-      chen = new THREE.Mesh(
-        new THREE.CapsuleGeometry(0.22, 0.72, 6, 10),
-        new THREE.MeshStandardMaterial({ color: 0xc9a36a, roughness: 0.7 }),
-      );
-      chen.position.set(C1_LAYOUT.spawnS05[0] - 1.2, 0.9, C1_LAYOUT.spawnS05[2]);
-      const shawl = new THREE.Mesh(
-        new THREE.BoxGeometry(0.55, 0.18, 0.32),
-        new THREE.MeshStandardMaterial({ color: 0xb85c38, roughness: 0.65, emissive: 0x4a2010, emissiveIntensity: 0.2 }),
-      );
-      shawl.position.set(0, 0.22, 0.04);
-      chen.add(shawl);
+      chen = createNpc("chen");
+      chen.position.set(C1_LAYOUT.spawnS05[0] - 1.2, 0, C1_LAYOUT.spawnS05[2]);
       ctx.root.add(chen);
       const shadeVol = new THREE.Mesh(
         new THREE.BoxGeometry(2.4, 0.04, 2.4),
@@ -124,7 +116,7 @@ export function createC1S05(): GameScene {
       if (!a || !b) return;
       const local = walk - idx;
       chen.position.lerpVectors(a, b, nextIdx === idx ? 1 : local);
-      chen.position.y = 0.9;
+      chen.position.y = 0;
       walk += dt * 0.55;
 
       if (!shadeSaid && near(chen.position, C1_LAYOUT.shade, 1.6)) {

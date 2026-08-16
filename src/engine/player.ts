@@ -117,8 +117,14 @@ export class PlayerMotor {
 
     const wish = wishOnYaw(axis.x, axis.z, lookYaw);
     const stunned = this.recoverStun > 0;
-    const targetX = stunned ? 0 : wish.x * this.walkSpeed;
-    const targetZ = stunned ? 0 : wish.z * this.walkSpeed;
+    const speed = this.walkSpeed * (input.sprinting() ? MOTOR.sprintMul : 1);
+    const targetX = stunned ? 0 : wish.x * speed;
+    const targetZ = stunned ? 0 : wish.z * speed;
+    if (!stunned && input.jumping() && (this.grounded || this.coyote > 0)) {
+      this.velocity.y = MOTOR.jumpSpeed;
+      this.grounded = false;
+      this.coyote = 0;
+    }
     const next = approachVec(this.velocity.x, this.velocity.z, targetX, targetZ, MOTOR.accel, MOTOR.decel, dt);
     this.velocity.x = next.x;
     this.velocity.z = next.z;

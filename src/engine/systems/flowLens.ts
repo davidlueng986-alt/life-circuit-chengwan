@@ -44,6 +44,7 @@ export class FlowLens {
   justPulsed = false;
   justFailed = false;
   waveAge = 99;
+  deniedHint = false;
 
   private tapHeld = false;
   private voice: ToolVoice | null = null;
@@ -143,6 +144,7 @@ export class FlowLens {
     this.justFailed = false;
     this.tapHeld = false;
     this.waveAge = 99;
+    this.deniedHint = false;
   }
 
   grantPickup(): void {
@@ -167,8 +169,10 @@ export class FlowLens {
     this.time += tick.dt;
     this.justPulsed = false;
     this.justFailed = false;
+    this.deniedHint = false;
     if (this.time > this.lastPulseAt + 0.4) this.failedPulse = false;
     if (!this.owned) {
+      this.deniedHint = tick.press || tick.hold;
       this.charging = tick.hold;
       this.charge01 = tick.hold ? 0.4 : 0;
       if (tick.hold) this.waveAge = 0;

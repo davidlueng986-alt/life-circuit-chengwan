@@ -358,6 +358,9 @@ export class Game {
         readable: this.bioRig.fieldReadable(this.save),
         reducedMotion: this.save.settings.reducedMotion,
       });
+      if (this.flowLens.deniedHint && this.input.lensPressed) {
+        this.hud.announce("還沒有透鏡。先找桌上那隻只有圓鈕的。");
+      }
       this.tether.update({
         dt,
         input: this.input,
@@ -419,7 +422,14 @@ export class Game {
       const fBtn = document.querySelector("[data-act='f']");
       if (fBtn instanceof HTMLElement) fBtn.hidden = !this.tether.owned;
       const nowMs = performance.now();
-      const ate = this.hud.consumeInteract(this.input.interactPressed, this.input.interactHeld, nowMs);
+      const worldWants = !!this.interact.focused?.enabled;
+      const cross = document.querySelector("#crosshair");
+      if (cross instanceof HTMLElement) {
+        cross.dataset["hot"] = worldWants || this.tether.focusId || this.tether.heldId ? "1" : "0";
+      }
+      const ate = worldWants
+        ? false
+        : this.hud.consumeInteract(this.input.interactPressed, this.input.interactHeld, nowMs);
       const tetherLine = this.tether.prompt();
       const worldPrompt = this.interact.promptText();
       const worldMeta = this.interact.promptMeta();
@@ -509,7 +519,7 @@ function resumeLabel(id: SceneId): string {
 function pickGoal(items: Interactable[], focused: Interactable | null): Interactable | null {
   const ranked = items.filter((item) => item.enabled);
   const preferred = ranked.find((item) =>
-    /控制室|升降|進入|拾起|推開|去河港|探頭|透鏡|工具箱|維修梯|放下|開門/.test(item.prompt),
+    /控制室|升降|進入|拾起|取下|推開|去河港|探頭|透鏡|工具箱|維修梯|放下|開門|扣進|走過/.test(item.prompt),
   );
   return preferred ?? focused ?? ranked[0] ?? null;
 }
