@@ -57,9 +57,9 @@ export function createStormArrival(): GameScene {
       addSolidBox(ctx.root, ctx.world, 0.18, 2.3, 1.45, 0x2a241c, L.indoorDoor.x, 1.15, -1.55);
       addSolidBox(ctx.root, ctx.world, 0.18, 2.3, 1.45, 0x2a241c, L.indoorDoor.x, 1.15, 1.55);
       doorMesh = addSolidBox(ctx.root, ctx.world, 0.18, 2.3, 1.5, 0x3a2e22, L.indoorDoor.x, 1.15, 0);
-      const warm = playPoint(0xffd08a, 4.6, 12, 0.95);
+      const warm = playPoint(0xffd08a, 1.8, 8, 1.1);
       warm.position.set(7.4, 1.9, 0);
-      const alcoveFill = playPoint(0x9ec0d2, 2.8, 10, 1);
+      const alcoveFill = playPoint(0x9ec0d2, 1.1, 7, 1.15);
       alcoveFill.position.set(8.2, 2.2, 1.4);
       ctx.root.add(warm, alcoveFill);
       const map = addSolidBox(ctx.root, ctx.world, 0.06, 1.1, 1.6, 0x2a2620, 9.02, 1.5, 0);
@@ -156,9 +156,9 @@ export function createStormArrival(): GameScene {
         enabled: true,
         onUse: () => ctx.completeAndGo(),
       });
-      const gateLamp = playPoint(0xff7a28, 7.2, 38, 1.1);
+      const gateLamp = playPoint(0xff7a28, 3.4, 28, 1.15);
       gateLamp.position.set(L.gate.x, L.gate.y + 2, L.gate.z);
-      const liftLamp = playPoint(0xffd08a, 4.4, 16, 1.05);
+      const liftLamp = playPoint(0xffd08a, 2.1, 12, 1.1);
       liftLamp.position.set(L.lift.x, 2.4, L.lift.z);
       ctx.root.add(gateLamp, liftLamp);
 

@@ -54,7 +54,7 @@ export const PROMPT = {
   pickLens: "拾起 透鏡",
   pulseWall: "對牆 放出脈衝",
   seatRelay: "壓回 接頭",
-  pickTether: "抓取 連接工具",
+  pickTether: "取下 連接工具",
   snapPlate: "扣進 形狀座",
   grabPlate: "再抓一次",
   pickProbe: "拾起 探頭",

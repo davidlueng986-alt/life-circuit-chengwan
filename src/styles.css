@@ -983,7 +983,7 @@ html[data-high-contrast="true"] .hud-task {
   position: absolute;
   inset: auto var(--safe-x) calc(var(--safe-b) + 0.2rem) var(--safe-x);
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto;
   justify-content: space-between;
   gap: 0.7rem;
   pointer-events: auto;

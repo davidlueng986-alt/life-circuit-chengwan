@@ -72,23 +72,23 @@ export interface TetherTick {
 }
 
 const MASS_FORCE: Record<Exclude<MassClass, "locked">, number> = {
-  light: 22,
-  medium: 11,
-  heavy: 5.2,
+  light: 26,
+  medium: 9.4,
+  heavy: 3.6,
   fragile: 10,
 };
 
 const MASS_DAMP: Record<Exclude<MassClass, "locked">, number> = {
-  light: 0.8,
-  medium: 0.88,
-  heavy: 0.93,
+  light: 0.76,
+  medium: 0.86,
+  heavy: 0.94,
   fragile: 0.86,
 };
 
 const MASS_SPIN: Record<Exclude<MassClass, "locked">, number> = {
-  light: 7.5,
-  medium: 3.8,
-  heavy: 1.5,
+  light: 8.4,
+  medium: 3.1,
+  heavy: 0.85,
   fragile: 3.4,
 };
 
@@ -401,7 +401,9 @@ export class TetherTool {
     const delta = this.tmp.copy(this.target).sub(body.object.position);
     body.velocity.addScaledVector(delta, force * tick.dt);
     if (body.mass === "heavy") {
-      body.velocity.x += Math.sin(this.time * 1.5) * 1.6 * tick.dt;
+      body.velocity.x += Math.sin(this.time * 2.1) * 4.2 * tick.dt;
+      body.velocity.z += Math.cos(this.time * 1.4) * 1.8 * tick.dt;
+      body.roll += Math.sin(this.time * 1.8) * 0.35 * tick.dt;
     }
     body.velocity.multiplyScalar(Math.pow(damp, tick.dt * 60));
     body.object.position.addScaledVector(body.velocity, tick.dt);

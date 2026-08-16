@@ -15,7 +15,7 @@ export function lightHarbor(ctx: SceneContext, weather: HarborWeather): THREE.Po
   applyFog(ctx.three, palette, ctx.reducedMotion);
   if (weather === "hub") {
     if (ctx.three.fog instanceof THREE.FogExp2) {
-      ctx.three.fog.density = ctx.reducedMotion ? 0.0018 : 0.0026;
+      ctx.three.fog.density = ctx.reducedMotion ? 0.004 : 0.006;
     }
     ctx.root.add(new THREE.HemisphereLight(0xfff0dc, 0x2a2218, 1.25));
     const sun = new THREE.DirectionalLight(0xffe6c4, 1.85);
@@ -27,7 +27,7 @@ export function lightHarbor(ctx: SceneContext, weather: HarborWeather): THREE.Po
     return null;
   }
   if (ctx.three.fog instanceof THREE.FogExp2) {
-    ctx.three.fog.density = ctx.reducedMotion ? 0.002 : weather === "storm" ? 0.0032 : 0.0026;
+    ctx.three.fog.density = ctx.reducedMotion ? 0.005 : weather === "storm" ? 0.008 : 0.006;
   }
   ctx.root.add(new THREE.HemisphereLight(0xf0dcc4, 0x2a2218, 1.18));
   const key = new THREE.DirectionalLight(weather === "storm" ? 0xc4d8e6 : 0xffe2b8, weather === "storm" ? 1.45 : 1.7);

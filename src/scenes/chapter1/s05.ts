@@ -36,11 +36,23 @@ export function createC1S05(): GameScene {
       addSolidBox(ctx.root, ctx.world, 0.9, 1.1, 0.4, 0x3a322c, C1_LAYOUT.demoStand[0], 0.55, C1_LAYOUT.demoStand[2]);
 
       chen = new THREE.Mesh(
-        new THREE.CapsuleGeometry(0.22, 0.9, 4, 8),
-        new THREE.MeshLambertMaterial({ color: 0xc9a36a }),
+        new THREE.CapsuleGeometry(0.22, 0.72, 6, 10),
+        new THREE.MeshStandardMaterial({ color: 0xc9a36a, roughness: 0.7 }),
       );
       chen.position.set(C1_LAYOUT.spawnS05[0] - 1.2, 0.9, C1_LAYOUT.spawnS05[2]);
+      const shawl = new THREE.Mesh(
+        new THREE.BoxGeometry(0.55, 0.18, 0.32),
+        new THREE.MeshStandardMaterial({ color: 0xb85c38, roughness: 0.65, emissive: 0x4a2010, emissiveIntensity: 0.2 }),
+      );
+      shawl.position.set(0, 0.22, 0.04);
+      chen.add(shawl);
       ctx.root.add(chen);
+      const shadeVol = new THREE.Mesh(
+        new THREE.BoxGeometry(2.4, 0.04, 2.4),
+        new THREE.MeshBasicMaterial({ color: 0x050608, transparent: true, opacity: 0.45 }),
+      );
+      shadeVol.position.copy(xyz(C1_LAYOUT.shade)).setY(0.03);
+      ctx.root.add(shadeVol);
 
       ctx.bioRig.grantPickup(ctx.save.c1.loadout);
       ctx.bioRig.accessibility = ctx.save.c1.accessibilityOutput ?? "color_only";

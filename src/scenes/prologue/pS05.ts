@@ -90,6 +90,16 @@ export function createEvacRun(): GameScene {
         a: new THREE.Vector3(L.corridorMouth.x, 1.25, 6.8),
         b: new THREE.Vector3(L.lift.x, 1.25, L.lift.z + 0.4),
       });
+      for (let z = 6.4; z > L.lift.z; z -= 2.2) {
+        const pulse = new THREE.Mesh(
+          new THREE.ConeGeometry(0.16, 0.42, 3),
+          new THREE.MeshBasicMaterial({ color: 0xf4f8ff, fog: false, toneMapped: false }),
+        );
+        pulse.rotation.x = Math.PI / 2;
+        pulse.position.set(L.corridorMouth.x, 0.18, z);
+        pulse.name = "white-pulse";
+        ctx.root.add(pulse);
+      }
 
       water = addWaterChannel(ctx.root, -6, -3.2, 0);
       water.setDir(1);

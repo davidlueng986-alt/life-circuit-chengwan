@@ -9,6 +9,8 @@ export class CameraRig {
   fov = 62;
   dist: number = CAM.dist;
   private snap = false;
+  private yawVel = 0;
+  private pitchVel = 0;
   private readonly desired = new THREE.Vector3();
   private readonly look = new THREE.Vector3();
   private readonly scratch = new THREE.Vector3();
@@ -26,20 +28,29 @@ export class CameraRig {
   }
 
   applyMouse(dx: number, dy: number, reduced: boolean): void {
-    const sense = reduced ? 0.00115 : 0.00205;
-    this.yaw -= dx * sense;
-    this.pitch = clampPitch(this.pitch - dy * sense);
+    const sense = reduced ? 0.00105 : 0.00172;
+    this.yawVel -= dx * sense;
+    this.pitchVel -= dy * sense;
   }
 
   update(camera: THREE.PerspectiveCamera, player: PlayerMotor, reduced: boolean, world?: WorldColliders): void {
     camera.fov = this.fov;
     camera.updateProjectionMatrix();
+    const damp = reduced ? 0.35 : 0.78;
+    this.yaw += this.yawVel;
+    this.pitch = clampPitch(this.pitch + this.pitchVel);
+    this.yawVel *= damp;
+    this.pitchVel *= damp;
 
     const ladder = player.climbing;
     const dist = ladder ? CAM.ladderDist : this.dist;
     const height = ladder ? CAM.ladderHeight : CAM.height;
     const offset = orbitOffset(this.yaw, this.pitch, dist, height, CAM.side);
-    this.look.set(player.position.x, player.position.y + CAM.lookHeight, player.position.z);
+    this.look.set(
+      player.position.x + player.velocity.x * 0.14,
+      player.position.y + CAM.lookHeight,
+      player.position.z + player.velocity.z * 0.14,
+    );
     this.desired.set(this.look.x + offset.x, this.look.y + offset.y, this.look.z + offset.z);
 
     if (world) {

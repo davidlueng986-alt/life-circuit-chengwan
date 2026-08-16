@@ -3,6 +3,7 @@ import { TASK } from "../../content/copy";
 import { P_LINE } from "../../content/prologue/ids";
 import { P04_LAYOUT as L } from "../../content/prologue/layout";
 import { addSolidBox, boxMesh, playPoint } from "../../engine/greybox";
+import { makeWorldLabel } from "../../engine/worldHints";
 import type { GameScene, SceneContext } from "../types";
 import {
   SceneVoice,
@@ -88,6 +89,13 @@ export function createActuatorGallery(): GameScene {
       const relayJam = addRelayMesh(ctx.root, L.jam.x, L.jam.y, L.jam.z, 0x6a5340);
       const relayLoose = addRelayMesh(ctx.root, L.loose.x, L.loose.y, L.loose.z, 0x8aa0b8);
       ctx.root.add(debris);
+      const wrongTag = makeWorldLabel("接錯的 relay", "搬到正確座");
+      wrongTag.position.set(L.wrongHome.x, L.wrongHome.y + 0.7, L.wrongHome.z);
+      const jamTag = makeWorldLabel("卡住的 relay", "先清雜物再接");
+      jamTag.position.set(L.jam.x, L.jam.y + 0.7, L.jam.z);
+      const looseTag = makeWorldLabel("鬆脫的 relay", "壓回高處座");
+      looseTag.position.set(L.loose.x, L.loose.y + 0.55, L.loose.z);
+      ctx.root.add(wrongTag, jamTag, looseTag);
 
       ctx.signals.add({
         id: "bus",

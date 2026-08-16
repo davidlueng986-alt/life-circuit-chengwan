@@ -12,7 +12,7 @@ export function createHubScene(id: SceneId = "HUB-S00"): GameScene {
     mount(ctx) {
       applyFog(ctx.three, HUB, ctx.reducedMotion);
       if (ctx.three.fog instanceof THREE.FogExp2) {
-        ctx.three.fog.density = ctx.reducedMotion ? 0.0018 : 0.0024;
+        ctx.three.fog.density = ctx.reducedMotion ? 0.004 : 0.006;
       }
       ctx.root.add(new THREE.HemisphereLight(0xfff0dc, 0x2a2218, 1.28));
       const sun = new THREE.DirectionalLight(0xffe6c4, 1.9);
@@ -34,9 +34,42 @@ export function createHubScene(id: SceneId = "HUB-S00"): GameScene {
       addSolidBox(ctx.root, ctx.world, 0.4, 4, 16, HUB.wall, 11, 2, 0);
 
       addSolidBox(ctx.root, ctx.world, 4.8, 0.7, 2.4, 0x4a4034, 0, 0.35, 0);
-      const tableTag = makeWorldLabel("中央桌", "先走到這裡");
+      const tableTag = makeWorldLabel("中央桌", "先組裝，再故意弄壞，再帶去現場");
       tableTag.position.set(0, 1.35, 0);
       ctx.root.add(tableTag);
+      const proto = addSolidBox(ctx.root, ctx.world, 0.42, 0.28, 0.28, 0x6a7068, 0.85, 0.85, 0.15);
+      proto.name = "hub-proto";
+      let protoState: "raw" | "built" | "broken" = "raw";
+      ctx.interact.add({
+        id: "proto",
+        prompt: "組裝原型探頭",
+        position: new THREE.Vector3(0.85, 0, 0.15),
+        radius: 1.5,
+        enabled: true,
+        onUse: () => {
+          if (protoState === "raw") {
+            protoState = "built";
+            const mat = proto.material;
+            if (mat instanceof THREE.MeshStandardMaterial || mat instanceof THREE.MeshLambertMaterial) {
+              mat.emissive = new THREE.Color(0xc44a3a);
+              mat.emissiveIntensity = 0.85;
+            }
+            const item = ctx.interact.items.find((entry) => entry.id === "proto");
+            if (item) item.prompt = "故意弄壞它（看第一次失效）";
+            ctx.say("C1-S00-D001");
+            return;
+          }
+          if (protoState === "built") {
+            protoState = "broken";
+            proto.rotation.z = 0.45;
+            ctx.save.c1.invalidRunExperienced = true;
+            ctx.persist();
+            const item = ctx.interact.items.find((entry) => entry.id === "proto");
+            if (item) item.prompt = "已留下第一次失效，去河港";
+            ctx.hud.setTask("去河港：帶這次失效紀錄出門");
+          }
+        },
+      });
       mountDoor(ctx, -3.15, 1.35, 0xb85c38, "harbor-door");
       mountDoor(ctx, 3.15, 1.35, 0x3d6a68, "workshop-door");
       const harborTag = makeWorldLabel("去河港", "第一章");

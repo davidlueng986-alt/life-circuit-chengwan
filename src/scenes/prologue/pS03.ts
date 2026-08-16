@@ -40,10 +40,17 @@ export function createCutSpan(): GameScene {
       addSolidBox(ctx.root, ctx.world, 0.35, 1.15, 1.1, 0x1a2127, 1.7, 0.48, 0.55);
       addAmberSpine(ctx, -2.2, 1.4, 4.6);
 
-      const holster = boxMesh(0.2, 0.55, 0.2, 0x7ec8c3, L.holster.x, L.holster.y, L.holster.z);
-      ctx.root.add(holster);
-      const toolTag = makeWorldLabel("連接工具", "抓取後扣進形狀座");
-      toolTag.position.set(L.holster.x, 1.7, L.holster.z);
+      addSolidBox(ctx.root, ctx.world, 0.18, 1.15, 0.55, 0x3a444c, L.holster.x + 0.18, 1.15, L.holster.z);
+      const holster = boxMesh(0.22, 0.72, 0.22, 0x8fd4cf, L.holster.x, L.holster.y, L.holster.z);
+      const holsterMat = holster.material;
+      if (holsterMat instanceof THREE.MeshStandardMaterial || holsterMat instanceof THREE.MeshLambertMaterial) {
+        holsterMat.emissive = new THREE.Color(0x3a8884);
+        holsterMat.emissiveIntensity = 0.85;
+      }
+      const grip = boxMesh(0.08, 0.28, 0.08, 0xe0a03a, L.holster.x - 0.16, L.holster.y + 0.12, L.holster.z);
+      ctx.root.add(holster, grip);
+      const toolTag = makeWorldLabel("連接工具", "先按 E 取下，再用 F 抓板");
+      toolTag.position.set(L.holster.x, 1.85, L.holster.z);
       ctx.root.add(toolTag);
       plateA = boxMesh(1.15, 0.11, 0.7, 0x8a8f86, L.plateA.x, L.plateA.y, L.plateA.z);
       const plateB = boxMesh(1.15, 0.16, 0.7, 0x6a6560, L.plateB.x, L.plateB.y, L.plateB.z);
@@ -62,6 +69,11 @@ export function createCutSpan(): GameScene {
       ctx.root.add(plateA, plateB);
       addShapeMark(ctx.root, "chevron", L.seatA.x, 0, L.seatA.z);
       addShapeMark(ctx.root, "notch", L.seatB.x, 0, L.seatB.z);
+      const seatATag = makeWorldLabel("三角座", "對準板的尖角");
+      seatATag.position.set(L.seatA.x, 0.85, L.seatA.z);
+      const seatBTag = makeWorldLabel("缺角座", "這塊板比較重，風會推");
+      seatBTag.position.set(L.seatB.x, 0.85, L.seatB.z);
+      ctx.root.add(seatATag, seatBTag);
 
       water = addWaterChannel(ctx.root, 0, -3.1, 0);
       sos = addSosBeacon(ctx.root, -6.4, -1.8, -8);
@@ -71,8 +83,9 @@ export function createCutSpan(): GameScene {
       ctx.world.addAnchor("far", 0, 0, -3.4);
       ctx.world.killY = -2.2;
 
-      ctx.player.reset(L.spawn.x, L.spawn.y, L.spawn.z, L.spawn.yaw);
-      ctx.camera.yaw = L.spawn.yaw;
+      const faceTool = Math.atan2(-(L.holster.x - L.spawn.x), -(L.holster.z - L.spawn.z));
+      ctx.player.reset(L.spawn.x, L.spawn.y, L.spawn.z, faceTool);
+      ctx.camera.yaw = faceTool;
       ctx.hud.setTask(TASK["P-S03-pick"] ?? "");
       ctx.say(P_LINE.pickTether);
       ctx.tether.assistAlign = true;
@@ -89,6 +102,7 @@ export function createCutSpan(): GameScene {
           ctx.save.player.tool.tether = true;
           ctx.persist();
           holster.visible = false;
+          grip.visible = false;
           ctx.hud.setTask(TASK["P-S03-snap"] ?? "");
           ctx.say(P_LINE.rotateSlow);
           armPlates(ctx, plateA!, plateB);

@@ -20,15 +20,11 @@ export function createDeadLift(): GameScene {
     mount(ctx) {
       const lights = stormShell(ctx, false);
       rain = lights.rain;
-      const key = playPoint(0xffd8a0, 4.6, 16, 0.95);
+      const key = playPoint(0xffd8a0, 1.8, 10, 1.05);
       key.position.set(-1.2, 2.3, -1.4);
-      const fill = playPoint(0xa8c8dc, 3.4, 16, 1);
-      fill.position.set(3.4, 2.6, 2.1);
-      const crateLamp = playPoint(0xffc14a, 4.8, 12, 0.9);
-      crateLamp.position.set(L.crate.x, 1.9, L.crate.z);
-      const rear = playPoint(0x8aa4b8, 2.6, 12, 1);
-      rear.position.set(-2.2, 2.4, 2.6);
-      ctx.root.add(key, fill, crateLamp, rear);
+      const crateLamp = playPoint(0xffc14a, 2.2, 8, 1);
+      crateLamp.position.set(L.crate.x, 1.7, L.crate.z);
+      ctx.root.add(key, crateLamp);
 
       addSolidBox(ctx.root, ctx.world, 10.4, 0.4, 10.4, 0x4a5560, 0, -0.2, 0);
       addSolidBox(ctx.root, ctx.world, 10.4, 3.2, 0.4, 0x4e5c68, 0, 1.4, -5.1);

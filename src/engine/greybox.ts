@@ -13,11 +13,11 @@ export interface Palette {
 export type LitMat = THREE.MeshStandardMaterial | THREE.MeshLambertMaterial;
 
 export const STORM: Palette = {
-  floor: 0x5a6670,
-  wall: 0x4a5864,
+  floor: 0x3a444c,
+  wall: 0x2e3840,
   accent: 0xe0a03a,
   emissive: 0xff7a28,
-  fog: 0x314048,
+  fog: 0x1c2428,
 };
 
 export const HUB: Palette = {
@@ -88,7 +88,7 @@ function luma(color: number): number {
 
 /** Three r155+ point lights are candela. Greybox strengths are still 0–8 “old units”. */
 export function playPoint(color: number, strength = 1, distance = 16, decay = 1.05): THREE.PointLight {
-  return new THREE.PointLight(color, Math.max(36, strength * 74), distance, decay);
+  return new THREE.PointLight(color, Math.max(16, strength * 34), distance, decay);
 }
 
 export function surf(
@@ -135,7 +135,7 @@ export function paintEmissive(object: THREE.Object3D, intensity: number, color?:
 
 export function configureKeyShadow(light: THREE.DirectionalLight, span = 28): void {
   light.castShadow = true;
-  light.shadow.mapSize.set(1536, 1536);
+  light.shadow.mapSize.set(1024, 1024);
   light.shadow.bias = -0.00035;
   light.shadow.normalBias = 0.035;
   light.shadow.camera.near = 1.5;
@@ -291,7 +291,7 @@ export function addSky(scene: THREE.Scene, zenith: number, horizon: number): THR
 
 export function applyFog(scene: THREE.Scene, palette: Palette, reduced: boolean): void {
   scene.background = new THREE.Color(palette.fog);
-  scene.fog = new THREE.FogExp2(palette.fog, reduced ? 0.0018 : 0.0028);
+  scene.fog = new THREE.FogExp2(palette.fog, reduced ? 0.004 : 0.0068);
   const old = scene.getObjectByName("sky-dome");
   if (old) {
     scene.remove(old);
@@ -305,7 +305,7 @@ export function applyFog(scene: THREE.Scene, palette: Palette, reduced: boolean)
 
 export function makeRain(reduced: boolean): THREE.Points | null {
   if (reduced) return null;
-  const count = 2200;
+  const count = 900;
   const positions = new Float32Array(count * 3);
   for (let i = 0; i < count; i += 1) {
     positions[i * 3] = (Math.random() - 0.5) * 52;
@@ -368,17 +368,17 @@ export function markerPole(color: number, x: number, y: number, z: number): THRE
 /** Extra fill so night / indoor greybox is never a black room. */
 export function addPlayLights(root: THREE.Group, mood: "storm" | "indoor" | "hub" | "workshop" | "harbor"): void {
   if (mood === "storm") {
-    root.add(new THREE.AmbientLight(0x8aa4b6, 0.92));
-    const fill = new THREE.DirectionalLight(0xd4e4f0, 0.88);
+    root.add(new THREE.AmbientLight(0x6a8090, 0.42));
+    const fill = new THREE.DirectionalLight(0xb8c8d4, 0.48);
     fill.position.set(8, 16, -10);
     root.add(fill);
     return;
   }
   if (mood === "indoor") {
-    root.add(new THREE.AmbientLight(0xd8e4ee, 1.38));
-    const wash = playPoint(0xffe2b8, 4.4, 22, 0.95);
-    wash.position.set(0, 2.6, 0.4);
-    const bounce = playPoint(0xa8c8e0, 2.8, 18, 1);
+    root.add(new THREE.AmbientLight(0x8aa0b0, 0.55));
+    const wash = playPoint(0xffe2b8, 1.8, 14, 1.05);
+    wash.position.set(0, 2.4, 0.4);
+    const bounce = playPoint(0x7a98a8, 1.1, 12, 1.1);
     bounce.position.set(2.6, 2.2, -2.1);
     root.add(wash, bounce);
     return;

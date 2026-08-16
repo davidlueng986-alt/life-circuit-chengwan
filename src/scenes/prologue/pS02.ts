@@ -37,21 +37,19 @@ export function createBorrowedLens(): GameScene {
     mount(ctx) {
       const lights = stormShell(ctx, false);
       rain = lights.rain;
-      const deskLamp = playPoint(0xffe2b0, 5.2, 14, 0.95);
-      deskLamp.position.set(L.desk.x, 2.15, L.desk.z);
-      const wash = playPoint(0x9ec0d2, 3.4, 16, 1);
-      wash.position.set(0, 2.6, 1.2);
-      const rear = playPoint(0x7ec8c3, 2.8, 12, 1);
-      rear.position.set(3.2, 2.2, -3.6);
-      ctx.root.add(deskLamp, wash, rear);
+      const deskLamp = playPoint(0xffe2b0, 1.7, 8, 1.1);
+      deskLamp.position.set(L.desk.x, 1.85, L.desk.z);
+      const wash = playPoint(0x6a8494, 0.9, 10, 1.15);
+      wash.position.set(0, 2.4, 1.2);
+      ctx.root.add(deskLamp, wash);
       ctx.camera.dist = 3.4;
       ctx.camera.pitch = -0.22;
 
-      addSolidBox(ctx.root, ctx.world, 11.2, 0.4, 14.6, 0x2a3036, 0, -0.2, 1.6);
-      addSolidBox(ctx.root, ctx.world, 8.6, 3.2, 0.35, 0x4e5c68, -1.3, 1.4, -5.45);
-      addSolidBox(ctx.root, ctx.world, 11.2, 3.2, 0.35, 0x4e5c68, 0, 1.4, 8.7);
-      addSolidBox(ctx.root, ctx.world, 0.35, 3.2, 14.6, 0x4e5c68, -5.55, 1.4, 1.6);
-      addSolidBox(ctx.root, ctx.world, 0.35, 3.2, 14.6, 0x4e5c68, 5.55, 1.4, 1.6);
+      addSolidBox(ctx.root, ctx.world, 11.2, 0.4, 14.6, 0x1c2228, 0, -0.2, 1.6);
+      addSolidBox(ctx.root, ctx.world, 8.6, 3.2, 0.35, 0x243038, -1.3, 1.4, -5.45);
+      addSolidBox(ctx.root, ctx.world, 11.2, 3.2, 0.35, 0x243038, 0, 1.4, 8.7);
+      addSolidBox(ctx.root, ctx.world, 0.35, 3.2, 14.6, 0x243038, -5.55, 1.4, 1.6);
+      addSolidBox(ctx.root, ctx.world, 0.35, 3.2, 14.6, 0x243038, 5.55, 1.4, 1.6);
       exitDoor = addSolidBox(ctx.root, ctx.world, 2.1, 2.4, 0.35, 0x2a3038, 4.15, 1.2, -5.45);
       addSolidBox(ctx.root, ctx.world, 3.2, 0.4, 2.6, 0x2a3036, 4.1, -0.2, -6.9);
       addSolidBox(ctx.root, ctx.world, 1.9, 0.72, 0.9, 0x4a4034, L.desk.x, 0.36, L.desk.z);
@@ -64,11 +62,13 @@ export function createBorrowedLens(): GameScene {
       ctx.root.add(lampStem, lampHead);
 
       lensMesh = new THREE.Mesh(
-        new THREE.BoxGeometry(0.38, 0.1, 0.46),
-        new THREE.MeshLambertMaterial({
+        new THREE.BoxGeometry(0.48, 0.14, 0.58),
+        new THREE.MeshStandardMaterial({
           color: 0xc9861a,
-          emissive: 0xc9861a,
-          emissiveIntensity: 0.85,
+          emissive: 0xffb020,
+          emissiveIntensity: 1.15,
+          roughness: 0.35,
+          metalness: 0.28,
         }),
       );
       lensMesh.position.set(L.desk.x + 0.52, 0.88, L.desk.z + 0.18);
@@ -83,8 +83,17 @@ export function createBorrowedLens(): GameScene {
       lensTag.position.set(L.desk.x + 0.52, 1.25, L.desk.z + 0.18);
       ctx.root.add(lensTag);
 
-      dead = addPipe(ctx.root, -2.5, L.deadY, L.wallZ, 5.1, 0.075, 0x8a6a2a);
-      live = addPipe(ctx.root, -2.5, L.liveY, L.wallZ, 2.9, 0.06, 0x4a5a58);
+      dead = addPipe(ctx.root, -2.5, L.deadY, L.wallZ, 5.1, 0.11, 0xc9a24a);
+      live = addPipe(ctx.root, -2.5, L.liveY, L.wallZ, 2.9, 0.08, 0x3a6a66);
+      const deadTag = makeWorldLabel("最亮的線", "會反光，不是路");
+      deadTag.position.set(0.2, L.deadY + 0.35, L.wallZ + 0.2);
+      deadTag.visible = false;
+      deadTag.name = "dead-tag";
+      const liveTag = makeWorldLabel("會流動的線", "跟這條走到門鎖");
+      liveTag.position.set(0.2, L.liveY + 0.35, L.wallZ + 0.2);
+      liveTag.visible = false;
+      liveTag.name = "live-tag";
+      ctx.root.add(deadTag, liveTag);
       liveTail = addPipe(ctx.root, 0.4, L.liveY, L.wallZ, 2.2, 0.055, 0x3a6a66, "z");
       liveTail.rotation.set(0, 0, Math.PI / 2);
       liveTail.position.set(1.55, L.liveY, -4.2);
@@ -170,6 +179,10 @@ export function createBorrowedLens(): GameScene {
         if (flags.take("pulsed")) {
           ctx.hud.setTask(TASK["P-S02-follow"] ?? "");
           ctx.say(P_LINE.followFlow);
+          const deadTag = ctx.root.getObjectByName("dead-tag");
+          const liveTag = ctx.root.getObjectByName("live-tag");
+          if (deadTag) deadTag.visible = true;
+          if (liveTag) liveTag.visible = true;
         }
       }
       if (pulsedAt >= 0) {

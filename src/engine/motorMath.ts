@@ -45,9 +45,9 @@ export interface MoveResult extends MoveState {
 }
 
 export const MOTOR = {
-  walkSpeed: 4.55,
-  accel: 26,
-  decel: 34,
+  walkSpeed: 4.15,
+  accel: 16,
+  decel: 22,
   gravity: 22,
   stepHeight: 0.28,
   radius: 0.36,
@@ -71,7 +71,7 @@ export const CAM = {
   ladderHeight: 1.62,
   minDist: 0.58,
   skin: 0.18,
-  lerp: 0.16,
+  lerp: 0.09,
   pitchMin: -0.72,
   pitchMax: 0.86,
 } as const;

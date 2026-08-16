@@ -43,18 +43,18 @@ export function stormShell(ctx: SceneContext, outdoor: boolean): {
 } {
   applyFog(ctx.three, STORM, ctx.reducedMotion);
   if (ctx.three.fog instanceof THREE.FogExp2) {
-    ctx.three.fog.density = ctx.reducedMotion ? 0.0016 : outdoor ? 0.0024 : 0.002;
+    ctx.three.fog.density = ctx.reducedMotion ? 0.0045 : outdoor ? 0.0072 : 0.009;
   }
-  const hemi = new THREE.HemisphereLight(0xe4eef6, 0x4a5864, outdoor ? 1.18 : 1.42);
-  const key = new THREE.DirectionalLight(0xf4f8ff, outdoor ? 1.72 : 2.05);
+  const hemi = new THREE.HemisphereLight(0xc8d8e4, 0x2a343c, outdoor ? 0.62 : 0.48);
+  const key = new THREE.DirectionalLight(0xd8e4ee, outdoor ? 0.95 : 0.72);
   key.position.set(-10, 22, 8);
   configureKeyShadow(key, outdoor ? 32 : 16);
   ctx.root.add(hemi, key);
   addPlayLights(ctx.root, outdoor ? "storm" : "indoor");
   if (outdoor) ctx.root.add(citySkyline(-24));
   if (!outdoor) {
-    const fill = playPoint(0xffe2b8, 4.2, 20, 0.95);
-    fill.position.set(0, 2.4, 1.2);
+    const fill = playPoint(0xffd8a0, 1.6, 12, 1.1);
+    fill.position.set(0, 2.2, 1.2);
     ctx.root.add(fill);
   }
   const rain = outdoor && !ctx.reducedMotion ? makeRain(false) : null;
@@ -65,8 +65,8 @@ export function stormShell(ctx: SceneContext, outdoor: boolean): {
     rain,
     setFill(t01: number) {
       const t = THREE.MathUtils.clamp(t01, 0, 1);
-      hemi.intensity = (outdoor ? 1.18 : 1.42) * Math.max(0.86, t);
-      key.intensity = (outdoor ? 1.72 : 2.05) * Math.max(0.88, t);
+      hemi.intensity = (outdoor ? 0.62 : 0.48) * Math.max(0.7, t);
+      key.intensity = (outdoor ? 0.95 : 0.72) * Math.max(0.75, t);
     },
   };
 }
@@ -114,7 +114,7 @@ export function addGate3(
   group.position.set(x, y, z);
   const frame = new THREE.Mesh(
     new THREE.BoxGeometry(16, 10, 1.15),
-    surf(0x5a6874, { roughness: 0.48, metalness: 0.38 }),
+    surf(0x2c343c, { roughness: 0.52, metalness: 0.42 }),
   );
   frame.position.y = 0;
   group.add(frame);
