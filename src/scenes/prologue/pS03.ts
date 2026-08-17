@@ -4,8 +4,7 @@ import { P_LINE } from "../../content/prologue/ids";
 import { P03_LAYOUT as L } from "../../content/prologue/layout";
 import { lookFlat } from "../../engine/motorMath";
 import { heroPlate, heroSeat } from "../../engine/props";
-import { addVoxelFloor, addVoxelVolume } from "../../engine/voxels";
-import { makeWorldLabel } from "../../engine/worldHints";
+import { BlockStamp, floorBox } from "../../engine/blocks";
 import type { GameScene, SceneContext } from "../types";
 import { SceneVoice, addAmberSpine, addSosBeacon, addWaterChannel, onceFlags, stormShell, tickSceneRain } from "./kit";
 
@@ -44,11 +43,16 @@ export function createCutSpan(): GameScene {
       rain = lights.rain;
       voice.startRumble();
 
-      addVoxelFloor(ctx.root, ctx.world, 10, 6, 0x2a3036, 0, 3.5);
-      addVoxelFloor(ctx.root, ctx.world, 10, 6, 0x2a3036, 0, -3.5);
-      addVoxelVolume(ctx.root, ctx.world, 0.35, 1.15, 1.1, 0x1a2127, -1.7, 0.48, 0.55);
-      addVoxelVolume(ctx.root, ctx.world, 0.35, 1.15, 1.1, 0x1a2127, 1.7, 0.48, 0.55);
-      addAmberSpine(ctx, -2.2, 1.4, 4.6);
+      const map = new BlockStamp();
+      map.fill(-5, -1, 1, 5, -1, 6, "stone");
+      map.fill(-5, -1, -6, 5, -1, -1, "stone");
+      map.fill(-6, -4, -1, 6, -2, 1, "water");
+      map.fill(-6, 0, 1, -6, 1, 6, "iron");
+      map.fill(6, 0, 1, 6, 1, 6, "iron");
+      map.commit(ctx.root);
+      floorBox(ctx.world, -5, 1, 5, 6, 0);
+      floorBox(ctx.world, -5, -6, 5, -1, 0);
+      addAmberSpine(ctx, -3, 2, 6);
 
       plateA = heroPlate("chevron");
       plateA.position.copy(home["plate-a"]);
@@ -61,11 +65,8 @@ export function createCutSpan(): GameScene {
       const seatB = heroSeat("notch");
       seatB.position.copy(seats["seat-b"]);
       ctx.root.add(seatA, seatB);
-      const seatATag = makeWorldLabel("三角座", "E 放下輕板");
-      seatATag.position.set(L.seatA.x, 0.85, L.seatA.z);
-      const seatBTag = makeWorldLabel("缺角座", "E 放下重板");
-      seatBTag.position.set(L.seatB.x, 0.85, L.seatB.z);
-      ctx.root.add(seatATag, seatBTag);
+      ctx.camera.dist = 6.4;
+      ctx.camera.pitch = -0.28;
 
       water = addWaterChannel(ctx.root, 0, -3.1, 0);
       sos = addSosBeacon(ctx.root, -6.4, -1.8, -8);

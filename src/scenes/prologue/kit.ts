@@ -45,7 +45,7 @@ export function stormShell(ctx: SceneContext, outdoor: boolean): {
 } {
   applyFog(ctx.three, STORM, ctx.reducedMotion);
   if (ctx.three.fog instanceof THREE.FogExp2) {
-    ctx.three.fog.density = ctx.reducedMotion ? 0.0045 : outdoor ? 0.0072 : 0.009;
+    ctx.three.fog.density = ctx.reducedMotion ? 0.0032 : outdoor ? 0.0042 : 0.0065;
   }
   const hemi = new THREE.HemisphereLight(0xc8d8e4, 0x2a343c, outdoor ? 0.62 : 0.48);
   const key = new THREE.DirectionalLight(0xd8e4ee, outdoor ? 0.95 : 0.72);

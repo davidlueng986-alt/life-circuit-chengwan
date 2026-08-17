@@ -120,6 +120,7 @@ export class WorldHints {
     this.objective.name = "objective-beam";
     this.objective.visible = false;
     this.root.add(this.objective);
+    this.arrow.visible = false;
 
     this.arrow.rotation.x = Math.PI / 2;
     this.arrow.name = "objective-arrow";
@@ -164,12 +165,8 @@ export class WorldHints {
   }
 
   setObjective(pos: THREE.Vector3 | null): void {
-    if (!pos) {
-      this.objective.visible = false;
-      return;
-    }
-    this.objective.visible = true;
-    this.objective.position.set(pos.x, 0.02, pos.z);
+    this.objective.visible = false;
+    void pos;
   }
 
   sync(
@@ -191,15 +188,15 @@ export class WorldHints {
         ? Math.hypot(extras.player.x - item.position.x, extras.player.z - item.position.z)
         : 3;
       const hot = focused?.id === item.id;
-      if (!hot && dist > 3.4) {
+      if (!hot) {
         slot.group.visible = false;
         continue;
       }
       slot.group.visible = true;
       slot.group.position.copy(item.position);
       slot.group.position.y = 0.04;
-      const pulse = 1 + Math.sin(time * 5.2) * (hot || this.scanning ? 0.28 : 0.12);
-      slot.group.scale.setScalar((hot ? 1.35 : this.scanning ? 1.18 : 1) * pulse);
+      const pulse = 1 + Math.sin(time * 5.2) * 0.16;
+      slot.group.scale.setScalar(1.12 * pulse);
       const ringMat = slot.ring.material;
       if (ringMat instanceof THREE.MeshBasicMaterial) {
         ringMat.color.setHex(hot || this.scanning ? 0x8fd4cf : 0xffc14a);
@@ -223,9 +220,11 @@ export class WorldHints {
       const dz = goal.z - player.z;
       const len = Math.hypot(dx, dz);
       const step = Math.min(2.4, Math.max(1.1, len * 0.28));
-      if (len > 0.2) {
+      if (len > 6) {
         this.arrow.position.set(player.x + (dx / len) * step, 0.14, player.z + (dz / len) * step);
         this.arrow.rotation.z = Math.atan2(dx, dz);
+      } else {
+        this.arrow.visible = false;
       }
     } else {
       this.arrow.visible = false;

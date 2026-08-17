@@ -5,8 +5,7 @@ import { P01_LAYOUT as L } from "../../content/prologue/layout";
 import { addSolidBox, isLitMat, placeSolid, playPoint } from "../../engine/greybox";
 import { applyKind } from "../../engine/materials";
 import { lookFlat } from "../../engine/motorMath";
-import { addVoxelFloor, addVoxelVolume } from "../../engine/voxels";
-import { makeWorldLabel } from "../../engine/worldHints";
+import { BlockStamp, floorBox, wallBox } from "../../engine/blocks";
 import type { GameScene, SceneContext } from "../types";
 import { addRelayMesh, onceFlags, stormShell, tickSceneRain } from "./kit";
 
@@ -30,13 +29,18 @@ export function createDeadLift(): GameScene {
       crateLamp.position.set(L.crate.x, 1.7, L.crate.z);
       ctx.root.add(key, crateLamp);
 
-      addVoxelFloor(ctx.root, ctx.world, 10.4, 10.4, 0x4a5560, 0, 0);
-      addVoxelVolume(ctx.root, ctx.world, 10.4, 3.2, 0.4, 0x4e5c68, 0, 1.4, -5.1);
-      addVoxelVolume(ctx.root, ctx.world, 10.4, 3.2, 0.4, 0x4e5c68, 0, 1.4, 5.1);
-      addVoxelVolume(ctx.root, ctx.world, 0.4, 3.2, 10.4, 0x4e5c68, -5.2, 1.4, 0);
-      addVoxelVolume(ctx.root, ctx.world, 0.4, 3.2, 10.4, 0x4e5c68, 5.2, 1.4, 0);
+      const map = new BlockStamp();
+      map.room(-5, -5, 5, 5, -1, 3, "stone", "iron");
+      map.fill(-4, 0, -3, -2, 2, -2, "iron");
+      map.commit(ctx.root);
+      floorBox(ctx.world, -5, -5, 5, 5, 0);
+      wallBox(ctx.world, -5, 0, -5, 5, 3, -5);
+      wallBox(ctx.world, -5, 0, 5, 5, 3, 5);
+      wallBox(ctx.world, -5, 0, -5, -5, 3, 5);
+      wallBox(ctx.world, 5, 0, -5, 5, 3, 5);
+      wallBox(ctx.world, -4, 0, -3, -2, 2, -2);
 
-      addVoxelVolume(ctx.root, ctx.world, 1.9, 2.5, 1.9, 0x15191d, L.liftCage.x, 1.15, L.liftCage.z);
+      addSolidBox(ctx.root, ctx.world, 1.9, 2.5, 1.9, 0x15191d, L.liftCage.x, 1.15, L.liftCage.z);
       const door = new THREE.Mesh(
         new THREE.BoxGeometry(1.2, 2.1, 0.06),
         new THREE.MeshLambertMaterial({ color: 0x1b1f24 }),
@@ -55,9 +59,6 @@ export function createDeadLift(): GameScene {
         crateMat.emissive = new THREE.Color(0xc9861a);
         crateMat.emissiveIntensity = 0.42;
       }
-      const crateTag = makeWorldLabel("工具箱", "按住 E 往梯子推");
-      crateTag.position.set(0, 0.92, 0);
-      crate.add(crateTag);
       const crateHalo = new THREE.Mesh(
         new THREE.TorusGeometry(0.82, 0.07, 8, 28),
         new THREE.MeshBasicMaterial({
@@ -72,9 +73,6 @@ export function createDeadLift(): GameScene {
       crateHalo.rotation.x = -Math.PI / 2;
       crateHalo.position.y = -0.38;
       crate.add(crateHalo);
-      const ladderTag = makeWorldLabel("維修梯", "箱子擋住了，先推開");
-      ladderTag.position.set(L.ladder.x, 2.4, L.ladder.z);
-      ctx.root.add(ladderTag);
       const handle = new THREE.Mesh(
         new THREE.TorusGeometry(0.16, 0.03, 6, 10, Math.PI),
         new THREE.MeshLambertMaterial({ color: 0xc9a36a }),
@@ -97,8 +95,8 @@ export function createDeadLift(): GameScene {
         ctx.root.add(rung);
       }
 
-      addVoxelVolume(ctx.root, ctx.world, 2.3, 0.28, 1.8, 0x2a3038, 3.4, 2.55, 2.45);
-      addVoxelVolume(ctx.root, ctx.world, 2.4, 1.6, 0.18, 0x12161a, 3.4, 3.3, 3.35);
+      addSolidBox(ctx.root, ctx.world, 2.3, 0.28, 1.8, 0x2a3038, 3.4, 2.55, 2.45);
+      addSolidBox(ctx.root, ctx.world, 2.4, 1.6, 0.18, 0x12161a, 3.4, 3.3, 3.35);
       const crack = new THREE.Mesh(
         new THREE.BoxGeometry(0.18, 1.5, 0.06),
         new THREE.MeshBasicMaterial({ color: 0x050608 }),
@@ -116,7 +114,8 @@ export function createDeadLift(): GameScene {
       const faceCrate = Math.atan2(-(L.crate.x - L.spawn.x), -(L.crate.z - L.spawn.z));
       ctx.player.reset(L.spawn.x, L.spawn.y, L.spawn.z, faceCrate);
       ctx.camera.yaw = faceCrate;
-      ctx.camera.pitch = -0.1;
+      ctx.camera.pitch = -0.22;
+      ctx.camera.dist = 6.2;
       ctx.hud.setTask(TASK["P-S01-crate"] ?? "");
       ctx.say(P_LINE.deadLift);
 

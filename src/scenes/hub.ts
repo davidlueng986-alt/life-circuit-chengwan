@@ -4,7 +4,7 @@ import type { SceneId } from "../content/ids";
 import { nextC1Scene, workshopEntry } from "../content/progress";
 import { HUB, addPlayLights, addSolidBox, applyFog, configureKeyShadow, lamp, playPoint } from "../engine/greybox";
 import { heroProbe } from "../engine/props";
-import { addVoxelFloor, addVoxelVolume } from "../engine/voxels";
+import { BlockStamp, floorBox, wallBox } from "../engine/blocks";
 import { makeWorldLabel } from "../engine/worldHints";
 import type { GameScene } from "./types";
 
@@ -29,13 +29,18 @@ export function createHubScene(id: SceneId = "HUB-S00"): GameScene {
       workshopLamp.position.set(3.15, 2.15, 1.7);
       ctx.root.add(harborLamp, workshopLamp);
 
-      addVoxelFloor(ctx.root, ctx.world, 22, 16, HUB.floor, 0, 0);
-      addVoxelVolume(ctx.root, ctx.world, 22, 4, 0.4, HUB.wall, 0, 2, -8);
-      addVoxelVolume(ctx.root, ctx.world, 22, 4, 0.4, HUB.wall, 0, 2, 8);
-      addVoxelVolume(ctx.root, ctx.world, 0.4, 4, 16, HUB.wall, -11, 2, 0);
-      addVoxelVolume(ctx.root, ctx.world, 0.4, 4, 16, HUB.wall, 11, 2, 0);
-
-      addVoxelVolume(ctx.root, ctx.world, 4.8, 0.7, 2.4, 0x4a4034, 0, 0.35, 0);
+      const map = new BlockStamp();
+      map.room(-11, -8, 11, 8, -1, 4, "stone", "wood");
+      map.fill(-2, 0, -1, 2, 0, 1, "wood");
+      map.fill(-4, 1, 1, -3, 3, 1, "lamp");
+      map.fill(3, 1, 1, 4, 3, 1, "cyan");
+      map.commit(ctx.root);
+      floorBox(ctx.world, -11, -8, 11, 8, 0);
+      wallBox(ctx.world, -11, 0, -8, 11, 4, -8);
+      wallBox(ctx.world, -11, 0, 8, 11, 4, 8);
+      wallBox(ctx.world, -11, 0, -8, -11, 4, 8);
+      wallBox(ctx.world, 11, 0, -8, 11, 4, 8);
+      floorBox(ctx.world, -2, -1, 2, 1, 1);
       const tableTag = makeWorldLabel("中央桌", "先組裝，再故意弄壞，再帶去現場");
       tableTag.position.set(0, 1.35, 0);
       ctx.root.add(tableTag);

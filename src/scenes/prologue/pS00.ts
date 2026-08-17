@@ -4,13 +4,11 @@ import { P00_LAYOUT as L } from "../../content/prologue/layout";
 import { P00 } from "../../content/prologue/script";
 import { PROMPT, TASK } from "../../content/copy";
 import { addSolidBox, placeSolid, playPoint } from "../../engine/greybox";
-import { addAmberBlocks, addGlassWater, addVoxelVolume, pulseAmber } from "../../engine/voxels";
-import { makeWorldLabel } from "../../engine/worldHints";
+import { BlockStamp, floorBox, wallBox } from "../../engine/blocks";
+import { citySkyline } from "../../engine/props";
 import type { GameScene } from "../types";
 import {
   SceneVoice,
-  addAmberSpine,
-  addDeck,
   addGate3,
   addSosBeacon,
   addWaterChannel,
@@ -34,7 +32,6 @@ export function createStormArrival(): GameScene {
   let idle = 0;
   let wrong = 0;
   let doorMesh: THREE.Mesh | null = null;
-  let amber: THREE.Mesh[] = [];
   let gate: ReturnType<typeof addGate3> | null = null;
 
   return {
@@ -46,80 +43,49 @@ export function createStormArrival(): GameScene {
       fill(ctx.reducedMotion ? 1 : 0);
       lights.key.position.set(10, 18, -8);
 
-      addDeck(ctx, 14, 10, 0.4, 0);
-      addDeck(ctx, 3.6, 26, L.spineX, 11.2);
-      addVoxelVolume(ctx.root, ctx.world, 3.2, 0.2, 0.7, 0x4a535c, L.spineX, 0.1, L.pipeZ);
-      addVoxelVolume(ctx.root, ctx.world, 0.16, 1.05, 26, 0x1a2127, L.spineX - 1.7, 0.52, 11.2);
-      addVoxelVolume(ctx.root, ctx.world, 0.16, 1.05, 26, 0x1a2127, L.spineX + 1.7, 0.52, 11.2);
-      addAmberSpine(ctx, L.spineX + 1.05, 1.2, 21.5);
-      amber = addAmberBlocks(ctx.root, L.spineX + 0.05, 1.2, 21.8);
+      const map = new BlockStamp();
+      map.fill(-8, -1, -5, 10, -1, 7, "stone");
+      map.fill(-3, -1, 7, 2, -1, 25, "lamp");
+      map.fill(-8, -1, 7, -4, -1, 18, "stone");
+      map.fill(-4, 0, 7, -4, 1, 24, "iron");
+      map.fill(3, 0, 7, 3, 1, 24, "iron");
+      map.fill(-16, -4, -2, -5, -2, 28, "water");
+      map.fill(-5, 0, 12, -5, 2, 16, "glass");
+      map.room(6, -3, 12, 3, -1, 3, "wood", "wood");
+      for (let y = 0; y <= 2; y += 1) {
+        map.erase(6, y, 0);
+        map.erase(6, y, -1);
+        map.erase(6, y, 1);
+      }
+      map.fill(-2, -1, 21, 1, -1, 24, "iron");
+      map.fill(-2, 0, 24, 1, 2, 24, "iron");
+      map.fill(-14, 3, 20, -6, 8, 21, "iron");
+      map.commit(ctx.root);
+      floorBox(ctx.world, -8, -5, 10, 7, 0);
+      floorBox(ctx.world, -3, 7, 2, 25, 0);
+      floorBox(ctx.world, 6, -3, 12, 3, 0);
+      wallBox(ctx.world, -4, 0, 7, -4, 1, 24);
+      wallBox(ctx.world, 3, 0, 7, 3, 1, 24);
+      wallBox(ctx.world, -2, 0, 24, 1, 2, 24);
+      ctx.root.add(citySkyline(32));
 
-      addVoxelVolume(ctx.root, ctx.world, 5.2, 3.2, 0.35, 0x2a241c, 6.6, 1.4, -2.4);
-      addVoxelVolume(ctx.root, ctx.world, 5.2, 3.2, 0.35, 0x2a241c, 6.6, 1.4, 2.4);
-      addVoxelVolume(ctx.root, ctx.world, 0.35, 3.2, 5.2, 0x2a241c, 9.2, 1.4, 0);
-      addVoxelVolume(ctx.root, ctx.world, 4.6, 0.4, 4.8, 0x2a241c, 7.2, -0.2, 0);
-      addVoxelVolume(ctx.root, ctx.world, 0.18, 2.3, 1.45, 0x2a241c, L.indoorDoor.x, 1.15, -1.55);
-      addVoxelVolume(ctx.root, ctx.world, 0.18, 2.3, 1.45, 0x2a241c, L.indoorDoor.x, 1.15, 1.55);
       doorMesh = addSolidBox(ctx.root, ctx.world, 0.18, 2.3, 1.5, 0x3a2e22, L.indoorDoor.x, 1.15, 0);
       const warm = playPoint(0xffd08a, 1.8, 8, 1.1);
       warm.position.set(7.4, 1.9, 0);
       const alcoveFill = playPoint(0x9ec0d2, 1.1, 7, 1.15);
       alcoveFill.position.set(8.2, 2.2, 1.4);
       ctx.root.add(warm, alcoveFill);
-      addSolidBox(ctx.root, ctx.world, 0.06, 1.1, 1.6, 0x2a2620, 9.02, 1.5, 0).name = "wall-map";
+      addSolidBox(ctx.root, ctx.world, 0.06, 1.1, 1.6, 0x2a2620, 11.4, 1.55, 0).name = "wall-map";
       const wallPlan = makeWallPlan();
-      wallPlan.position.set(8.94, 1.52, 0);
+      wallPlan.position.set(11.35, 1.55, 0);
       wallPlan.rotation.y = -Math.PI / 2;
       ctx.root.add(wallPlan);
-      const indoorTag = makeWorldLabel("牆上簡圖", "控制室在黃線盡頭");
-      indoorTag.position.set(7.6, 2.15, 0);
-      ctx.root.add(indoorTag);
-
-      const glass = new THREE.Mesh(
-        new THREE.BoxGeometry(0.07, 1.55, 2.8),
-        new THREE.MeshPhysicalMaterial({
-          color: 0x6f8a99,
-          transparent: true,
-          opacity: 0.22,
-          transmission: 0.4,
-          roughness: 0.08,
-          metalness: 0.05,
-        }),
-      );
-      glass.position.set(L.spineX - 1.68, 1.2, L.glassZ);
-      ctx.root.add(glass);
-      addGlassWater(ctx.root, 6, 8, -8.4, -2.35, L.glassZ + 2);
 
       gate = addGate3(ctx.root, L.gate.x, L.gate.y, L.gate.z);
       sos = addSosBeacon(ctx.root, L.sos.x, L.sos.y, L.sos.z);
       addXiaocenFigure(ctx.root, L.xiaocen.x, L.xiaocen.y, L.xiaocen.z);
-      const gateTag = makeWorldLabel("三號閘", "防洪控制室在橙燈上方");
-      gateTag.position.set(L.gate.x + 2.2, L.gate.y + 2.4, L.gate.z);
-      const sosTag = makeWorldLabel("橙燈／小岑", "無線電從這裡來");
-      sosTag.position.set(L.sos.x, 5.4, L.sos.z);
-      const liftTag = makeWorldLabel("控制室入口", "走黃線進升降機");
-      liftTag.position.set(L.lift.x, 2.15, L.lift.z);
-      ctx.root.add(gateTag, sosTag, liftTag);
-      for (let z = 3.2; z < 21; z += 3.4) {
-        const chevron = new THREE.Mesh(
-          new THREE.ConeGeometry(0.22, 0.55, 3),
-          new THREE.MeshBasicMaterial({ color: 0xffc14a }),
-        );
-        chevron.rotation.x = Math.PI / 2;
-        chevron.position.set(L.spineX + 0.15, 0.12, z);
-        ctx.root.add(chevron);
-      }
-      water = addWaterChannel(ctx.root, -10, -3.15, 18);
+      water = addWaterChannel(ctx.root, -11, -3.2, 14);
       water.setDir(-1);
-
-      addVoxelVolume(ctx.root, ctx.world, 3.6, 0.4, 3.6, 0x2a3036, L.lift.x, -0.2, L.lift.z);
-      addVoxelVolume(ctx.root, ctx.world, 1.7, 2.5, 1.7, 0x1b1f24, L.lift.x, 1.1, L.lift.z + 0.7);
-      const cage = new THREE.Mesh(
-        new THREE.BoxGeometry(1.5, 2.1, 0.08),
-        new THREE.MeshLambertMaterial({ color: 0x2a3038, transparent: true, opacity: 0.45 }),
-      );
-      cage.position.set(L.lift.x, 1.15, L.lift.z - 0.15);
-      ctx.root.add(cage);
 
       ctx.world.addTrigger("indoor", new THREE.Vector3(6.5, 0, -1.6), new THREE.Vector3(9.1, 2.4, 1.6));
       ctx.world.addTrigger(
@@ -134,9 +100,11 @@ export function createStormArrival(): GameScene {
       ctx.world.addAnchor("glass", L.spineX, 0, L.glassZ);
       ctx.world.addAnchor("lift", L.lift.x, 0, L.lift.z);
 
-      ctx.player.reset(L.spawn.x, L.spawn.y, L.spawn.z, L.spawn.yaw);
-      ctx.camera.yaw = L.spawn.yaw;
-      ctx.camera.pitch = -0.18;
+      const faceGate = Math.atan2(-(L.gate.x - L.spawn.x), -(L.gate.z - L.spawn.z));
+      ctx.player.reset(L.spawn.x, L.spawn.y, L.spawn.z, faceGate);
+      ctx.camera.yaw = faceGate;
+      ctx.camera.pitch = -0.38;
+      ctx.camera.dist = 8.4;
       ctx.hud.setTask(TASK["P-S00"] ?? "");
 
       ctx.interact.add({
@@ -172,7 +140,6 @@ export function createStormArrival(): GameScene {
       tickSceneRain(rain, dt);
       water?.tick(dt);
       sos?.tick(elapsed);
-      pulseAmber(amber, elapsed, wrong > 1.2);
 
       if (!controlled) {
         ctx.player.position.set(L.spawn.x, L.spawn.y, L.spawn.z);
@@ -216,7 +183,6 @@ export function createStormArrival(): GameScene {
       sos = null;
       water = null;
       doorMesh = null;
-      amber = [];
       gate = null;
       voice.dispose();
     },

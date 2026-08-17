@@ -65,13 +65,13 @@ export const MOTOR = {
 } as const;
 
 export const CAM = {
-  dist: 4.05,
-  height: 1.48,
-  side: 0.42,
-  lookHeight: 1.32,
-  ladderDist: 2.55,
-  ladderHeight: 1.62,
-  minDist: 1.12,
+  dist: 5.6,
+  height: 1.72,
+  side: 0.55,
+  lookHeight: 1.38,
+  ladderDist: 3.1,
+  ladderHeight: 1.72,
+  minDist: 1.8,
   skin: 0.18,
   lerp: 0.09,
   pitchMin: -0.72,

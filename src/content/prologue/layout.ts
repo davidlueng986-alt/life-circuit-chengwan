@@ -8,9 +8,9 @@ export const P00_LAYOUT = {
   pipeZ: 8.2,
   glassZ: 14.4,
   lift: { x: -1.45, z: 22.4 },
-  gate: { x: -8.2, y: 12.2, z: 34 },
-  sos: { x: -7.1, y: -2.7, z: 31.6 },
-  xiaocen: { x: -6.4, y: -2.35, z: 31.2 },
+  gate: { x: -9.2, y: 5.4, z: 22.5 },
+  sos: { x: -8.1, y: -2.2, z: 20.6 },
+  xiaocen: { x: -7.6, y: -1.95, z: 20.2 },
 } as const;
 
 export const P01_LAYOUT = {
