@@ -4,6 +4,7 @@ import { P_LINE } from "../../content/prologue/ids";
 import { P02_LAYOUT as L } from "../../content/prologue/layout";
 import { addSolidBox, boxMesh, playPoint } from "../../engine/greybox";
 import { BlockStamp, floorBox, wallBox } from "../../engine/blocks";
+import { dressInterior, stampCabinet, stampCrateStack, stampStripe } from "../../engine/dress";
 import { heroLens } from "../../engine/props";
 import type { GameScene } from "../types";
 import {
@@ -56,6 +57,13 @@ export function createBorrowedLens(): GameScene {
       map.fill(-1, 0, 1, 1, 0, 2, "wood");
       map.fill(3, -1, -8, 6, -1, -6, "stone");
       map.fill(-14, 2, -16, -6, 8, -14, "iron");
+      map.fill(3, 0, -6, 5, 0, -6, "iron");
+      map.fill(3, 3, -6, 5, 3, -6, "iron");
+      dressInterior(map, { x0: -5, z0: -5, x1: 5, z1: 8, y0: -1, h: 3 });
+      stampCrateStack(map, -4, 6, 2);
+      stampCabinet(map, -4, -4);
+      stampCabinet(map, -3, -4);
+      stampStripe(map, 0, -3, 0, 4);
       map.commit(ctx.root);
       floorBox(ctx.world, -5, -5, 5, 8, 0);
       floorBox(ctx.world, 3, -8, 6, -6, 0);
@@ -125,6 +133,7 @@ export function createBorrowedLens(): GameScene {
       ctx.player.reset(0, 0, 3.15, 0.05);
       ctx.camera.yaw = 0.05;
       ctx.hud.setTask(TASK["P-S02-pick"] ?? "");
+      ctx.guide.set("path", new THREE.Vector3(L.desk.x, 0, L.desk.z), [{ x0: -5, z0: -5, x1: 5, z1: 8 }]);
 
       ctx.interact.add({
         id: "lens",
@@ -139,6 +148,7 @@ export function createBorrowedLens(): GameScene {
           ctx.persist();
           if (lensMesh) lensMesh.visible = false;
           ctx.hud.setTask(TASK["P-S02-pulse"] ?? "");
+          ctx.guide.setGoal(new THREE.Vector3(0, 0, L.wallZ));
           ctx.say(P_LINE.pickLens);
         },
       });
@@ -163,6 +173,7 @@ export function createBorrowedLens(): GameScene {
         pulsedAt = ctx.flowLens.time;
         if (flags.take("pulsed")) {
           ctx.hud.setTask(TASK["P-S02-follow"] ?? "");
+          ctx.guide.setGoal(new THREE.Vector3(L.relay.x, 0, L.relay.z));
           ctx.say(P_LINE.followFlow);
         }
       }
@@ -239,6 +250,7 @@ export function createBorrowedLens(): GameScene {
     }
     unlocked = true;
     ctx.hud.setTask(TASK["P-S02-seat"] ?? "");
+    ctx.guide.setGoal(new THREE.Vector3(4.2, 0, -6.2));
     ctx.interact.add({
       id: "exit-gap",
       prompt: "走過缺口",

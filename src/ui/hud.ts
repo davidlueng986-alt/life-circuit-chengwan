@@ -216,13 +216,24 @@ export class Hud {
     if (this.scanSub) this.scanSub.textContent = opts.owned ? SCAN.hold : SCAN.noLens;
   }
 
-  setNav(opts: { yaw: number; marks: NavMark[]; objective: string; speaker: string | null; radio: boolean }): void {
-    if (this.minimap) drawMinimap(this.minimap, opts.marks, opts.yaw);
+  setNav(opts: {
+    yaw: number;
+    marks: NavMark[];
+    objective: string;
+    speaker: string | null;
+    radio: boolean;
+    walls?: import("./nav").NavWall[];
+    bearing?: string;
+  }): void {
+    if (this.minimap) drawMinimap(this.minimap, opts.marks, opts.yaw, opts.walls ?? []);
     const compass = document.querySelector("#compass");
     if (compass instanceof HTMLElement) {
       compass.style.setProperty("--yaw", `${(-opts.yaw * 180) / Math.PI}deg`);
     }
-    if (this.objectiveChip) this.objectiveChip.textContent = opts.objective ? `目標：${opts.objective}` : "";
+    if (this.objectiveChip) {
+      const head = opts.bearing ? `${opts.bearing} · ` : "";
+      this.objectiveChip.textContent = opts.objective ? `${head}${opts.objective}` : opts.bearing || "";
+    }
     if (this.speakerChip) {
       this.speakerChip.hidden = !opts.speaker;
       this.speakerChip.textContent = opts.speaker

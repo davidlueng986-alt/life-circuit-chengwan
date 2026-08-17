@@ -61,6 +61,7 @@ export function createC1S00(): GameScene {
       }
 
       ctx.player.reset(0, 0, 2.15, 0);
+      ctx.guide.set("path", xyz(C1_LAYOUT.battery), [{ x0: -11, z0: -8, x1: 11, z1: 8 }]);
       ctx.camera.yaw = 0;
       ctx.camera.pitch = -0.18;
       ctx.hud.setTask(TASK["C1-S00-pick"] ?? "");

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import type { WorldColliders } from "./collision";
 
-export type BlockKind = "stone" | "iron" | "wood" | "lamp" | "cyan" | "glass" | "water";
+export type BlockKind = "stone" | "iron" | "wood" | "lamp" | "cyan" | "glass" | "water" | "brick" | "stripe" | "night";
 
 const SIZE = 1;
 const dummy = new THREE.Object3D();
@@ -61,6 +61,35 @@ function paintKind(kind: BlockKind, g: CanvasRenderingContext2D, s: number): voi
     g.strokeRect(1, 1, s - 2, s - 2);
     return;
   }
+  if (kind === "brick") {
+    g.fillStyle = "#6a4030";
+    g.fillRect(0, 0, s, s);
+    g.fillStyle = "#8a5340";
+    for (let y = 0; y < s; y += 4) {
+      g.fillRect(0, y, s, 3);
+      g.fillStyle = "#3a2418";
+      g.fillRect(0, y + 3, s, 1);
+      g.fillStyle = y % 8 === 0 ? "#5a3224" : "#7a4a38";
+      g.fillRect(y % 8 === 0 ? 8 : 0, y, 1, 3);
+    }
+    return;
+  }
+  if (kind === "stripe") {
+    g.fillStyle = "#c9a227";
+    g.fillRect(0, 0, s, s);
+    g.fillStyle = "#1a1610";
+    for (let i = 0; i < s; i += 4) g.fillRect(i, 0, 2, s);
+    return;
+  }
+  if (kind === "night") {
+    g.fillStyle = "#1a2430";
+    g.fillRect(0, 0, s, s);
+    g.fillStyle = "#ffe2a0";
+    g.fillRect(3, 3, s - 6, s - 6);
+    g.fillStyle = "#fff6d0";
+    g.fillRect(6, 5, 3, 4);
+    return;
+  }
   g.fillStyle = "#163848";
   g.fillRect(0, 0, s, s);
   g.fillStyle = "#2a6a78";
@@ -90,14 +119,14 @@ function atlasOf(kind: BlockKind): THREE.CanvasTexture {
 
 function matOf(kind: BlockKind): THREE.MeshLambertMaterial {
   const map = atlasOf(kind);
-  const emissive = kind === "lamp" ? 0xc9861a : kind === "cyan" ? 0x3a8884 : 0x000000;
+  const emissive = kind === "lamp" ? 0xc9861a : kind === "cyan" ? 0x3a8884 : kind === "night" ? 0xc9861a : 0x000000;
   return new THREE.MeshLambertMaterial({
     map,
     transparent: kind === "glass" || kind === "water",
     opacity: kind === "glass" ? 0.42 : kind === "water" ? 0.72 : 1,
     depthWrite: kind !== "glass",
     emissive,
-    emissiveIntensity: kind === "lamp" ? 0.55 : kind === "cyan" ? 0.2 : 0,
+    emissiveIntensity: kind === "lamp" ? 0.55 : kind === "cyan" ? 0.2 : kind === "night" ? 0.7 : 0,
     flatShading: true,
   });
 }

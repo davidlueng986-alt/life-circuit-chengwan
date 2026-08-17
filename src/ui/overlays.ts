@@ -179,7 +179,9 @@ export class Overlays {
   }
 
   anyModal(): boolean {
-    return this.pause.open || this.settings.open || this.webgl.open || this.codex.open || this.confirm.open;
+    const brief = document.querySelector("#briefing");
+    const briefingOpen = brief instanceof HTMLElement && !brief.hidden;
+    return this.pause.open || this.settings.open || this.webgl.open || this.codex.open || this.confirm.open || briefingOpen;
   }
 
   /** Visible only when the URL has `?debug=1`. */

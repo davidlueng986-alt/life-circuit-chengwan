@@ -5,7 +5,7 @@ import { P04_LAYOUT as L } from "../../content/prologue/layout";
 import { boxMesh, playPoint } from "../../engine/greybox";
 import { heroRelay } from "../../engine/props";
 import { BlockStamp, floorBox, wallBox } from "../../engine/blocks";
-import { makeWorldLabel } from "../../engine/worldHints";
+import { dressInterior, stampCatwalk, stampCrateStack, stampStripe } from "../../engine/dress";
 import type { GameScene, SceneContext } from "../types";
 import {
   SceneVoice,
@@ -51,6 +51,14 @@ export function createActuatorGallery(): GameScene {
         for (let y = 1; y <= 3; y += 1) map.erase(x, y, -6);
       }
       map.fill(-2, 1, -6, 2, 3, -6, "glass");
+      map.fill(-2, 0, -6, 2, 0, -6, "iron");
+      map.fill(-2, 3, -6, 2, 3, -6, "iron");
+      dressInterior(map, { x0: -7, z0: -6, x1: 7, z1: 6, y0: -1, h: 3 });
+      stampCatwalk(map, -4, -4, -3);
+      stampCrateStack(map, 5, 4, 2);
+      stampStripe(map, -1, -4, -1, 3);
+      stampStripe(map, 0, -4, 0, 3);
+      stampStripe(map, 1, -4, 1, 3);
       map.commit(ctx.root);
       floorBox(ctx.world, -7, -6, 7, 6, 0);
       wallBox(ctx.world, -7, 0, -6, 7, 3, -6);
@@ -101,13 +109,6 @@ export function createActuatorGallery(): GameScene {
       const relayLoose = heroRelay(0x8aa0b8);
       relayLoose.position.set(L.loose.x, L.loose.y, L.loose.z);
       ctx.root.add(debris, relayWrong, relayJam, relayLoose);
-      const wrongTag = makeWorldLabel("接錯的 relay", "搬到正確座");
-      wrongTag.position.set(L.wrongHome.x, L.wrongHome.y + 0.7, L.wrongHome.z);
-      const jamTag = makeWorldLabel("卡住的 relay", "先清雜物再接");
-      jamTag.position.set(L.jam.x, L.jam.y + 0.7, L.jam.z);
-      const looseTag = makeWorldLabel("鬆脫的 relay", "壓回高處座");
-      looseTag.position.set(L.loose.x, L.loose.y + 0.55, L.loose.z);
-      ctx.root.add(wrongTag, jamTag, looseTag);
 
       ctx.signals.add({
         id: "bus",
@@ -193,6 +194,7 @@ export function createActuatorGallery(): GameScene {
       ctx.save.player.tool.tether = true;
       ctx.persist();
       ctx.hud.setTask(TASK["P-S04"] ?? "");
+      ctx.guide.set("path", new THREE.Vector3(L.debris.x, 0, L.debris.z), [{ x0: -7, z0: -6, x1: 7, z1: 6 }]);
       ctx.say(P_LINE.findBreak);
       voice.startRumble();
       ctx.hud.announce("雜物離座太遠時，按住 F 拉過來。");

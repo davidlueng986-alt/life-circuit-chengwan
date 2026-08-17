@@ -6,6 +6,7 @@ import { addSolidBox, isLitMat, placeSolid, playPoint } from "../../engine/greyb
 import { applyKind } from "../../engine/materials";
 import { lookFlat } from "../../engine/motorMath";
 import { BlockStamp, floorBox, wallBox } from "../../engine/blocks";
+import { dressInterior, stampCrateStack, stampLampPost, stampStripe } from "../../engine/dress";
 import type { GameScene, SceneContext } from "../types";
 import { addRelayMesh, onceFlags, stormShell, tickSceneRain } from "./kit";
 
@@ -32,6 +33,13 @@ export function createDeadLift(): GameScene {
       const map = new BlockStamp();
       map.room(-5, -5, 5, 5, -1, 3, "stone", "iron");
       map.fill(-4, 0, -3, -2, 2, -2, "iron");
+      map.fill(-1, -4, 3, 1, -2, 4, "iron");
+      map.fill(4, 1, -1, 5, 2, 1, "glass");
+      dressInterior(map, { x0: -5, z0: -5, x1: 5, z1: 5, y0: -1, h: 3 });
+      stampCrateStack(map, -4, 3, 2);
+      stampCrateStack(map, 3, -4, 2);
+      stampLampPost(map, -3, 4);
+      stampStripe(map, 0, -2, 0, 3);
       map.commit(ctx.root);
       floorBox(ctx.world, -5, -5, 5, 5, 0);
       wallBox(ctx.world, -5, 0, -5, 5, 3, -5);
@@ -117,6 +125,7 @@ export function createDeadLift(): GameScene {
       ctx.camera.pitch = -0.22;
       ctx.camera.dist = 6.2;
       ctx.hud.setTask(TASK["P-S01-crate"] ?? "");
+      ctx.guide.set("path", new THREE.Vector3(L.crate.x, 0, L.crate.z), [{ x0: -5, z0: -5, x1: 5, z1: 5 }]);
       ctx.say(P_LINE.deadLift);
 
       ctx.interact.add({
@@ -171,6 +180,7 @@ export function createDeadLift(): GameScene {
   function openLadder(ctx: SceneContext): void {
     ladderReady = true;
     ctx.hud.setTask(TASK["P-S01-ladder"] ?? "");
+    ctx.guide.setGoal(new THREE.Vector3(L.ladder.x, 0, L.ladder.z));
     if (flags.take("swim")) ctx.say(P_LINE.noSwim);
     ctx.world.addLadder(
       "maint",

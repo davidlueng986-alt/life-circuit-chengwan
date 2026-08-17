@@ -1,8 +1,17 @@
 import * as THREE from "three";
 import { C1_LAYOUT } from "../../../content/chapter1/layout";
+import { BlockStamp, floorBox, wallBox } from "../../engine/blocks";
+import {
+  stampBuilding,
+  stampCrateStack,
+  stampHollow,
+  stampLampPost,
+  stampPiling,
+  stampRailing,
+} from "../../engine/dress";
 import { HARBOR, HUB, addPlayLights, addSolidBox, applyFog, boxMesh, configureKeyShadow, lamp, makeRain, playPoint, waterSheet, type Palette } from "../../engine/greybox";
 import { addGate3 } from "../prologue/kit";
-import { makeWorldLabel } from "../../engine/worldHints";
+import { dressHorizon } from "../horizon";
 import type { SceneContext } from "../types";
 
 export type HarborWeather = "hub" | "fog" | "storm";
@@ -25,6 +34,7 @@ export function lightHarbor(ctx: SceneContext, weather: HarborWeather): THREE.Po
     ctx.root.add(sun);
     ctx.root.add(lamp(HUB.accent, 0, 3.2, 0));
     addPlayLights(ctx.root, "hub");
+    dressHorizon(ctx.root, { weather: "hub", shift: { z: 14 } });
     return null;
   }
   if (ctx.three.fog instanceof THREE.FogExp2) {
@@ -36,6 +46,7 @@ export function lightHarbor(ctx: SceneContext, weather: HarborWeather): THREE.Po
   configureKeyShadow(key, 30);
   ctx.root.add(key);
   addPlayLights(ctx.root, weather === "storm" ? "storm" : "harbor");
+  dressHorizon(ctx.root, { weather: weather === "storm" ? "storm" : "fog", shift: { x: 8, z: 40 } });
   if (weather !== "storm") return null;
   const rain = makeRain(ctx.reducedMotion);
   if (rain) ctx.root.add(rain);
@@ -77,21 +88,50 @@ export function blinkMesh(color: number, x: number, y: number, z: number): THREE
 }
 
 export function mountEastShore(ctx: SceneContext, opts: { floodMarket?: boolean; floodPier?: boolean; roofs?: boolean }): void {
-  deck(ctx, 22, 18, 0, 8);
-  deck(ctx, 12, 22, -1, 26);
-  deck(ctx, 10, 10, -12, 12, 0, 0x3a322c);
-  deck(ctx, 8, 6, 10, 11.2);
-  wall(ctx, 0.4, 2.2, 8, 15.4, 1.1, 20, 0x4a4034);
-  wall(ctx, 6, 3.4, 6, 19.4, 1.7, 20, 0x5a4034);
-  wall(ctx, 6.4, 3.6, 6.4, 1, 1.8, 31.2, 0x3a322c);
-  wall(ctx, 0.35, 2.4, 8, -2.2, 1.2, 38.4);
-  wall(ctx, 0.35, 2.4, 8, 3.2, 1.2, 38.4);
-  deck(ctx, 5.2, 10, 0.5, 39.2);
-  deck(ctx, 8, 8, -12.2, 40, 1.2, 0x4a4034);
-  wall(ctx, 5.4, 2.2, 0.32, -12.4, 2.4, 42.15, 0x3d5c58);
-  wall(ctx, 0.28, 2.2, 2.5, -15.05, 2.4, 40.9, 0x3d5c58);
-  wall(ctx, 0.28, 2.2, 2.5, -9.75, 2.4, 40.9, 0x3d5c58);
-  wall(ctx, 5.4, 0.22, 2.6, -12.4, 3.52, 40.9, 0x2f4a48);
+  const map = new BlockStamp();
+  map.fill(-11, -1, -1, 11, -1, 17, "stone");
+  map.fill(-7, -1, 15, 5, -1, 37, "stone");
+  map.fill(-17, -1, 7, -7, -1, 17, "wood");
+  map.fill(6, -1, 8, 14, -1, 14, "stone");
+  map.fill(-2, -1, 34, 3, -1, 44, "stone");
+  map.fill(-16, 0, 36, -8, 0, 44, "wood");
+  stampBuilding(map, -16, 12, 5, 4, 3, "wood", "e");
+  stampBuilding(map, 16, 17, 6, 6, 5, "brick", "w");
+  stampBuilding(map, -2, 28, 6, 6, 4, "iron", "s");
+  stampHollow(map, -16, 37, 8, 7, 3, "wood");
+  stampRailing(map, 11, 0, 11, 16);
+  stampRailing(map, 6, 8, 6, 14);
+  stampRailing(map, 14, 8, 14, 14);
+  stampRailing(map, -2, 38, -2, 44);
+  stampRailing(map, 3, 38, 3, 44);
+  for (let x = -8; x <= 8; x += 4) stampLampPost(map, x, 2);
+  stampLampPost(map, -10, 18);
+  stampLampPost(map, 4, 26);
+  stampLampPost(map, 0, 36);
+  stampCrateStack(map, 8, 9, 2);
+  stampCrateStack(map, -8, 8, 3);
+  stampCrateStack(map, 3, 24, 2);
+  for (let z = 4; z <= 20; z += 4) stampPiling(map, 15, z);
+  for (let z = 8; z <= 18; z += 5) stampPiling(map, -18, z);
+  if (opts.roofs) {
+    map.fill(-15, 3, 8, -8, 3, 16, "wood");
+    map.fill(5, 3, 20, 8, 3, 24, "iron");
+    map.fill(-5, 4, 30, -2, 4, 33, "iron");
+    map.fill(-1, 3, 29, 3, 3, 33, "iron");
+    map.fill(-2, 3, 43, 6, 3, 52, "iron");
+  }
+  map.commit(ctx.root);
+
+  floorBox(ctx.world, -11, -1, 11, 17, 0);
+  floorBox(ctx.world, -7, 15, 5, 37, 0);
+  floorBox(ctx.world, -17, 7, -7, 17, 0);
+  floorBox(ctx.world, 6, 8, 14, 14, 0);
+  floorBox(ctx.world, -2, 34, 3, 44, 0);
+  floorBox(ctx.world, -16, 36, -8, 44, 1);
+  wallBox(ctx.world, 16, 0, 17, 21, 4, 22);
+  wallBox(ctx.world, -2, 0, 28, 3, 3, 33);
+  wallBox(ctx.world, -16, 1, 37, -9, 3, 37);
+  wallBox(ctx.world, -16, 1, 43, -9, 3, 43);
 
   const stall = addSolidBox(ctx.root, ctx.world, 3.4, 2.2, 2.4, 0x4a4034, -13.2, 1.1, 13.4);
   stall.name = "stall-shade";
@@ -101,13 +141,6 @@ export function mountEastShore(ctx: SceneContext, opts: { floodMarket?: boolean;
   warehouseLamp.position.set(18.6, 3.6, 20);
   warehouseLamp.name = "city-blink";
   ctx.root.add(warehouseLamp);
-  const marketTag = makeWorldLabel("市集棚", "陳姨走這裡");
-  marketTag.position.set(-13.2, 2.6, 13.4);
-  const storeTag = makeWorldLabel("倉庫燈", "遠方城市光");
-  storeTag.position.set(18.6, 4.4, 20);
-  const pumpTag = makeWorldLabel("抽水站", "往河閘");
-  pumpTag.position.set(1, 3.4, 31.2);
-  ctx.root.add(marketTag, storeTag, pumpTag);
 
   if (opts.floodMarket) {
     ctx.world.addHazard("market-tide", "water", new THREE.Vector3(-18, -1, 6), new THREE.Vector3(-6, 0.55, 20));
@@ -117,17 +150,17 @@ export function mountEastShore(ctx: SceneContext, opts: { floodMarket?: boolean;
     ctx.world.addHazard("pier-tide", "water", new THREE.Vector3(6, -1, 8), new THREE.Vector3(16, 0.45, 15));
   }
   if (opts.roofs) {
-    deck(ctx, 8, 8, -11.4, 12, 3.15, 0x4a4034);
-    deck(ctx, 4, 4, 6.4, 22.4, 3.25, 0x5a6570);
-    deck(ctx, 3.4, 3.4, -3.6, 32.2, 4.05, 0x4a534c);
-    deck(ctx, 5, 4, 1.2, 30.8, 3.35, 0x3a322c);
-    deck(ctx, 8, 10, 2.2, 48, 3.15, 0x3a4038);
     addLadder(ctx, "lad-market", -7.6, 10.4, 3.2);
     addLadder(ctx, "lad-crane", 4.4, 20.6, 3.3);
     addLadder(ctx, "lad-drain", -3.6, 28.6, 4.1);
     addLadder(ctx, "lad-pump", -2.4, 30.8, 3.4);
     addLadder(ctx, "lad-sluice", 2.2, 42.2, 3.2);
     wall(ctx, 1.8, 2.2, 0.3, -2.2, 4.2, 32.4, 0x2a2620);
+    floorBox(ctx.world, -15, 8, -8, 16, 4);
+    floorBox(ctx.world, 5, 20, 8, 24, 4);
+    floorBox(ctx.world, -5, 30, -2, 33, 5);
+    floorBox(ctx.world, -1, 29, 3, 33, 4);
+    floorBox(ctx.world, -2, 43, 6, 52, 4);
     ctx.signals.addOccluder({
       id: "drain-occlude",
       min: new THREE.Vector3(-3.2, 3.2, 31.8),

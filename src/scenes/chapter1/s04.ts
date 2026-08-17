@@ -66,6 +66,9 @@ export function createC1S04(): GameScene {
       ctx.camera.dist = 6.4;
       ctx.triangulation.attach(ctx.root);
       ctx.hud.setTask(TASK["C1-S04"] ?? "");
+      ctx.guide.set("explore", null, [
+        { x0: -17, z0: -1, x1: 14, z1: 52 },
+      ]);
       ctx.queueLines(openingLineIds("C1-S04", ctx.save));
       ctx.interact.add({
         id: "drop-beacon",

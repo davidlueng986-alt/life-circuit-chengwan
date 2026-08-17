@@ -4,10 +4,18 @@ export interface NavMark {
   kind: "self" | "goal" | "item" | "talk";
 }
 
+export interface NavWall {
+  x0: number;
+  z0: number;
+  x1: number;
+  z1: number;
+}
+
 export function drawMinimap(
   canvas: HTMLCanvasElement,
   marks: NavMark[],
   yaw: number,
+  walls: NavWall[] = [],
 ): void {
   const g = canvas.getContext("2d");
   if (!g) return;
@@ -43,12 +51,34 @@ export function drawMinimap(
   maxX += pad;
   minZ -= pad;
   maxZ += pad;
+  for (const wall of walls) {
+    minX = Math.min(minX, wall.x0, wall.x1);
+    maxX = Math.max(maxX, wall.x0, wall.x1);
+    minZ = Math.min(minZ, wall.z0, wall.z1);
+    maxZ = Math.max(maxZ, wall.z0, wall.z1);
+  }
   const span = Math.max(maxX - minX, maxZ - minZ, 8);
 
   const toXY = (x: number, z: number): { x: number; y: number } => ({
     x: ((x - (minX + maxX) * 0.5) / span + 0.5) * (w - 16) + 8,
     y: ((z - (minZ + maxZ) * 0.5) / span + 0.5) * (h - 16) + 8,
   });
+
+  g.strokeStyle = "rgba(138, 160, 184, 0.55)";
+  g.lineWidth = 2;
+  for (const wall of walls) {
+    const a = toXY(wall.x0, wall.z0);
+    const b = toXY(wall.x1, wall.z0);
+    const c = toXY(wall.x1, wall.z1);
+    const d = toXY(wall.x0, wall.z1);
+    g.beginPath();
+    g.moveTo(a.x, a.y);
+    g.lineTo(b.x, b.y);
+    g.lineTo(c.x, c.y);
+    g.lineTo(d.x, d.y);
+    g.closePath();
+    g.stroke();
+  }
 
   for (const mark of marks) {
     const p = toXY(mark.x, mark.z);

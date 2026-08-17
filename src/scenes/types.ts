@@ -12,6 +12,7 @@ import type { FlowLens } from "../engine/systems/flowLens";
 import type { SignalGraph } from "../engine/systems/signalGraph";
 import type { TetherTool } from "../engine/systems/tether";
 import type { Triangulation } from "../engine/systems/triangulation";
+import type { Guide } from "../engine/guide";
 import type { Hud } from "../ui/hud";
 import type { Workbench } from "../ui/workbench";
 
@@ -40,6 +41,7 @@ export interface SceneContext {
   reducedMotion: boolean;
   now: number;
   suggestRelaxed: () => void;
+  guide: Guide;
 }
 
 export interface GameScene {

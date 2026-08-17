@@ -5,7 +5,8 @@ import { nextC1Scene, workshopEntry } from "../content/progress";
 import { HUB, addPlayLights, addSolidBox, applyFog, configureKeyShadow, lamp, playPoint } from "../engine/greybox";
 import { heroProbe } from "../engine/props";
 import { BlockStamp, floorBox, wallBox } from "../engine/blocks";
-import { makeWorldLabel } from "../engine/worldHints";
+import { dressInterior, stampCabinet, stampCrateStack } from "../engine/dress";
+import { dressHorizon } from "./horizon";
 import type { GameScene } from "./types";
 
 export function createHubScene(id: SceneId = "HUB-S00"): GameScene {
@@ -34,16 +35,24 @@ export function createHubScene(id: SceneId = "HUB-S00"): GameScene {
       map.fill(-2, 0, -1, 2, 0, 1, "wood");
       map.fill(-4, 1, 1, -3, 3, 1, "lamp");
       map.fill(3, 1, 1, 4, 3, 1, "cyan");
+      for (let x = -3; x <= 3; x += 1) {
+        for (let y = 1; y <= 3; y += 1) map.erase(x, y, 8);
+      }
+      map.fill(-3, 1, 8, 3, 3, 8, "glass");
+      dressInterior(map, { x0: -11, z0: -8, x1: 11, z1: 8, y0: -1, h: 4 });
+      stampCrateStack(map, -9, -6, 2);
+      stampCrateStack(map, 8, -6, 3);
+      stampCabinet(map, -10, 2);
+      stampCabinet(map, -9, 2);
       map.commit(ctx.root);
+      dressHorizon(ctx.root, { weather: "hub", shift: { z: 18 } });
       floorBox(ctx.world, -11, -8, 11, 8, 0);
       wallBox(ctx.world, -11, 0, -8, 11, 4, -8);
       wallBox(ctx.world, -11, 0, 8, 11, 4, 8);
       wallBox(ctx.world, -11, 0, -8, -11, 4, 8);
       wallBox(ctx.world, 11, 0, -8, 11, 4, 8);
       floorBox(ctx.world, -2, -1, 2, 1, 1);
-      const tableTag = makeWorldLabel("中央桌", "先組裝，再故意弄壞，再帶去現場");
-      tableTag.position.set(0, 1.35, 0);
-      ctx.root.add(tableTag);
+
       const partA = addSolidBox(ctx.root, ctx.world, 0.22, 0.12, 0.22, 0x6a7068, -0.55, 0.82, 0.25);
       const partB = addSolidBox(ctx.root, ctx.world, 0.18, 0.18, 0.18, 0x8aa0b8, 0.05, 0.86, -0.2);
       const proto = heroProbe();
@@ -78,16 +87,13 @@ export function createHubScene(id: SceneId = "HUB-S00"): GameScene {
             const item = ctx.interact.items.find((entry) => entry.id === "proto");
             if (item) item.prompt = "已留下第一次失效，去河港";
             ctx.hud.setTask("去河港：帶這次失效紀錄出門");
+            ctx.guide.setGoal(new THREE.Vector3(-3.15, 0, 1.35));
           }
         },
       });
       mountDoor(ctx, -3.15, 1.35, 0xb85c38, "harbor-door");
       mountDoor(ctx, 3.15, 1.35, 0x3d6a68, "workshop-door");
-      const harborTag = makeWorldLabel("去河港", "第一章");
-      harborTag.position.set(-3.15, 2.85, 1.35);
-      const shopTag = makeWorldLabel("微觀工作坊", "可跳過");
-      shopTag.position.set(3.15, 2.85, 1.35);
-      ctx.root.add(harborTag, shopTag);
+
 
       const hatch = addSolidBox(ctx.root, ctx.world, 1.8, 2.3, 0.18, 0x2a2620, 0, 1.25, -7.72);
       hatch.name = "c2-hatch";
@@ -120,6 +126,7 @@ export function createHubScene(id: SceneId = "HUB-S00"): GameScene {
       ctx.camera.yaw = 0;
       ctx.camera.pitch = -0.12;
       ctx.hud.setTask(TASK["HUB-S00"] ?? "");
+      ctx.guide.set("path", new THREE.Vector3(0.85, 0, 0.15), [{ x0: -11, z0: -8, x1: 11, z1: 8 }]);
 
       ctx.interact.add({
         id: "harbor",

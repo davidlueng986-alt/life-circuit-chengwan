@@ -16,7 +16,7 @@ import {
 } from "../../engine/greybox";
 import { addVoxelFloor } from "../../engine/voxels";
 import { makeWorldLabel } from "../../engine/worldHints";
-import { citySkyline } from "../../engine/props";
+import { dressHorizon } from "../horizon";
 import { createNpc } from "../../engine/npc";
 import type { SceneContext } from "../types";
 
@@ -45,7 +45,7 @@ export function stormShell(ctx: SceneContext, outdoor: boolean): {
 } {
   applyFog(ctx.three, STORM, ctx.reducedMotion);
   if (ctx.three.fog instanceof THREE.FogExp2) {
-    ctx.three.fog.density = ctx.reducedMotion ? 0.0032 : outdoor ? 0.0042 : 0.0065;
+    ctx.three.fog.density = ctx.reducedMotion ? 0.0026 : outdoor ? 0.0031 : 0.0058;
   }
   const hemi = new THREE.HemisphereLight(0xc8d8e4, 0x2a343c, outdoor ? 0.62 : 0.48);
   const key = new THREE.DirectionalLight(0xd8e4ee, outdoor ? 0.95 : 0.72);
@@ -53,7 +53,7 @@ export function stormShell(ctx: SceneContext, outdoor: boolean): {
   configureKeyShadow(key, outdoor ? 32 : 16);
   ctx.root.add(hemi, key);
   addPlayLights(ctx.root, outdoor ? "storm" : "indoor");
-  if (outdoor) ctx.root.add(citySkyline(-24));
+  if (outdoor) dressHorizon(ctx.root, { weather: "storm" });
   if (!outdoor) {
     const fill = playPoint(0xffd8a0, 1.6, 12, 1.1);
     fill.position.set(0, 2.2, 1.2);

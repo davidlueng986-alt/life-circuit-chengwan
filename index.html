@@ -31,7 +31,7 @@
         <div id="nav-cluster">
           <div id="minimap" aria-label="現場簡圖">
             <canvas id="minimap-draw" width="168" height="168"></canvas>
-            <p id="minimap-caption">簡圖 · 橙三角＝目標</p>
+            <p id="minimap-caption">簡圖 · 琥珀＝路 · 探索關不畫終點</p>
           </div>
           <div id="compass" aria-hidden="true">
             <span class="cmp-n">北</span>
@@ -136,6 +136,55 @@
         <p id="hud-live" class="visually-hidden" aria-live="polite"></p>
       </div>
 
+      <div id="briefing" hidden>
+        <div class="brief-plate">
+          <p class="brief-kicker">今晚 · 澄灣研究站</p>
+          <svg class="brief-map" viewBox="0 0 360 220" role="img" aria-label="澄灣簡圖">
+            <rect class="brief-sea" x="0" y="0" width="360" height="220" />
+            <path class="brief-river" d="M0 150 C 80 120, 140 170, 220 140 S 320 90, 360 110 L 360 220 L 0 220 Z" />
+            <g id="brief-station" class="brief-pin" data-node="station">
+              <rect x="36" y="58" width="58" height="38" rx="3" />
+              <rect x="42" y="50" width="16" height="10" />
+              <text x="65" y="110">研究站</text>
+            </g>
+            <g id="brief-harbor" class="brief-pin" data-node="harbor">
+              <rect x="250" y="138" width="62" height="28" rx="3" />
+              <rect x="258" y="128" width="18" height="12" />
+              <text x="281" y="182">河港</text>
+            </g>
+            <g id="brief-gate" class="brief-pin" data-node="gate">
+              <rect x="168" y="52" width="10" height="48" />
+              <rect x="182" y="52" width="10" height="48" />
+              <rect x="164" y="46" width="32" height="8" />
+              <text x="200" y="34">三號閘</text>
+            </g>
+            <g id="brief-xiaocen" class="brief-who" data-who="xiaocen">
+              <circle cx="190" cy="118" r="6" />
+              <text x="202" y="134">小岑 · 被困</text>
+            </g>
+            <g id="brief-fang" class="brief-who" data-who="fang">
+              <circle cx="44" cy="42" r="5" />
+              <text x="54" y="32">方雅 · 無線電</text>
+            </g>
+            <g id="brief-lin" class="brief-who" data-who="lin">
+              <circle cx="92" cy="48" r="5" />
+              <text x="78" y="72">林博士</text>
+            </g>
+            <g id="brief-you" class="brief-who" data-who="you">
+              <circle cx="108" cy="78" r="6" />
+              <text x="120" y="82">你 · 系統跑手</text>
+            </g>
+            <path class="brief-route" d="M108 78 L 148 68 L 176 70" />
+          </svg>
+          <p id="briefing-line">今晚暴雨。澄灣三號防洪閘停了。</p>
+          <div id="briefing-dots" aria-hidden="true"></div>
+          <div class="brief-nav">
+            <button type="button" id="briefing-skip" class="btn-ghost">跳過</button>
+            <button type="button" id="briefing-next" class="btn-play">下一頁</button>
+          </div>
+        </div>
+      </div>
+
       <div id="title-screen">
         <div class="title-sky" aria-hidden="true"></div>
         <div class="title-hero" aria-hidden="true"></div>
@@ -143,7 +192,7 @@
           <p class="title-kicker">iGEM 教育冒險 · 澄灣研究站</p>
           <div class="title-logo" aria-hidden="true"></div>
           <h1 class="title-name" id="title-name">生命迴路：澄灣</h1>
-          <p class="title-logline">暴風雨夜，沿著橙燈走到控制室。地上發光環＝可互動。沒有測驗倒數，滑鼠也不會被鎖住。</p>
+          <p class="title-logline">暴風雨夜，三號閘停了，小岑被困在下面。先看地圖，再沿著橙燈走進控制室。</p>
           <p id="title-corrupt" hidden></p>
           <nav class="title-nav" aria-label="標題">
             <button type="button" id="btn-new" class="btn-play">開始冒險</button>
@@ -170,7 +219,7 @@
         <h2 id="settings-title">設定</h2>
         <label class="set-row">
           <span>寬鬆時間</span>
-          <input type="checkbox" id="set-relaxed" checked />
+          <input type="checkbox" id="set-relaxed" />
         </label>
         <label class="set-row">
           <span>減少動態</span>

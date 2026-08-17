@@ -5,6 +5,7 @@ import { P05_LAYOUT as L } from "../../content/prologue/layout";
 import { P05 } from "../../content/prologue/script";
 import { addSolidBox, boxMesh } from "../../engine/greybox";
 import { BlockStamp, floorBox, wallBox } from "../../engine/blocks";
+import { stampCrateStack, stampLampPost, stampRailing, stampStripe } from "../../engine/dress";
 import type { Aabb } from "../../engine/collision";
 import type { GameScene } from "../types";
 import {
@@ -46,6 +47,15 @@ export function createEvacRun(): GameScene {
       map.fill(2, -1, -12, 4, -1, 8, "cyan");
       map.fill(1, 0, -12, 1, 2, 8, "iron");
       map.fill(5, 0, -12, 5, 2, 8, "iron");
+      map.fill(1, 3, -12, 5, 3, 8, "iron");
+      map.fill(-2, 0, 12, 2, 2, 12, "iron");
+      stampRailing(map, 2, -12, 2, 6);
+      stampRailing(map, 4, -12, 4, 6);
+      stampStripe(map, 3, -10, 3, 6);
+      stampLampPost(map, 2, 4);
+      stampLampPost(map, 4, 0);
+      stampLampPost(map, 4, -6);
+      stampCrateStack(map, -1, 10, 2);
       map.commit(ctx.root);
       floorBox(ctx.world, -2, 6, 2, 12, 0);
       floorBox(ctx.world, 2, -12, 4, 8, 0);
@@ -130,6 +140,10 @@ export function createEvacRun(): GameScene {
       ctx.player.reset(L.corridorMouth.x, 0, L.corridorMouth.z + 2.2, 0);
       ctx.camera.yaw = 0;
       ctx.hud.setTask(TASK["P-S05-run"] ?? "");
+      ctx.guide.set("timer", new THREE.Vector3(L.lever.x, 0, L.lever.z), [
+        { x0: -2, z0: 6, x1: 2, z1: 12 },
+        { x0: 2, z0: -12, x1: 4, z1: 8 },
+      ]);
       ctx.say(P_LINE.whitePulse);
       ctx.hud.setStorm(ctx.save.settings.relaxedTimer ? null : 1);
       ctx.hud.setRelaxed(ctx.save.settings.relaxedTimer);
@@ -208,5 +222,6 @@ export function createEvacRun(): GameScene {
     const lift = ctx.interact.items.find((item) => item.id === "lift");
     if (lift) lift.enabled = true;
     ctx.hud.setTask(TASK["P-S05-hold"] ?? "");
+    ctx.guide.setGoal(new THREE.Vector3(L.lift.x, 0, L.lift.z));
   }
 }

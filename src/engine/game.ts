@@ -8,6 +8,7 @@ import { getLine } from "../content/dialogue";
 import { emptySave, type SaveState, type SettingsState } from "../content/saveTypes";
 import { createScene } from "../scenes/registry";
 import type { GameScene, SceneContext } from "../scenes/types";
+import { Briefing } from "../ui/briefing";
 import { Hud } from "../ui/hud";
 import { Overlays } from "../ui/overlays";
 import { Workbench } from "../ui/workbench";
@@ -29,6 +30,7 @@ import { Triangulation } from "./systems/triangulation";
 import { detectQuality, type QualityTier } from "./materials";
 import { bindTouchPad } from "./pad";
 import { WorldHints } from "./worldHints";
+import { Guide } from "./guide";
 
 export class Game {
   private readonly renderer: THREE.WebGLRenderer;
@@ -42,6 +44,7 @@ export class Game {
   private readonly interact = new InteractSystem();
   private readonly hud = new Hud();
   private readonly overlays = new Overlays();
+  private readonly briefing = new Briefing();
   private readonly workbench = new Workbench();
   private readonly rain = new RainBed();
   private readonly voice = new ToolVoice();
@@ -58,6 +61,7 @@ export class Game {
   private now = 0;
   private last = performance.now();
   private readonly hints = new WorldHints();
+  private readonly guide = new Guide();
   private helpUntil = 0;
   private readonly quality: QualityTier = detectQuality();
 
@@ -97,6 +101,7 @@ export class Game {
     this.overlays.fillCodex(this.save.player.codex.terms);
     this.hud.applyChrome(this.save);
     this.three.add(this.hints.root);
+    this.guide.attach(this.three);
     window.addEventListener("keydown", this.onKey);
     window.addEventListener("resize", this.resize);
     this.resize();
@@ -136,10 +141,13 @@ export class Game {
     this.save.meta.hasSave = true;
     this.save.meta.currentScene = "P-S00";
     this.persist();
-    this.rain.start();
-    this.voice.ensure();
-    this.helpUntil = Number.POSITIVE_INFINITY;
-    this.enter("P-S00");
+    this.overlays.showTitle(false, false);
+    void this.briefing.play(this.save.settings.reducedMotion).then(() => {
+      this.rain.start();
+      this.voice.ensure();
+      this.helpUntil = Number.POSITIVE_INFINITY;
+      this.enter("P-S00");
+    });
   }
 
   private continueGame(): void {
@@ -179,6 +187,7 @@ export class Game {
     this.world.reset();
     this.interact.reset();
     this.hints.reset();
+    this.guide.reset();
     this.signals.reset();
     this.triangulation.reset();
     this.flowLens.detach();
@@ -204,6 +213,8 @@ export class Game {
     const scene = createScene(id === "BOOT-S00" ? "HUB-S00" : id);
     this.active = scene;
     scene.mount(this.context());
+    if (id === "HUB-S00") this.briefing.stamp("station", this.save.settings.reducedMotion);
+    if (id === "C1-S01") this.briefing.stamp("harbor", this.save.settings.reducedMotion);
     this.cam.snapNext();
     this.hud.bindSave(this.save, () => this.persist());
     this.hud.setBattery(this.flowLens.owned, this.save.player.tool.battery);
@@ -317,6 +328,7 @@ export class Game {
       reducedMotion: this.save.settings.reducedMotion,
       now: this.now,
       suggestRelaxed: () => this.suggestRelaxed(),
+      guide: this.guide,
     };
   }
 
@@ -400,9 +412,17 @@ export class Game {
       this.hints.setSpeaker(speaker.pos, speaker.name, speaker.radio);
       const scanning = this.input.lensHeld || this.flowLens.charging || this.flowLens.waveAge < 0.55;
       this.hints.setScan(scanning);
+      if (this.guide.mode === "path" || this.guide.mode === "timer") {
+        if (!this.guide.hasGoal && goal) this.guide.setGoal(goal.position);
+      }
+      const moving = Math.hypot(this.player.velocity.x, this.player.velocity.z) > 0.45;
+      const guided = this.guide.tick(dt, this.player.position, this.cam.yaw, moving);
+      const goBtn = document.querySelector("[data-act='go']");
+      if (goBtn instanceof HTMLElement) goBtn.hidden = guided.hideGo;
       this.hints.sync(this.interact.items, this.interact.focused, this.now, {
         player: this.player.position,
-        objective: goal?.position ?? speaker.pos,
+        objective: this.guide.hasGoal ? this.guide.goal : goal?.position ?? speaker.pos,
+        showArrow: guided.showArrow,
       });
       this.hud.setScan({
         on: scanning,
@@ -478,10 +498,17 @@ export class Game {
       this.hud.setInteractList(listed.length ? listed : null);
       this.hud.setNav({
         yaw: this.cam.yaw,
-        marks: navMarks(this.player.position, this.interact.items, goal, speaker.pos),
+        marks: navMarks(
+          this.player.position,
+          this.guide.mode === "explore" ? [] : this.interact.items,
+          this.guide.mode === "explore" ? null : goal,
+          speaker.pos,
+        ),
         objective: document.querySelector("#task-line")?.textContent || goal?.prompt || worldPrompt || "看橙燈與發光環",
         speaker: speaker.name || null,
         radio: speaker.radio,
+        walls: this.guide.walls,
+        bearing: guided.chip,
       });
       if (!ate && !this.tether.heldId) {
         const used = this.interact.pollUse(dt, this.input.interactPressed, this.input.interactHeld);

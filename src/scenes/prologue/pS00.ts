@@ -5,7 +5,15 @@ import { P00 } from "../../content/prologue/script";
 import { PROMPT, TASK } from "../../content/copy";
 import { addSolidBox, placeSolid, playPoint } from "../../engine/greybox";
 import { BlockStamp, floorBox, wallBox } from "../../engine/blocks";
-import { citySkyline } from "../../engine/props";
+import {
+  dressInterior,
+  dressPerimeter,
+  stampBuilding,
+  stampLampPost,
+  stampPiling,
+  stampRailing,
+  stampStationMass,
+} from "../../engine/dress";
 import type { GameScene } from "../types";
 import {
   SceneVoice,
@@ -60,6 +68,19 @@ export function createStormArrival(): GameScene {
       map.fill(-2, -1, 21, 1, -1, 24, "iron");
       map.fill(-2, 0, 24, 1, 2, 24, "iron");
       map.fill(-14, 3, 20, -6, 8, 21, "iron");
+      dressPerimeter(map, { x0: -8, z0: -5, x1: 10, z1: 24 }, { wall: "iron", lamps: true, open: "ns" });
+      stampStationMass(map, 13, -6);
+      stampBuilding(map, 8, 18, 4, 4, 5, "brick", "w");
+      stampBuilding(map, -18, 8, 5, 5, 6, "stone", "e");
+      dressInterior(map, { x0: 6, z0: -3, x1: 12, z1: 3, y0: -1, h: 3 });
+      stampRailing(map, -4, 8, -4, 23);
+      stampRailing(map, 3, 8, 3, 23);
+      for (let z = 0; z <= 24; z += 4) stampPiling(map, -11, z);
+      stampLampPost(map, 4, 10);
+      stampLampPost(map, 4, 16);
+      stampLampPost(map, -1, 10);
+      stampLampPost(map, 0, 16);
+      stampLampPost(map, -1, 21);
       map.commit(ctx.root);
       floorBox(ctx.world, -8, -5, 10, 7, 0);
       floorBox(ctx.world, -3, 7, 2, 25, 0);
@@ -67,8 +88,6 @@ export function createStormArrival(): GameScene {
       wallBox(ctx.world, -4, 0, 7, -4, 1, 24);
       wallBox(ctx.world, 3, 0, 7, 3, 1, 24);
       wallBox(ctx.world, -2, 0, 24, 1, 2, 24);
-      ctx.root.add(citySkyline(32));
-
       doorMesh = addSolidBox(ctx.root, ctx.world, 0.18, 2.3, 1.5, 0x3a2e22, L.indoorDoor.x, 1.15, 0);
       const warm = playPoint(0xffd08a, 1.8, 8, 1.1);
       warm.position.set(7.4, 1.9, 0);
@@ -103,9 +122,14 @@ export function createStormArrival(): GameScene {
       const faceGate = Math.atan2(-(L.gate.x - L.spawn.x), -(L.gate.z - L.spawn.z));
       ctx.player.reset(L.spawn.x, L.spawn.y, L.spawn.z, faceGate);
       ctx.camera.yaw = faceGate;
-      ctx.camera.pitch = -0.38;
-      ctx.camera.dist = 8.4;
+      ctx.camera.pitch = -0.22;
+      ctx.camera.dist = 9.2;
       ctx.hud.setTask(TASK["P-S00"] ?? "");
+      ctx.guide.set("path", new THREE.Vector3(L.lift.x, 0, L.lift.z), [
+        { x0: -8, z0: -5, x1: 10, z1: 7 },
+        { x0: -3, z0: 7, x1: 2, z1: 25 },
+        { x0: 6, z0: -3, x1: 12, z1: 3 },
+      ]);
 
       ctx.interact.add({
         id: "indoor-door",
@@ -126,9 +150,9 @@ export function createStormArrival(): GameScene {
         enabled: true,
         onUse: () => ctx.completeAndGo(),
       });
-      const gateLamp = playPoint(0xff7a28, 3.4, 28, 1.15);
+      const gateLamp = playPoint(0xff7a28, 6.4, 36, 1.15);
       gateLamp.position.set(L.gate.x, L.gate.y + 2, L.gate.z);
-      const liftLamp = playPoint(0xffd08a, 2.1, 12, 1.1);
+      const liftLamp = playPoint(0xffd08a, 2.8, 16, 1.1);
       liftLamp.position.set(L.lift.x, 2.4, L.lift.z);
       ctx.root.add(gateLamp, liftLamp);
 

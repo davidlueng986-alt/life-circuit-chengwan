@@ -173,7 +173,7 @@ export class WorldHints {
     items: Interactable[],
     focused: Interactable | null,
     time: number,
-    extras?: { player?: THREE.Vector3; objective?: THREE.Vector3 | null },
+    extras?: { player?: THREE.Vector3; objective?: THREE.Vector3 | null; showArrow?: boolean },
   ): void {
     while (this.pool.length < items.length) this.pool.push(this.makeHint());
     for (let i = 0; i < this.pool.length; i += 1) {
@@ -214,13 +214,14 @@ export class WorldHints {
 
     const goal = extras?.objective ?? focused?.position ?? null;
     const player = extras?.player ?? null;
-    if (goal && player) {
-      this.arrow.visible = true;
+    const allow = extras?.showArrow !== false;
+    if (goal && player && allow) {
       const dx = goal.x - player.x;
       const dz = goal.z - player.z;
       const len = Math.hypot(dx, dz);
       const step = Math.min(2.4, Math.max(1.1, len * 0.28));
       if (len > 6) {
+        this.arrow.visible = true;
         this.arrow.position.set(player.x + (dx / len) * step, 0.14, player.z + (dz / len) * step);
         this.arrow.rotation.z = Math.atan2(dx, dz);
       } else {

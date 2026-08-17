@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { UI } from "../../content/copy";
 import { leaveWorkshop } from "../../content/progress";
+import { BlockStamp } from "../../engine/blocks";
+import { dressInterior, stampCabinet, stampCrateStack } from "../../engine/dress";
 import { WORKSHOP, addPlayLights, addSolidBox, applyFog, lamp, playPoint } from "../../engine/greybox";
 import type { SceneContext } from "../types";
 import { lambert, safePadMesh } from "./kit";
@@ -75,6 +77,14 @@ export function mountHall(ctx: SceneContext, length = 20, width = 11): WorkshopR
   addSolidBox(ctx.root, ctx.world, width, 3.4, 0.4, WORKSHOP.wall, 0, 1.5, length / 2);
   addSolidBox(ctx.root, ctx.world, 0.4, 3.4, length, WORKSHOP.wall, -width / 2, 1.5, 0);
   addSolidBox(ctx.root, ctx.world, 0.4, 3.4, length, WORKSHOP.wall, width / 2, 1.5, 0);
+  const map = new BlockStamp();
+  const hx = Math.floor(width / 2);
+  const hz = Math.floor(length / 2);
+  dressInterior(map, { x0: -hx, z0: -hz, x1: hx, z1: hz, y0: -1, h: 3 });
+  stampCrateStack(map, -hx + 1, -hz + 2, 2);
+  stampCabinet(map, hx - 1, -hz + 1);
+  map.commit(ctx.root);
+  ctx.guide.set("explore", null, [{ x0: -hx, z0: -hz, x1: hx, z1: hz }]);
   return { pad: placeSafePad(ctx, new THREE.Vector3(width / 2 - 1.4, 0, length / 2 - 1.15)), floorY: 0 };
 }
 

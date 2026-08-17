@@ -5,6 +5,7 @@ import { P03_LAYOUT as L } from "../../content/prologue/layout";
 import { lookFlat } from "../../engine/motorMath";
 import { heroPlate, heroSeat } from "../../engine/props";
 import { BlockStamp, floorBox } from "../../engine/blocks";
+import { stampCrateStack, stampLampPost, stampPiling, stampRailing, stampTornEdge } from "../../engine/dress";
 import type { GameScene, SceneContext } from "../types";
 import { SceneVoice, addAmberSpine, addGate3, addSosBeacon, addWaterChannel, onceFlags, stormShell, tickSceneRain } from "./kit";
 
@@ -49,6 +50,20 @@ export function createCutSpan(): GameScene {
       map.fill(-6, -4, -1, 6, -2, 1, "water");
       map.fill(-6, 0, 1, -6, 1, 6, "iron");
       map.fill(6, 0, 1, 6, 1, 6, "iron");
+      stampRailing(map, -5, 6, 5, 6);
+      stampRailing(map, -5, 1, -3, 1);
+      stampRailing(map, 3, 1, 5, 1);
+      stampRailing(map, -5, -1, -3, -1);
+      stampRailing(map, 3, -1, 5, -1);
+      stampRailing(map, -5, -6, 5, -6);
+      stampTornEdge(map, -2, 1, 2);
+      stampTornEdge(map, -2, -1, 2);
+      stampCrateStack(map, -4, 5, 2);
+      stampCrateStack(map, 4, -5, 2);
+      stampLampPost(map, -4, 4);
+      stampLampPost(map, 4, -4);
+      for (let x = -5; x <= 5; x += 2) stampPiling(map, x, 0);
+      map.fill(-10, 2, -16, -4, 7, -14, "iron");
       map.commit(ctx.root);
       floorBox(ctx.world, -5, 1, 5, 6, 0);
       floorBox(ctx.world, -5, -6, 5, -1, 0);
@@ -81,6 +96,10 @@ export function createCutSpan(): GameScene {
       ctx.player.reset(L.spawn.x, L.spawn.y, L.spawn.z, facePlates);
       ctx.camera.yaw = facePlates;
       ctx.hud.setTask(TASK["P-S03-pick"] ?? "");
+      ctx.guide.set("path", new THREE.Vector3(L.plateA.x, 0, L.plateA.z), [
+        { x0: -5, z0: 1, x1: 5, z1: 6 },
+        { x0: -5, z0: -6, x1: 5, z1: -1 },
+      ]);
       ctx.say(P_LINE.pickTether);
 
       ctx.interact.add({

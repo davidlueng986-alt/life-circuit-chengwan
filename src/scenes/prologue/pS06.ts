@@ -2,7 +2,10 @@ import * as THREE from "three";
 import { P_LINE } from "../../content/prologue/ids";
 import { P06_LAYOUT as L } from "../../content/prologue/layout";
 import { P06 } from "../../content/prologue/script";
+import { BlockStamp, floorBox, wallBox } from "../../engine/blocks";
+import { dressInterior, stampCrateStack } from "../../engine/dress";
 import { HUB, addSolidBox } from "../../engine/greybox";
+import { dressHorizon } from "../horizon";
 import type { GameScene } from "../types";
 import {
   SceneVoice,
@@ -32,12 +35,25 @@ export function createBeforeDawn(): GameScene {
       sun.position.set(8, 12, 4);
       ctx.root.add(sun);
 
-      addSolidBox(ctx.root, ctx.world, 11, 0.4, 8.4, HUB.floor, 0, -0.2, 0);
-      addSolidBox(ctx.root, ctx.world, 11, 3.4, 0.18, 0x88a0b0, 0, 1.6, -3.95);
-      addSolidBox(ctx.root, ctx.world, 0.4, 3.4, 8.4, HUB.wall, -5.5, 1.6, 0);
-      addSolidBox(ctx.root, ctx.world, 0.4, 3.4, 8.4, HUB.wall, 5.5, 1.6, 0);
+      const map = new BlockStamp();
+      map.room(-6, -4, 6, 4, -1, 3, "wood", "stone");
+      for (let x = -2; x <= 2; x += 1) {
+        for (let y = 1; y <= 2; y += 1) map.erase(x, y, -4);
+      }
+      map.fill(-2, 1, -4, 2, 2, -4, "glass");
+      dressInterior(map, { x0: -6, z0: -4, x1: 6, z1: 4, y0: -1, h: 3 });
+      stampCrateStack(map, -5, 3, 2);
+      stampCrateStack(map, 4, 3, 2);
+      map.commit(ctx.root);
+      floorBox(ctx.world, -6, -4, 6, 4, 0);
+      wallBox(ctx.world, -6, 0, -4, 6, 3, -4);
+      wallBox(ctx.world, -6, 0, 4, 6, 3, 4);
+      wallBox(ctx.world, -6, 0, -4, -6, 3, 4);
+      wallBox(ctx.world, 6, 0, -4, 6, 3, 4);
       addSolidBox(ctx.root, ctx.world, 1.45, 0.48, 0.62, 0x4a4034, -1.25, 0.24, 0.55);
       addSolidBox(ctx.root, ctx.world, 1.45, 0.48, 0.62, 0x4a4034, 1.25, 0.24, 0.55);
+      dressHorizon(ctx.root, { weather: "hub" });
+      ctx.guide.set("off");
 
       const glass = new THREE.Mesh(
         new THREE.BoxGeometry(6.4, 2.4, 0.06),

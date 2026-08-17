@@ -79,6 +79,10 @@ export function createC1S01(): GameScene {
       addSolidBox(ctx.root, ctx.world, 0.35, 1.6, 0.35, 0x6a7068, C1_LAYOUT.wallPower[0], 0.8, C1_LAYOUT.wallPower[2]);
       addSolidBox(ctx.root, ctx.world, 0.6, 1.1, 0.4, 0x3d5c58, C1_LAYOUT.pumpJack[0], 0.55, C1_LAYOUT.pumpJack[2]);
 
+      ctx.guide.set("path", xyz(C1_LAYOUT.pumpJack), [
+        { x0: -11, z0: -1, x1: 11, z1: 17 },
+        { x0: -7, z0: 15, x1: 5, z1: 37 },
+      ]);
       ctx.player.reset(C1_LAYOUT.spawnS01[0], C1_LAYOUT.spawnS01[1], C1_LAYOUT.spawnS01[2], Math.PI);
       ctx.camera.yaw = Math.PI;
       ctx.hud.setTask(TASK["C1-S01-hunt"] ?? "");

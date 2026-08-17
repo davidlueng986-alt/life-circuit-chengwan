@@ -80,6 +80,9 @@ export function createC1S02(): GameScene {
         origin.copy(ctx.player.position);
         startYaw = ctx.camera.yaw;
         ctx.hud.setTask("全紅了。試轉身、走開、關那根燈");
+        ctx.guide.set("explore", null, [
+          { x0: -7, z0: 15, x1: 5, z1: 44 },
+        ]);
         const wash = new THREE.Mesh(
           new THREE.SphereGeometry(1.1, 12, 10),
           new THREE.MeshBasicMaterial({ color: 0xc44a3a, transparent: true, opacity: 0.45, depthWrite: false }),
@@ -148,6 +151,9 @@ export function createC1S02(): GameScene {
     ctx.persist();
     mountEastShoreEvac(ctx);
     armExits(ctx);
+    ctx.guide.set("path", xyz(C1_LAYOUT.vanMouth), [
+      { x0: -16, z0: 34, x1: 5, z1: 44 },
+    ]);
   }
 }
 

@@ -69,6 +69,9 @@ export function createC1S05(): GameScene {
       ctx.player.reset(C1_LAYOUT.spawnS05[0], 0, C1_LAYOUT.spawnS05[2], Math.PI);
       ctx.camera.yaw = Math.PI;
       ctx.hud.setTask(TASK["C1-S05-walk"] ?? "");
+      ctx.guide.set("path", xyz(C1_LAYOUT.demoStand), [
+        { x0: -17, z0: 7, x1: -6, z1: 18 },
+      ]);
 
       ctx.workbench.bind({
         onChenChange: (draft) => {
