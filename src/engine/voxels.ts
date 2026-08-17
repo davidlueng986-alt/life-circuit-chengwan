@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import type { WorldColliders } from "./collision";
-import { surf } from "./greybox";
 
 const dummy = new THREE.Object3D();
 const tint = new THREE.Color();
@@ -31,10 +30,10 @@ export function addVoxelVolume(
   const sy = h / ny;
   const sz = d / nz;
   const geo = new THREE.BoxGeometry(sx * 0.985, sy * 0.985, sz * 0.985);
-  const mat = surf(color, { roughness: 0.94, metalness: 0.02, flat: true });
+  const mat = new THREE.MeshLambertMaterial({ color, flatShading: true });
   const mesh = new THREE.InstancedMesh(geo, mat, nx * ny * nz);
   mesh.receiveShadow = true;
-  mesh.castShadow = h > 0.6;
+  mesh.castShadow = false;
   mesh.name = "voxel-volume";
   const x0 = x - w / 2 + sx / 2;
   const y0 = y - h / 2 + sy / 2;

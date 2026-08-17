@@ -181,9 +181,13 @@ export function createActuatorGallery(): GameScene {
 
       ctx.player.reset(L.spawn.x, L.spawn.y, L.spawn.z, L.spawn.yaw);
       ctx.camera.yaw = L.spawn.yaw;
+      ctx.tether.grantPickup();
+      ctx.save.player.tool.tether = true;
+      ctx.persist();
       ctx.hud.setTask(TASK["P-S04"] ?? "");
       ctx.say(P_LINE.findBreak);
       voice.startRumble();
+      ctx.hud.announce("雜物離座太遠時，按住 F 拉過來。");
 
       const grab = (id: string, x: number, z: number, label: string) => {
         ctx.interact.add({

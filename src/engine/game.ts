@@ -68,7 +68,7 @@ export class Game {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.12;
-    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.enabled = this.quality !== "low";
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.three.add(this.root);
     this.three.add(this.player.root);
@@ -420,7 +420,11 @@ export class Game {
         );
       }
       const fBtn = document.querySelector("[data-act='f']");
-      if (fBtn instanceof HTMLElement) fBtn.hidden = !this.tether.owned;
+      if (fBtn instanceof HTMLElement) {
+        const scene = this.save.meta.currentScene;
+        const hideF = scene === "P-S00" || scene === "P-S01" || scene === "P-S02" || scene === "P-S03";
+        fBtn.hidden = !this.tether.owned || hideF;
+      }
       const nowMs = performance.now();
       const worldWants = !!this.interact.focused?.enabled;
       const cross = document.querySelector("#crosshair");

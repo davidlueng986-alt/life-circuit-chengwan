@@ -161,6 +161,7 @@ export function detectQuality(): QualityTier {
   const cores = navigator.hardwareConcurrency ?? 8;
   const mem = Number((navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8);
   const small = Math.min(window.innerWidth, window.innerHeight) < 720;
-  if (cores <= 4 || mem <= 4 || small) return "low";
+  const touchPad = navigator.maxTouchPoints > 0 && Math.min(window.innerWidth, window.innerHeight) < 1100;
+  if (cores <= 4 || mem <= 4 || small || touchPad) return "low";
   return "high";
 }

@@ -141,7 +141,7 @@ export function paintEmissive(object: THREE.Object3D, intensity: number, color?:
 
 export function configureKeyShadow(light: THREE.DirectionalLight, span = 28): void {
   light.castShadow = true;
-  light.shadow.mapSize.set(1024, 1024);
+  light.shadow.mapSize.set(512, 512);
   light.shadow.bias = -0.00035;
   light.shadow.normalBias = 0.035;
   light.shadow.camera.near = 1.5;
@@ -233,13 +233,10 @@ export function placeSolid(mesh: THREE.Mesh, x: number, y: number, z: number): v
 export function waterSheet(w: number, d: number, x: number, y: number, z: number): THREE.Mesh {
   const mesh = new THREE.Mesh(
     new THREE.PlaneGeometry(w, d, 28, 28),
-    new THREE.MeshPhysicalMaterial({
+    new THREE.MeshLambertMaterial({
       color: 0x1a3844,
-      roughness: 0.18,
-      metalness: 0.04,
-      transmission: 0.12,
       transparent: true,
-      opacity: 0.72,
+      opacity: 0.62,
       depthWrite: false,
     }),
   );
@@ -317,7 +314,7 @@ export function applyFog(scene: THREE.Scene, palette: Palette, reduced: boolean)
 
 export function makeRain(reduced: boolean): THREE.Points | null {
   if (reduced) return null;
-  const count = 640;
+  const count = 280;
   const positions = new Float32Array(count * 3);
   for (let i = 0; i < count; i += 1) {
     positions[i * 3] = (Math.random() - 0.5) * 52;
@@ -389,11 +386,9 @@ export function addPlayLights(root: THREE.Group, mood: "storm" | "indoor" | "hub
   }
   if (mood === "indoor") {
     root.add(new THREE.AmbientLight(0x8aa0b0, 0.55));
-    const wash = playPoint(0xffe2b8, 1.8, 14, 1.05);
+    const wash = playPoint(0xffe2b8, 1.4, 12, 1.1);
     wash.position.set(0, 2.4, 0.4);
-    const bounce = playPoint(0x7a98a8, 1.1, 12, 1.1);
-    bounce.position.set(2.6, 2.2, -2.1);
-    root.add(wash, bounce);
+    root.add(wash);
     return;
   }
   if (mood === "hub") {

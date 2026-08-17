@@ -29,8 +29,8 @@ export const LINES = {
   "P-S02-D002": line("P-S02-D002", SPEAKER.xiaocen, "找會流動的那條，不要找最亮的。壞線也會反光。"),
   "P-S02-D003": line("P-S02-D003", SPEAKER.lin, "對，就是那條。沿著它走。"),
 
-  "P-S03-D001": line("P-S03-D001", SPEAKER.fang, "按 E 取下牆上的連接工具。把板拉過來，扣進兩個形狀座。"),
-  "P-S03-D002": line("P-S03-D002", SPEAKER.xiaocen, "慢慢轉。掉下去它會回收，但我會笑。"),
+  "P-S03-D001": line("P-S03-D001", SPEAKER.fang, "把兩塊板撿起來，放到對應的形狀座。"),
+  "P-S03-D002": line("P-S03-D002", SPEAKER.xiaocen, "對不上就換一塊。掉下去板會回來。"),
 
   "P-S04-D001": line("P-S04-D001", SPEAKER.fang, "電在，命令沒有到。找斷點。"),
   "P-S04-D002": line("P-S04-D002", SPEAKER.xiaocen, "第二條水線到了。你只需要讓閘門聽見一次。"),

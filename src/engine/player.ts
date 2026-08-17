@@ -25,7 +25,7 @@ export class PlayerMotor {
   climbing = false;
   radius = MOTOR.radius;
   height = MOTOR.height;
-  walkSpeed = MOTOR.walkSpeed;
+  walkSpeed: number = MOTOR.walkSpeed;
   recovering = false;
   recoverKind: RecoverKind = "void";
   recoverT = 0;

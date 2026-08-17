@@ -2,19 +2,15 @@ import * as THREE from "three";
 import { PROMPT, TASK } from "../../content/copy";
 import { P_LINE } from "../../content/prologue/ids";
 import { P03_LAYOUT as L } from "../../content/prologue/layout";
-import { heroPlate, heroSeat, tetherHolster } from "../../engine/props";
+import { lookFlat } from "../../engine/motorMath";
+import { heroPlate, heroSeat } from "../../engine/props";
 import { addVoxelFloor, addVoxelVolume } from "../../engine/voxels";
 import { makeWorldLabel } from "../../engine/worldHints";
 import type { GameScene, SceneContext } from "../types";
-import {
-  SceneVoice,
-  addAmberSpine,
-  addSosBeacon,
-  addWaterChannel,
-  onceFlags,
-  stormShell,
-  tickSceneRain,
-} from "./kit";
+import { SceneVoice, addAmberSpine, addSosBeacon, addWaterChannel, onceFlags, stormShell, tickSceneRain } from "./kit";
+
+type PlateId = "plate-a" | "plate-b";
+type SeatId = "seat-a" | "seat-b";
 
 export function createCutSpan(): GameScene {
   const flags = onceFlags();
@@ -23,12 +19,23 @@ export function createCutSpan(): GameScene {
   let water: ReturnType<typeof addWaterChannel> | null = null;
   let sos: ReturnType<typeof addSosBeacon> | null = null;
   let plateA: THREE.Group | null = null;
-  let holster: THREE.Group | null = null;
+  let plateB: THREE.Group | null = null;
+  let carried: PlateId | null = null;
   let ready = false;
   let liftT = 0;
   let elapsed = 0;
   let falls = 0;
-  let idleTool = 0;
+  let idle = 0;
+  const seated: Record<SeatId, boolean> = { "seat-a": false, "seat-b": false };
+  const home = {
+    "plate-a": new THREE.Vector3(L.plateA.x, L.plateA.y, L.plateA.z),
+    "plate-b": new THREE.Vector3(L.plateB.x, L.plateB.y, L.plateB.z),
+  };
+  const match: Record<PlateId, SeatId> = { "plate-a": "seat-a", "plate-b": "seat-b" };
+  const seats = {
+    "seat-a": new THREE.Vector3(L.seatA.x, L.seatA.y, L.seatA.z),
+    "seat-b": new THREE.Vector3(L.seatB.x, L.seatB.y, L.seatB.z),
+  };
 
   return {
     id: "P-S03",
@@ -43,35 +50,20 @@ export function createCutSpan(): GameScene {
       addVoxelVolume(ctx.root, ctx.world, 0.35, 1.15, 1.1, 0x1a2127, 1.7, 0.48, 0.55);
       addAmberSpine(ctx, -2.2, 1.4, 4.6);
 
-      holster = tetherHolster();
-      holster.position.set(L.holster.x, L.holster.y, L.holster.z);
-      holster.rotation.y = Math.PI / 2;
-      ctx.root.add(holster);
-      const toolTag = makeWorldLabel("連接工具", "E 取下 · 再用 F 抓板");
-      toolTag.position.set(L.holster.x, 1.85, L.holster.z);
-      toolTag.name = "tool-tag";
-      ctx.root.add(toolTag);
-
       plateA = heroPlate("chevron");
-      plateA.position.set(L.plateA.x, L.plateA.y, L.plateA.z);
-      const plateB = heroPlate("notch");
-      plateB.position.set(L.plateB.x, L.plateB.y, L.plateB.z);
+      plateA.position.copy(home["plate-a"]);
+      plateB = heroPlate("notch");
+      plateB.position.copy(home["plate-b"]);
       ctx.root.add(plateA, plateB);
-      const plateATag = makeWorldLabel("輕板", "三角銷 · 按住 F");
-      plateATag.position.set(0, 0.45, 0);
-      plateA.add(plateATag);
-      const plateBTag = makeWorldLabel("重板", "缺角 · 風會推");
-      plateBTag.position.set(0, 0.5, 0);
-      plateB.add(plateBTag);
 
       const seatA = heroSeat("chevron");
-      seatA.position.set(L.seatA.x, L.seatA.y, L.seatA.z);
+      seatA.position.copy(seats["seat-a"]);
       const seatB = heroSeat("notch");
-      seatB.position.set(L.seatB.x, L.seatB.y, L.seatB.z);
+      seatB.position.copy(seats["seat-b"]);
       ctx.root.add(seatA, seatB);
-      const seatATag = makeWorldLabel("三角座", "對準板的尖角");
+      const seatATag = makeWorldLabel("三角座", "E 放下輕板");
       seatATag.position.set(L.seatA.x, 0.85, L.seatA.z);
-      const seatBTag = makeWorldLabel("缺角座", "這塊板比較重，風會推");
+      const seatBTag = makeWorldLabel("缺角座", "E 放下重板");
       seatBTag.position.set(L.seatB.x, 0.85, L.seatB.z);
       ctx.root.add(seatATag, seatBTag);
 
@@ -83,20 +75,51 @@ export function createCutSpan(): GameScene {
       ctx.world.addAnchor("far", 0, 0, -3.4);
       ctx.world.killY = -2.2;
 
-      const faceTool = Math.atan2(-(L.holster.x - L.spawn.x), -(L.holster.z - L.spawn.z));
-      ctx.player.reset(L.spawn.x, L.spawn.y, L.spawn.z, faceTool);
-      ctx.camera.yaw = faceTool;
+      const facePlates = Math.atan2(-(L.plateA.x - L.spawn.x), -(L.plateA.z - L.spawn.z));
+      ctx.player.reset(L.spawn.x, L.spawn.y, L.spawn.z, facePlates);
+      ctx.camera.yaw = facePlates;
       ctx.hud.setTask(TASK["P-S03-pick"] ?? "");
       ctx.say(P_LINE.pickTether);
-      ctx.tether.assistAlign = true;
 
       ctx.interact.add({
-        id: "holster",
-        prompt: PROMPT.pickTether,
-        position: new THREE.Vector3(L.holster.x, 0, L.holster.z),
-        radius: 3.4,
+        id: "plate-a",
+        prompt: PROMPT.pickLightPlate,
+        position: home["plate-a"].clone().setY(0),
+        radius: 1.9,
         enabled: true,
-        onUse: () => takeTool(ctx, plateB),
+        onUse: () => usePlate(ctx, "plate-a"),
+      });
+      ctx.interact.add({
+        id: "plate-b",
+        prompt: PROMPT.pickHeavyPlate,
+        position: home["plate-b"].clone().setY(0),
+        radius: 1.9,
+        enabled: true,
+        onUse: () => usePlate(ctx, "plate-b"),
+      });
+      ctx.interact.add({
+        id: "seat-a",
+        prompt: PROMPT.placeChevron,
+        position: seats["seat-a"].clone().setY(0),
+        radius: 1.7,
+        enabled: true,
+        onUse: () => useSeat(ctx, "seat-a"),
+      });
+      ctx.interact.add({
+        id: "seat-b",
+        prompt: PROMPT.placeNotch,
+        position: seats["seat-b"].clone().setY(0),
+        radius: 1.7,
+        enabled: true,
+        onUse: () => useSeat(ctx, "seat-b"),
+      });
+      ctx.interact.add({
+        id: "drop-carry",
+        prompt: PROMPT.dropPlate,
+        position: new THREE.Vector3(L.spawn.x, 0, L.spawn.z),
+        radius: 0.55,
+        enabled: false,
+        onUse: () => dropHere(ctx),
       });
     },
     update(dt, ctx) {
@@ -104,37 +127,24 @@ export function createCutSpan(): GameScene {
       tickSceneRain(rain, dt);
       water?.tick(dt);
       sos?.tick(elapsed);
+      followCarry(ctx, dt);
 
-      if (!ctx.tether.owned) {
-        idleTool += dt;
-        if (holster) holster.rotation.z = Math.sin(elapsed * 3.2) * 0.08;
-        if (idleTool > 8 && flags.take("nudge-tool")) {
-          ctx.hud.announce("牆上那把發光的鉤就是連接工具。走近按 E。");
-        }
-      }
+      if (!carried && !seated["seat-a"] && !seated["seat-b"]) {
+        idle += dt;
+        if (idle > 8 && flags.take("nudge")) ctx.hud.announce("走近腳邊的板，按 E 撿起來。");
+      } else idle = 0;
 
       const hits = ctx.world.sampleTriggers(ctx.player.position);
       if (hits.includes("gap")) {
         falls += 1;
+        if (carried) sendHome(carried);
         ctx.player.pullTo(new THREE.Vector3(0, 0, 3.7), "void");
-        if (falls >= 2 && !ready) ctx.hud.announce("兩塊都扣好才過得去。");
+        if (falls >= 2 && !ready) ctx.hud.announce("兩塊都放好才過得去。");
       }
 
-      for (const id of ["plate-a", "plate-b"] as const) {
-        const body = ctx.tether.body(id);
-        const item = ctx.interact.items.find((entry) => entry.id === id);
-        if (body && item) {
-          item.position.copy(body.object.position).setY(0);
-          item.enabled = !body.seated && !body.held;
-        }
-      }
+      syncPrompts(ctx);
 
-      const aOn = !!ctx.tether.seatedIn("seat-a");
-      const bOn = !!ctx.tether.seatedIn("seat-b");
-      if (ctx.tether.heldId === "plate-a") ctx.tether.tintGhost("seat-b", false);
-      if (ctx.tether.heldId === "plate-b") ctx.tether.tintGhost("seat-a", false);
-
-      if (aOn && bOn && !ready) {
+      if (seated["seat-a"] && seated["seat-b"] && !ready) {
         ready = true;
         ctx.world.triggers = ctx.world.triggers.filter((item) => item.id !== "gap");
         ctx.hud.setTask("走過短橋");
@@ -144,7 +154,7 @@ export function createCutSpan(): GameScene {
           position: new THREE.Vector3(0, 0, -2.2),
           radius: 1.8,
           enabled: true,
-          onUse: () => ctx.completeAndGo(),
+          onUse: () => finish(ctx),
         });
       }
 
@@ -154,7 +164,7 @@ export function createCutSpan(): GameScene {
           plateA.rotation.x = Math.min(0.55, liftT * 0.4);
           plateA.position.y = L.seatA.y + Math.min(0.22, liftT * 0.16);
         }
-        if (liftT > 1.1) ctx.completeAndGo();
+        if (liftT > 1.1) finish(ctx);
       }
     },
     unmount() {
@@ -162,72 +172,130 @@ export function createCutSpan(): GameScene {
       water = null;
       sos = null;
       plateA = null;
-      holster = null;
+      plateB = null;
+      carried = null;
       voice.dispose();
     },
   };
 
-  function takeTool(ctx: SceneContext, plateB: THREE.Group): void {
-    if (!flags.take("tether") || !plateA) return;
-    ctx.tether.grantPickup();
+  function plateOf(id: PlateId): THREE.Group | null {
+    return id === "plate-a" ? plateA : plateB;
+  }
+
+  function usePlate(ctx: SceneContext, id: PlateId): void {
+    if (seated[match[id]]) return;
+    if (carried === id) {
+      dropHere(ctx);
+      return;
+    }
+    if (carried) dropHere(ctx);
+    carried = id;
+    ctx.player.playAction("pick");
+    ctx.hud.setTask(id === "plate-a" ? TASK["P-S03-place-light"] ?? "" : TASK["P-S03-place-heavy"] ?? "");
+    if (flags.take("first-pick")) ctx.say(P_LINE.rotateSlow);
+  }
+
+  function useSeat(ctx: SceneContext, seat: SeatId): void {
+    if (seated[seat]) return;
+    if (!carried) {
+      ctx.hud.announce("先撿一塊板。");
+      return;
+    }
+    if (match[carried] !== seat) {
+      ctx.hud.announce(seat === "seat-a" ? "這是三角座，換輕板。" : "這是缺角座，換重板。");
+      return;
+    }
+    placeOn(ctx, carried, seat);
+  }
+
+  function placeOn(ctx: SceneContext, id: PlateId, seat: SeatId): void {
+    const plate = plateOf(id);
+    if (!plate) return;
+    plate.position.copy(seats[seat]);
+    plate.rotation.set(0, 0, 0);
+    seated[seat] = true;
+    carried = null;
+    ctx.player.playAction("push");
+    ctx.world.addBox(
+      new THREE.Vector3(seats[seat].x - 0.68, 0, seats[seat].z - 0.68),
+      new THREE.Vector3(seats[seat].x + 0.68, 0.28, seats[seat].z + 0.68),
+    );
+    const plateItem = ctx.interact.items.find((item) => item.id === id);
+    if (plateItem) plateItem.enabled = false;
+    const seatItem = ctx.interact.items.find((item) => item.id === seat);
+    if (seatItem) seatItem.enabled = false;
+    ctx.hud.setTask(seated["seat-a"] && seated["seat-b"] ? "走過短橋" : TASK["P-S03-pick"] ?? "");
+  }
+
+  function dropHere(ctx: SceneContext): void {
+    if (!carried) return;
+    const plate = plateOf(carried);
+    if (!plate) return;
+    const look = lookFlat(ctx.camera.yaw);
+    plate.position.set(ctx.player.position.x + look.x * 0.95, home[carried].y, ctx.player.position.z + look.z * 0.95);
+    if (plate.position.y < -0.4 || Math.abs(plate.position.z) < 0.55) sendHome(carried);
+    carried = null;
+  }
+
+  function sendHome(id: PlateId): void {
+    const plate = plateOf(id);
+    if (plate) {
+      plate.position.copy(home[id]);
+      plate.rotation.set(0, 0, 0);
+    }
+    if (carried === id) carried = null;
+  }
+
+  function followCarry(ctx: SceneContext, dt: number): void {
+    ctx.player.walkSpeed = carried === "plate-b" ? 3.1 : 4.317;
+    if (!carried) return;
+    const plate = plateOf(carried);
+    if (!plate) return;
+    const look = lookFlat(ctx.camera.yaw);
+    const target = new THREE.Vector3(
+      ctx.player.position.x + look.x * 0.85,
+      1.05,
+      ctx.player.position.z + look.z * 0.85,
+    );
+    if (carried === "plate-b") {
+      target.x += Math.sin(elapsed * 2.1) * 0.08;
+      ctx.player.velocity.x += Math.sin(elapsed * 1.6) * 1.4 * dt;
+    }
+    plate.position.lerp(target, Math.min(1, dt * 10));
+    plate.rotation.y = ctx.camera.yaw;
+    if (plate.position.y < -1) sendHome(carried);
+    const item = ctx.interact.items.find((entry) => entry.id === carried);
+    if (item) item.position.copy(plate.position).setY(0);
+  }
+
+  function syncPrompts(ctx: SceneContext): void {
+    const a = ctx.interact.items.find((item) => item.id === "plate-a");
+    const b = ctx.interact.items.find((item) => item.id === "plate-b");
+    if (a) {
+      a.prompt = PROMPT.pickLightPlate;
+      a.enabled = !seated["seat-a"] && carried !== "plate-a";
+    }
+    if (b) {
+      b.prompt = PROMPT.pickHeavyPlate;
+      b.enabled = !seated["seat-b"] && carried !== "plate-b";
+    }
+    const sa = ctx.interact.items.find((item) => item.id === "seat-a");
+    const sb = ctx.interact.items.find((item) => item.id === "seat-b");
+    if (sa) sa.enabled = !seated["seat-a"];
+    if (sb) sb.enabled = !seated["seat-b"];
+    const drop = ctx.interact.items.find((item) => item.id === "drop-carry");
+    if (drop) {
+      drop.position.copy(ctx.player.position).setY(0);
+      const nearSeat =
+        (carried === "plate-a" && ctx.player.position.distanceTo(seats["seat-a"]) < 1.8) ||
+        (carried === "plate-b" && ctx.player.position.distanceTo(seats["seat-b"]) < 1.8);
+      drop.enabled = !!carried && !nearSeat;
+    }
+  }
+
+  function finish(ctx: SceneContext): void {
     ctx.save.player.tool.tether = true;
     ctx.persist();
-    if (holster) holster.visible = false;
-    const tag = ctx.root.getObjectByName("tool-tag");
-    if (tag) tag.visible = false;
-    const holsterItem = ctx.interact.items.find((item) => item.id === "holster");
-    if (holsterItem) holsterItem.enabled = false;
-    ctx.hud.setTask(TASK["P-S03-snap"] ?? "");
-    ctx.say(P_LINE.rotateSlow);
-    armPlates(ctx, plateA, plateB);
-    ctx.interact.add({
-      id: "plate-a",
-      prompt: "按住 F 抓輕板",
-      position: new THREE.Vector3(L.plateA.x, 0, L.plateA.z),
-      radius: 1.8,
-      enabled: true,
-      onUse: () => {
-        ctx.tether.grabById("plate-a");
-      },
-    });
-    ctx.interact.add({
-      id: "plate-b",
-      prompt: "按住 F 抓重板",
-      position: new THREE.Vector3(L.plateB.x, 0, L.plateB.z),
-      radius: 1.8,
-      enabled: true,
-      onUse: () => {
-        ctx.tether.grabById("plate-b");
-      },
-    });
+    ctx.completeAndGo();
   }
-}
-
-function armPlates(ctx: SceneContext, plateA: THREE.Object3D, plateB: THREE.Object3D): void {
-  ctx.tether.registerBody({
-    id: "plate-a",
-    object: plateA,
-    mass: "medium",
-    shape: "chevron",
-    walkSize: new THREE.Vector3(1.35, 0.28, 1.35),
-  });
-  ctx.tether.registerBody({
-    id: "plate-b",
-    object: plateB,
-    mass: "heavy",
-    shape: "notch",
-    walkSize: new THREE.Vector3(1.35, 0.28, 1.35),
-  });
-  ctx.tether.registerSocket({
-    id: "seat-a",
-    shape: "chevron",
-    position: new THREE.Vector3(L.seatA.x, L.seatA.y, L.seatA.z),
-    parent: ctx.root,
-  });
-  ctx.tether.registerSocket({
-    id: "seat-b",
-    shape: "notch",
-    position: new THREE.Vector3(L.seatB.x, L.seatB.y, L.seatB.z),
-    parent: ctx.root,
-  });
 }

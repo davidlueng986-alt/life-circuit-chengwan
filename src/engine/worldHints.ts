@@ -187,10 +187,17 @@ export class WorldHints {
         slot.group.visible = false;
         continue;
       }
+      const dist = extras?.player
+        ? Math.hypot(extras.player.x - item.position.x, extras.player.z - item.position.z)
+        : 3;
+      const hot = focused?.id === item.id;
+      if (!hot && dist > 3.4) {
+        slot.group.visible = false;
+        continue;
+      }
       slot.group.visible = true;
       slot.group.position.copy(item.position);
       slot.group.position.y = 0.04;
-      const hot = focused?.id === item.id;
       const pulse = 1 + Math.sin(time * 5.2) * (hot || this.scanning ? 0.28 : 0.12);
       slot.group.scale.setScalar((hot ? 1.35 : this.scanning ? 1.18 : 1) * pulse);
       const ringMat = slot.ring.material;
@@ -203,10 +210,7 @@ export class WorldHints {
       if (slot.lastTitle !== item.prompt) {
         this.retitle(slot, item.prompt);
       }
-      const dist = extras?.player
-        ? Math.hypot(extras.player.x - item.position.x, extras.player.z - item.position.z)
-        : 3;
-      const width = THREE.MathUtils.clamp(1.6 + dist * 0.22, 2.1, 3.6);
+      const width = THREE.MathUtils.clamp(1.6 + dist * 0.22, 2.1, 3.2);
       const aspect = Number(slot.label.userData["aspect"] ?? 0.3);
       slot.label.scale.set(width, width * aspect, 1);
     }
