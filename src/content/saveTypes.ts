@@ -102,7 +102,7 @@ export interface SaveState {
 }
 
 export const DEFAULT_SETTINGS: SettingsState = {
-  relaxedTimer: true,
+  relaxedTimer: false,
   reducedMotion: false,
   subtitleScale: 1,
   fov: 62,

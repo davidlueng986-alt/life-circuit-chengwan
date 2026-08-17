@@ -59,6 +59,7 @@ export class PlayerMotor {
     this.stableGround = MOTOR.safeHold;
     this.justRecovered = false;
     this.grounded = true;
+    this.walkSpeed = MOTOR.walkSpeed;
     this.pose = "none";
     this.poseT = 0;
     this.rope.visible = false;

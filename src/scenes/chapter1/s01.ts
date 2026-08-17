@@ -27,6 +27,7 @@ export function createC1S01(): GameScene {
 
       ctx.bioRig.grantPickup(ctx.save.c1.loadout);
       ctx.bioRig.carry();
+      if (ctx.save.c1.loadout === "crash_shell") ctx.player.walkSpeed = 3.15;
       ctx.bioRig.setHeadingTarget(xyz(C1_LAYOUT.pumpJack));
       ctx.bioRig.reporterShape = "triangle";
 
@@ -127,6 +128,9 @@ export function createC1S01(): GameScene {
     update(_dt, ctx) {
       if (ctx.player.justRecovered && ctx.save.c1.loadout !== "crash_shell") {
         ctx.bioRig.shock();
+        ctx.hud.announce("探頭休克了。岸上找牆上電源。");
+      } else if (ctx.player.justRecovered && ctx.save.c1.loadout === "crash_shell") {
+        ctx.hud.announce("外殼撐住了，但走得比較慢。");
       }
       if (!woke && ctx.bioRig.triangleFill > 0.2 && ctx.bioRig.powered) {
         woke = true;

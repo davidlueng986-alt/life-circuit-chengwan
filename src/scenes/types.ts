@@ -39,6 +39,7 @@ export interface SceneContext {
   triangulation: Triangulation;
   reducedMotion: boolean;
   now: number;
+  suggestRelaxed: () => void;
 }
 
 export interface GameScene {

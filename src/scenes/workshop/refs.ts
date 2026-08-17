@@ -3,7 +3,7 @@ import { PROMPT, TASK, UI } from "../../content/copy";
 import { pushRun } from "../../content/progress";
 import type { GameScene } from "../types";
 import { consoleDesk, jointBlock, moonIcon, sealedLane, setEmissive, sunIcon, unknownIcon } from "./kit";
-import { makeWorldLabel } from "../../engine/worldHints";
+
 import { ensureWorkshopTools, finishWhenIdle, mountHall, spawnWorkshopPlayer, tickPad } from "./room";
 
 export function createRefsScene(): GameScene {
@@ -47,18 +47,11 @@ export function createRefsScene(): GameScene {
 
       moon = moonIcon();
       moon.position.set(-3.2, 1.15, -3.4);
-      const moonTag = makeWorldLabel("月亮", "應保持暗");
-      moonTag.position.set(-3.2, 1.85, -3.4);
       sun = sunIcon();
       sun.position.set(0, 1.15, -3.4);
-      const sunTag = makeWorldLabel("太陽", "應會亮");
-      sunTag.position.set(0, 1.85, -3.4);
-      ctx.root.add(moonTag, sunTag);
       unknown = unknownIcon();
       unknown.position.set(3.2, 1.15, -3.4);
-      const askTag = makeWorldLabel("問號", "先別信它");
-      askTag.position.set(3.2, 1.85, -3.4);
-      ctx.root.add(moon, sun, unknown, askTag);
+      ctx.root.add(moon, sun, unknown);
 
       hatch = new THREE.Mesh(
         new THREE.BoxGeometry(1.4, 1.5, 0.12),

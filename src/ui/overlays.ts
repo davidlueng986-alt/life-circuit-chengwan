@@ -101,6 +101,10 @@ export class Overlays {
     root.dataset["highContrast"] = settings.highContrast ? "true" : "false";
     root.style.setProperty("--ui-scale", String(settings.textScale));
     root.style.setProperty("--subtitle-scale", String(settings.subtitleScale));
+    const settingsBtn = document.querySelector("#btn-settings");
+    if (settingsBtn) {
+      settingsBtn.textContent = settings.relaxedTimer ? "設定 · 寬鬆時間已開" : "設定 · 寬鬆時間關";
+    }
   }
 
   setHasSave(on: boolean, resume = ""): void {

@@ -279,6 +279,12 @@ export class Game {
     this.persist();
   }
 
+  private suggestRelaxed(): void {
+    if (this.save.settings.relaxedTimer) return;
+    this.hud.announce("失敗了。可在設定打開寬鬆時間，不倒數。");
+    this.overlays.openSettings();
+  }
+
   private persist(): void {
     if (this.save.meta.currentScene !== "BOOT-S00") this.save.meta.hasSave = true;
     writeSave(this.save);
@@ -310,6 +316,7 @@ export class Game {
       triangulation: this.triangulation,
       reducedMotion: this.save.settings.reducedMotion,
       now: this.now,
+      suggestRelaxed: () => this.suggestRelaxed(),
     };
   }
 

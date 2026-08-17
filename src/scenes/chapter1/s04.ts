@@ -63,8 +63,18 @@ export function createC1S04(): GameScene {
 
       ctx.player.reset(C1_LAYOUT.spawnS04[0], C1_LAYOUT.spawnS04[1], C1_LAYOUT.spawnS04[2], Math.PI);
       ctx.camera.yaw = Math.PI;
+      ctx.camera.dist = 6.4;
+      ctx.triangulation.attach(ctx.root);
       ctx.hud.setTask(TASK["C1-S04"] ?? "");
       ctx.queueLines(openingLineIds("C1-S04", ctx.save));
+      ctx.interact.add({
+        id: "drop-beacon",
+        prompt: "在這塊高地放下信標",
+        position: ctx.player.position.clone(),
+        radius: 1.1,
+        enabled: false,
+        onUse: () => dropHere(ctx),
+      });
     },
     update(_dt, ctx) {
       const look = ctx.camera.lookDir();
@@ -72,7 +82,14 @@ export function createC1S04(): GameScene {
         readable: ctx.save.c1.controlsRestored && ctx.bioRig.fieldReadable(ctx.save),
         saturated: ctx.bioRig.saturated,
         lie: "live",
+        lowBattery: ctx.save.c1.loadout === "crash_shell",
       });
+      ctx.triangulation.syncVisuals();
+      const drop = ctx.interact.items.find((item) => item.id === "drop-beacon");
+      if (drop) {
+        drop.position.copy(ctx.player.position).setY(0);
+        drop.enabled = ctx.player.position.y > 2.15 && parked < 2;
+      }
 
       if (!nearSecond && (near(ctx.player.position, C1_LAYOUT.drainPad, 5) || near(ctx.player.position, C1_LAYOUT.sluiceLip, 6))) {
         nearSecond = true;
@@ -87,7 +104,8 @@ export function createC1S04(): GameScene {
 
       if (accepted) return;
       const result = ctx.triangulation.overlap();
-      if (result.accepted && parked >= 2) {
+      const inZone = near(ctx.player.position, [result.center.x, 0, result.center.z], 4.2);
+      if (result.accepted && parked >= 2 && inZone) {
         accepted = true;
         const tight = result.confirmSeconds <= 50;
         keepFieldTrace(ctx.save, tight, result.confirmSeconds);
@@ -115,6 +133,29 @@ export function createC1S04(): GameScene {
       used.clear();
     },
   };
+
+  function dropHere(ctx: SceneContext): void {
+    const free = ctx.tether.bodies.find((body) => body.shape === "beacon" && !body.seated && !used.has(body.id));
+    if (!free) return;
+    const high = ctx.player.position.y > 2.15;
+    const origin = ctx.player.position.clone();
+    free.object.position.copy(origin).setY(origin.y + 0.2);
+    const index = free.id === "beacon-1" ? 1 : 0;
+    const dir = xyz(C1_LAYOUT.source).sub(origin).setY(0);
+    if (dir.lengthSq() < 1e-4) dir.set(0, 0, 1);
+    else dir.normalize();
+    ctx.triangulation.setBeacon(
+      index,
+      ctx.triangulation.makeCone(origin, dir, {
+        occluded: !high,
+        readable: ctx.save.c1.controlsRestored,
+        lie: "live",
+      }),
+    );
+    used.add(free.id);
+    parked = ctx.triangulation.beacons.filter((item) => item && item.valid).length;
+    if (parked === 1) ctx.say("C1-S04-D002");
+  }
 
   function park(ctx: SceneContext, padId: string, occluded: boolean, bodyId: string): void {
     const pad = C1_HIGH_PADS.find((item) => item.id === padId);

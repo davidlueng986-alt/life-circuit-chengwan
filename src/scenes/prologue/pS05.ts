@@ -4,7 +4,7 @@ import { P_LINE } from "../../content/prologue/ids";
 import { P05_LAYOUT as L } from "../../content/prologue/layout";
 import { P05 } from "../../content/prologue/script";
 import { addSolidBox, boxMesh } from "../../engine/greybox";
-import { addVoxelFloor, addVoxelVolume } from "../../engine/voxels";
+import { BlockStamp, floorBox, wallBox } from "../../engine/blocks";
 import type { Aabb } from "../../engine/collision";
 import type { GameScene } from "../types";
 import {
@@ -41,10 +41,17 @@ export function createEvacRun(): GameScene {
       voice.startRumble();
       voice.setLayers(3);
 
-      addVoxelFloor(ctx.root, ctx.world, 4.2, 6.4, 0x2a3036, 0, 9.2);
-      addVoxelFloor(ctx.root, ctx.world, 3.4, 18.4, 0x2a3036, L.corridorMouth.x, -1.4);
-      addVoxelVolume(ctx.root, ctx.world, 0.24, 2.3, 18.4, 0x1a2127, L.corridorMouth.x - 1.75, 1.05, -1.4);
-      addVoxelVolume(ctx.root, ctx.world, 0.24, 2.3, 18.4, 0x1a2127, L.corridorMouth.x + 1.75, 1.05, -1.4);
+      const map = new BlockStamp();
+      map.fill(-2, -1, 6, 2, -1, 12, "stone");
+      map.fill(2, -1, -12, 4, -1, 8, "cyan");
+      map.fill(1, 0, -12, 1, 2, 8, "iron");
+      map.fill(5, 0, -12, 5, 2, 8, "iron");
+      map.commit(ctx.root);
+      floorBox(ctx.world, -2, 6, 2, 12, 0);
+      floorBox(ctx.world, 2, -12, 4, 8, 0);
+      wallBox(ctx.world, 1, 0, -12, 1, 2, 8);
+      wallBox(ctx.world, 5, 0, -12, 5, 2, 8);
+      ctx.camera.dist = 5.8;
       addSolidBox(ctx.root, ctx.world, 2.2, 0.12, 0.7, 0x6a6560, -0.2, 0.55, 5.7);
       const lifted = boxMesh(1.15, 0.12, 0.7, 0x8a8f86, -0.15, 0.72, 5.65);
       lifted.rotation.x = 0.62;
@@ -167,6 +174,7 @@ export function createEvacRun(): GameScene {
         failed = false;
         ctx.hud.setStorm(1);
         ctx.hud.setTask(TASK["P-S05-run"] ?? "");
+        ctx.suggestRelaxed();
       }
 
       const liftFocus = ctx.interact.focused?.id === "lift";

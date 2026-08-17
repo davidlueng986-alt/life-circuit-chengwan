@@ -53,7 +53,7 @@ export const P04_LAYOUT = {
   actJam: { x: -2.2, y: 0.72, z: -4.55 },
   loose: { x: 0.15, y: 2.45, z: -3.15 },
   actLoose: { x: 0, y: 1.45, z: -4.55 },
-  gate: { x: 0, y: 6.4, z: -18 },
+  gate: { x: 0, y: 4.2, z: -11 },
   deck: { x: 3.4, y: -1.8, z: -14.5 },
 } as const;
 

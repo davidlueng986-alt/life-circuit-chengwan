@@ -14,6 +14,7 @@ export function createC1S05(): GameScene {
   let guessSaid = false;
   let deskSaid = false;
   let pass = false;
+  let cartMoved = false;
   let chen: THREE.Object3D | null = null;
   let stand: THREE.Group | null = null;
   let board: THREE.Mesh | null = null;
@@ -35,6 +36,21 @@ export function createC1S05(): GameScene {
       board = addSolidBox(ctx.root, ctx.world, 1.2, 1.1, 0.08, 0x2a3640, -7.2, 1.2, 16.8);
       board.visible = false;
       addSolidBox(ctx.root, ctx.world, 0.9, 1.1, 0.4, 0x3a322c, C1_LAYOUT.demoStand[0], 0.55, C1_LAYOUT.demoStand[2]);
+      const cart = addSolidBox(
+        ctx.root,
+        ctx.world,
+        1.6,
+        1.05,
+        1.2,
+        0x6a5340,
+        C1_LAYOUT.cart[0],
+        0.55,
+        C1_LAYOUT.cart[2],
+      );
+      cart.name = "guess-cart";
+      const bystander = createNpc("generic");
+      bystander.position.set(C1_LAYOUT.cart[0] + 1.6, 0, C1_LAYOUT.cart[2] + 0.4);
+      ctx.root.add(bystander);
 
       chen = createNpc("chen");
       chen.position.set(C1_LAYOUT.spawnS05[0] - 1.2, 0, C1_LAYOUT.spawnS05[2]);
@@ -92,6 +108,25 @@ export function createC1S05(): GameScene {
         },
       });
       ctx.interact.add({
+        id: "cart",
+        prompt: "推開推車",
+        position: xyz(C1_LAYOUT.cart),
+        radius: 1.7,
+        enabled: true,
+        onUse: () => {
+          cart.position.x -= 1.8;
+          const box = cart.userData["aabb"] as { min: THREE.Vector3; max: THREE.Vector3 } | undefined;
+          if (box) {
+            box.min.x -= 1.8;
+            box.max.x -= 1.8;
+          }
+          const item = ctx.interact.items.find((entry) => entry.id === "cart");
+          if (item) item.enabled = false;
+          cartMoved = true;
+          ctx.hud.announce("有人指著那團紅，開始亂猜。");
+        },
+      });
+      ctx.interact.add({
         id: "desk",
         prompt: TASK["C1-S05-desk"] ?? "",
         position: xyz(C1_LAYOUT.desk),
@@ -117,6 +152,10 @@ export function createC1S05(): GameScene {
       const local = walk - idx;
       chen.position.lerpVectors(a, b, nextIdx === idx ? 1 : local);
       chen.position.y = 0;
+      if (!cartMoved && near(chen.position, C1_LAYOUT.cart, 1.4)) {
+        ctx.hud.announce("推車擋住了。先推開。");
+        return;
+      }
       walk += dt * 0.55;
 
       if (!shadeSaid && near(chen.position, C1_LAYOUT.shade, 1.6)) {
@@ -145,6 +184,7 @@ export function createC1S05(): GameScene {
       placed = false;
       walk = 0;
       pass = false;
+      cartMoved = false;
     },
   };
 

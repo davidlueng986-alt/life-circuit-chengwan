@@ -105,7 +105,7 @@ function mergeSave(base: SaveState, raw: Record<string, unknown>): SaveState {
       currentScene: current,
     },
     settings: {
-      relaxedTimer: settings["relaxedTimer"] !== false,
+      relaxedTimer: settings["relaxedTimer"] === true,
       reducedMotion: settings["reducedMotion"] === true,
       subtitleScale: snapSubtitleScale(num(settings["subtitleScale"], base.settings.subtitleScale)),
       fov: num(settings["fov"], base.settings.fov),

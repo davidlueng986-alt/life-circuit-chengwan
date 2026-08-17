@@ -6,7 +6,7 @@ import { lookFlat } from "../../engine/motorMath";
 import { heroPlate, heroSeat } from "../../engine/props";
 import { BlockStamp, floorBox } from "../../engine/blocks";
 import type { GameScene, SceneContext } from "../types";
-import { SceneVoice, addAmberSpine, addSosBeacon, addWaterChannel, onceFlags, stormShell, tickSceneRain } from "./kit";
+import { SceneVoice, addAmberSpine, addGate3, addSosBeacon, addWaterChannel, onceFlags, stormShell, tickSceneRain } from "./kit";
 
 type PlateId = "plate-a" | "plate-b";
 type SeatId = "seat-a" | "seat-b";
@@ -53,6 +53,7 @@ export function createCutSpan(): GameScene {
       floorBox(ctx.world, -5, 1, 5, 6, 0);
       floorBox(ctx.world, -5, -6, 5, -1, 0);
       addAmberSpine(ctx, -3, 2, 6);
+      addGate3(ctx.root, -8, 6.2, -14);
 
       plateA = heroPlate("chevron");
       plateA.position.copy(home["plate-a"]);

@@ -3,11 +3,11 @@ import { PROMPT, TASK } from "../../content/copy";
 import { P_LINE } from "../../content/prologue/ids";
 import { P02_LAYOUT as L } from "../../content/prologue/layout";
 import { addSolidBox, boxMesh, playPoint } from "../../engine/greybox";
+import { BlockStamp, floorBox, wallBox } from "../../engine/blocks";
 import { heroLens } from "../../engine/props";
-import { addVoxelFloor, addVoxelVolume } from "../../engine/voxels";
-import { makeWorldLabel } from "../../engine/worldHints";
 import type { GameScene } from "../types";
 import {
+  addGate3,
   addPipe,
   addRelayMesh,
   lambertOf,
@@ -45,17 +45,27 @@ export function createBorrowedLens(): GameScene {
       const wash = playPoint(0x6a8494, 0.9, 10, 1.15);
       wash.position.set(0, 2.4, 1.2);
       ctx.root.add(deskLamp, wash);
-      ctx.camera.dist = 3.4;
-      ctx.camera.pitch = -0.22;
+      ctx.camera.dist = 5.8;
+      ctx.camera.pitch = -0.24;
 
-      addVoxelFloor(ctx.root, ctx.world, 11.2, 14.6, 0x1c2228, 0, 1.6);
-      addVoxelVolume(ctx.root, ctx.world, 8.6, 3.2, 0.35, 0x243038, -1.3, 1.4, -5.45);
-      addVoxelVolume(ctx.root, ctx.world, 11.2, 3.2, 0.35, 0x243038, 0, 1.4, 8.7);
-      addVoxelVolume(ctx.root, ctx.world, 0.35, 3.2, 14.6, 0x243038, -5.55, 1.4, 1.6);
-      addVoxelVolume(ctx.root, ctx.world, 0.35, 3.2, 14.6, 0x243038, 5.55, 1.4, 1.6);
+      const map = new BlockStamp();
+      map.room(-5, -5, 5, 8, -1, 3, "stone", "iron");
+      for (let x = 3; x <= 5; x += 1) {
+        for (let y = 0; y <= 2; y += 1) map.erase(x, y, -5);
+      }
+      map.fill(-1, 0, 1, 1, 0, 2, "wood");
+      map.fill(3, -1, -8, 6, -1, -6, "stone");
+      map.fill(-14, 2, -16, -6, 8, -14, "iron");
+      map.commit(ctx.root);
+      floorBox(ctx.world, -5, -5, 5, 8, 0);
+      floorBox(ctx.world, 3, -8, 6, -6, 0);
+      wallBox(ctx.world, -5, 0, -5, 5, 3, -5);
+      wallBox(ctx.world, -5, 0, 8, 5, 3, 8);
+      wallBox(ctx.world, -5, 0, -5, -5, 3, 8);
+      wallBox(ctx.world, 5, 0, -5, 5, 3, 8);
       exitDoor = addSolidBox(ctx.root, ctx.world, 2.1, 2.4, 0.35, 0x2a3038, 4.15, 1.2, -5.45);
-      addVoxelVolume(ctx.root, ctx.world, 3.2, 0.4, 2.6, 0x2a3036, 4.1, -0.2, -6.9);
-      addVoxelVolume(ctx.root, ctx.world, 1.9, 0.72, 0.9, 0x4a4034, L.desk.x, 0.36, L.desk.z);
+      addGate3(ctx.root, -10, 5.2, -15);
+      addSolidBox(ctx.root, ctx.world, 1.9, 0.72, 0.9, 0x4a4034, L.desk.x, 0.36, L.desk.z);
       const lampStem = boxMesh(0.06, 0.55, 0.06, 0x6a5a44, L.desk.x + 0.62, 0.95, L.desk.z + 0.12);
       const lampHead = new THREE.Mesh(
         new THREE.SphereGeometry(0.1, 10, 8),
@@ -67,26 +77,13 @@ export function createBorrowedLens(): GameScene {
       lensMesh = heroLens();
       lensMesh.position.set(L.desk.x + 0.52, 0.88, L.desk.z + 0.18);
       ctx.root.add(lensMesh);
-      const lensTag = makeWorldLabel("透鏡", "拾起後對牆按住 Q，放開");
-      lensTag.position.set(L.desk.x + 0.52, 1.25, L.desk.z + 0.18);
-      ctx.root.add(lensTag);
-
       dead = addPipe(ctx.root, -2.5, L.deadY, L.wallZ, 5.1, 0.11, 0x5a6054);
       live = addPipe(ctx.root, -2.5, L.liveY, L.wallZ, 2.9, 0.08, 0x5a6054);
       dummy = addPipe(ctx.root, -2.5, L.dummyY, L.wallZ, 4.6, 0.05, 0x5a6054);
-      const deadTag = makeWorldLabel("最亮的線", "會反光，不是路");
-      deadTag.position.set(0.2, L.deadY + 0.35, L.wallZ + 0.2);
-      deadTag.visible = false;
-      deadTag.name = "dead-tag";
-      const liveTag = makeWorldLabel("會流動的線", "跟這條走到門鎖");
-      liveTag.position.set(0.2, L.liveY + 0.35, L.wallZ + 0.2);
-      liveTag.visible = false;
-      liveTag.name = "live-tag";
-      ctx.root.add(deadTag, liveTag);
       liveTail = addPipe(ctx.root, 0.4, L.liveY, L.wallZ, 2.2, 0.055, 0x5a6054, "z");
       liveTail.rotation.set(0, 0, Math.PI / 2);
       liveTail.position.set(1.55, L.liveY, -4.2);
-      addVoxelVolume(ctx.root, ctx.world, 1.45, 2.15, 0.22, 0x2a3036, L.panel.x, 1.15, L.panel.z);
+      addSolidBox(ctx.root, ctx.world, 1.45, 2.15, 0.22, 0x2a3036, L.panel.x, 1.15, L.panel.z);
       addRelayMesh(ctx.root, L.relay.x, L.relay.y, L.relay.z, 0x8aa0b8);
       lock = boxMesh(0.32, 0.52, 0.16, 0x4a4034, L.lock.x, L.lock.y, L.lock.z);
       ctx.root.add(lock);
@@ -167,10 +164,6 @@ export function createBorrowedLens(): GameScene {
         if (flags.take("pulsed")) {
           ctx.hud.setTask(TASK["P-S02-follow"] ?? "");
           ctx.say(P_LINE.followFlow);
-          const deadTag = ctx.root.getObjectByName("dead-tag");
-          const liveTag = ctx.root.getObjectByName("live-tag");
-          if (deadTag) deadTag.visible = true;
-          if (liveTag) liveTag.visible = true;
         }
       }
       if (pulsedAt >= 0) {

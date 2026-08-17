@@ -50,6 +50,7 @@ export function createC1S02(): GameScene {
       ctx.hud.setTask(TASK["C1-S01-hunt"] ?? "");
       origin.copy(ctx.player.position);
       startYaw = ctx.camera.yaw;
+      if (ctx.save.c1.loadout === "crash_shell") ctx.player.walkSpeed = 3.15;
 
       ctx.interact.add({
         id: "kill-relay",
@@ -62,6 +63,7 @@ export function createC1S02(): GameScene {
           tried.relay = true;
           ctx.bioRig.testsTried.relay = true;
           ctx.signals.setEnabled("env-relay", false);
+          ctx.hud.announce("燈關了。探頭還是滿。");
           maybeFlip(ctx);
         },
       });
@@ -77,7 +79,17 @@ export function createC1S02(): GameScene {
         ctx.bioRig.setHeadingTarget(null);
         origin.copy(ctx.player.position);
         startYaw = ctx.camera.yaw;
+        ctx.hud.setTask("全紅了。試轉身、走開、關那根燈");
+        const wash = new THREE.Mesh(
+          new THREE.SphereGeometry(1.1, 12, 10),
+          new THREE.MeshBasicMaterial({ color: 0xc44a3a, transparent: true, opacity: 0.45, depthWrite: false }),
+        );
+        wash.name = "sat-wash";
+        wash.position.copy(ctx.player.position).setY(1.2);
+        ctx.root.add(wash);
       }
+      const wash = ctx.root.getObjectByName("sat-wash");
+      if (wash) wash.position.copy(ctx.player.position).setY(1.2);
 
       if (saturated && !flipped) {
         const yawDelta = Math.abs(wrap(ctx.camera.yaw - startYaw));
@@ -85,19 +97,30 @@ export function createC1S02(): GameScene {
           tried.turn = true;
           ctx.bioRig.testsTried.turn = true;
           ctx.say("C1-S02-D001");
+          ctx.hud.announce("轉了。還是滿。");
         }
         if (!tried.leave && ctx.player.position.distanceTo(origin) > 4.2) {
           tried.leave = true;
           ctx.bioRig.testsTried.leave = true;
           ctx.say("C1-S02-D002");
+          ctx.hud.announce("走開了。還是滿。");
         }
         maybeFlip(ctx);
+        if (!flipped && clock > C1_SATURATE_DELAY + 12) {
+          const missing = [
+            !tried.turn ? "轉身" : "",
+            !tried.leave ? "走開" : "",
+            !tried.relay ? "關那根燈" : "",
+          ].filter(Boolean);
+          if (missing.length) ctx.hud.setTask(`還是滿。再試：${missing.join("、")}`);
+        }
       }
 
       if (evac && !forced) {
         const limit = ctx.save.settings.relaxedTimer ? 999 : C1_OVERSTAY;
         if (clock > C1_SATURATE_DELAY + limit) {
           forced = true;
+          ctx.suggestRelaxed();
           ctx.completeAndGo();
         }
       }

@@ -4,7 +4,7 @@ import { P_LINE } from "../../content/prologue/ids";
 import { P04_LAYOUT as L } from "../../content/prologue/layout";
 import { boxMesh, playPoint } from "../../engine/greybox";
 import { heroRelay } from "../../engine/props";
-import { addVoxelFloor, addVoxelVolume } from "../../engine/voxels";
+import { BlockStamp, floorBox, wallBox } from "../../engine/blocks";
 import { makeWorldLabel } from "../../engine/worldHints";
 import type { GameScene, SceneContext } from "../types";
 import {
@@ -45,12 +45,20 @@ export function createActuatorGallery(): GameScene {
       wash.position.set(-2.2, 2.8, -3.4);
       ctx.root.add(key, wash);
 
-      addVoxelFloor(ctx.root, ctx.world, 14.4, 13, 0x4a5560, 0, 0);
-      addVoxelVolume(ctx.root, ctx.world, 14.4, 3.6, 0.28, 0x4e5c68, 0, 1.6, -6.2);
-      addVoxelVolume(ctx.root, ctx.world, 0.28, 3.6, 13, 0x4e5c68, -7.2, 1.6, 0);
-      addVoxelVolume(ctx.root, ctx.world, 0.28, 3.6, 13, 0x4e5c68, 7.2, 1.6, 0);
-      addVoxelVolume(ctx.root, ctx.world, 5.2, 1.6, 0.12, 0x3a4650, 0, 2.15, -6.05);
-      addVoxelVolume(ctx.root, ctx.world, 4.2, 0.18, 1.6, 0x3a4650, -2.4, 1.55, -3.4);
+      const map = new BlockStamp();
+      map.room(-7, -6, 7, 6, -1, 3, "iron", "stone");
+      for (let x = -2; x <= 2; x += 1) {
+        for (let y = 1; y <= 3; y += 1) map.erase(x, y, -6);
+      }
+      map.fill(-2, 1, -6, 2, 3, -6, "glass");
+      map.commit(ctx.root);
+      floorBox(ctx.world, -7, -6, 7, 6, 0);
+      wallBox(ctx.world, -7, 0, -6, 7, 3, -6);
+      wallBox(ctx.world, -7, 0, 6, 7, 3, 6);
+      wallBox(ctx.world, -7, 0, -6, -7, 3, 6);
+      wallBox(ctx.world, 7, 0, -6, 7, 3, 6);
+      ctx.camera.dist = 6.2;
+      ctx.camera.pitch = -0.18;
       ctx.world.addLadder(
         "cat",
         new THREE.Vector3(-4.1, 0, -3.7),

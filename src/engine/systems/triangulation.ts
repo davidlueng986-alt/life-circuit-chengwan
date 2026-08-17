@@ -25,10 +25,52 @@ const LENGTH = 18;
 export class Triangulation {
   beacons: BearingCone[] = [];
   handheld: BearingCone | null = null;
+  private fx: THREE.Group | null = null;
 
   reset(): void {
     this.beacons = [];
     this.handheld = null;
+    this.clearFx();
+  }
+
+  attach(root: THREE.Group): void {
+    this.clearFx();
+    const group = new THREE.Group();
+    group.name = "tri-fx";
+    root.add(group);
+    this.fx = group;
+  }
+
+  syncVisuals(): void {
+    if (!this.fx) return;
+    while (this.fx.children.length) {
+      const child = this.fx.children[0];
+      if (child) this.fx.remove(child);
+    }
+    const cones = [...this.beacons, this.handheld].filter((item): item is BearingCone => !!item);
+    for (const cone of cones) {
+      this.fx.add(makeConeMesh(cone));
+    }
+    const overlap = this.overlap();
+    if (overlap.sampleCount > 0) {
+      const mark = new THREE.Mesh(
+        new THREE.SphereGeometry(Math.max(0.55, Math.sqrt(overlap.area) * 0.12), 12, 10),
+        new THREE.MeshBasicMaterial({
+          color: overlap.accepted ? 0x8fd4cf : 0xc9861a,
+          transparent: true,
+          opacity: 0.35,
+          depthWrite: false,
+        }),
+      );
+      mark.position.copy(overlap.center);
+      mark.position.y = 0.4;
+      this.fx.add(mark);
+    }
+  }
+
+  private clearFx(): void {
+    if (this.fx?.parent) this.fx.parent.remove(this.fx);
+    this.fx = null;
   }
 
   makeCone(
@@ -134,4 +176,25 @@ function insideCone(cone: BearingCone, x: number, z: number): boolean {
   const nz = dz / dist;
   const dot = nx * cone.dir.x + nz * cone.dir.z;
   return Math.acos(Math.min(1, Math.max(-1, dot))) <= cone.halfAngle;
+}
+
+function makeConeMesh(cone: BearingCone): THREE.Mesh {
+  const radius = Math.tan(cone.halfAngle) * cone.length;
+  const mesh = new THREE.Mesh(
+    new THREE.ConeGeometry(Math.max(0.4, radius), cone.length, 10, 1, true),
+    new THREE.MeshBasicMaterial({
+      color: cone.valid ? 0x8fd4cf : 0xc44a3a,
+      transparent: true,
+      opacity: cone.weak ? 0.12 : 0.2,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+    }),
+  );
+  mesh.position.copy(cone.origin);
+  const tip = cone.origin.clone().addScaledVector(cone.dir, cone.length);
+  mesh.lookAt(tip);
+  mesh.rotateX(-Math.PI / 2);
+  mesh.position.addScaledVector(cone.dir, cone.length * 0.5);
+  mesh.position.y = 0.35;
+  return mesh;
 }

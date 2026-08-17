@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { C1_LAYOUT } from "../../../content/chapter1/layout";
 import { HARBOR, HUB, addPlayLights, addSolidBox, applyFog, boxMesh, configureKeyShadow, lamp, makeRain, playPoint, waterSheet, type Palette } from "../../engine/greybox";
+import { addGate3 } from "../prologue/kit";
 import { makeWorldLabel } from "../../engine/worldHints";
 import type { SceneContext } from "../types";
 
@@ -136,6 +137,7 @@ export function mountEastShore(ctx: SceneContext, opts: { floodMarket?: boolean;
   }
 
   ctx.root.add(waterSheet(40, 20, 18, -0.8, 36));
+  addGate3(ctx.root, 6, 9.5, 56).setRise(1);
 }
 
 export function mountHubMorning(ctx: SceneContext): void {

@@ -25,7 +25,7 @@ export const TASK: Record<string, string> = {
   "W-S03-smoke": "打開煙霧模擬器（輸入）",
   "W-S03-trace": "追蹤訊號怎麼走到燈",
   "W-S03-flag": "換上形狀旗（報告器）",
-  "W-S04-refs": "先跑月亮（應關）和太陽（應開）",
+  "W-S04-refs": "先跑一次這三條通道",
   "W-S04-fix": "修好太陽接頭",
   "W-S04-unknown": "對照都正常後，再看問號",
   "W-S05": "看完這次循環",
