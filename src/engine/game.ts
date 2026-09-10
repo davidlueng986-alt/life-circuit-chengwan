@@ -138,8 +138,9 @@ export class Game {
       return;
     }
     const yaw = Math.atan2(-(pos.x - this.player.position.x), -(pos.z - this.player.position.z));
-    this.player.reset(pos.x, Math.max(0, pos.y), pos.z, yaw);
+    this.player.reset(pos.x, 0, pos.z + 0.85, yaw);
     this.cam.yaw = yaw;
+    this.cam.pitch = -0.18;
     this.cam.snapNext();
     this.hud.announce(`已傳到 ${goal?.prompt ?? "目標"}`);
   }
@@ -179,19 +180,20 @@ export class Game {
       this.autoUsed = "";
     }
     this.autoClock += dt;
-    const goal = this.debugGoal();
-    if (goal && this.autoUsed !== `${scene}:${goal.id}`) {
+    if (this.autoUsed !== scene) {
+      const goal = this.debugGoal();
       this.debugTeleport();
-      try {
-        goal.onUse();
-      } catch {
-        /* scene may unmount */
+      if (goal) {
+        try {
+          goal.onUse();
+        } catch {
+          /* scene may unmount */
+        }
       }
-      this.autoUsed = `${scene}:${goal.id}`;
-      this.autoClock = 0;
+      this.autoUsed = scene;
       return;
     }
-    if (this.autoClock > 4.5) {
+    if (this.autoClock > 2.6) {
       this.autoClock = 0;
       if (scene === "HUB-S00") {
         this.debugJump("C1-S00");
@@ -248,7 +250,7 @@ export class Game {
   }
 
   private newGame(): void {
-    const settings = { ...this.save.settings };
+    const settings = { ...this.save.settings, relaxedTimer: false };
     this.save = emptySave();
     this.save.settings = settings;
     this.save.meta.hasSave = true;
