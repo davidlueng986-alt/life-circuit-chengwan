@@ -32,6 +32,15 @@ export class Briefing {
     return !!this.root && !this.root.hidden;
   }
 
+  /** Debug / auto-run: close immediately. */
+  dismiss(): void {
+    if (this.root?.dataset["stamp"] === "1") {
+      this.hideStamp();
+      return;
+    }
+    this.finish();
+  }
+
   play(reducedMotion: boolean): Promise<void> {
     this.reduced = reducedMotion;
     this.beat = 0;

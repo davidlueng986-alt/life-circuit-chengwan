@@ -324,6 +324,10 @@ export class Hud {
     return this.current?.id ?? null;
   }
 
+  forceAdvance(): void {
+    if (this.current) this.advance(performance.now());
+  }
+
   /** Returns true if the press was used to advance or hold a line. */
   consumeInteract(pressed: boolean, held: boolean, now: number): boolean {
     if (!this.current) return false;

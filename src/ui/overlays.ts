@@ -185,7 +185,12 @@ export class Overlays {
   }
 
   /** Visible only when the URL has `?debug=1`. */
-  mountDebug(onJump: (id: SceneId) => void): void {
+  mountDebug(hooks: {
+    onJump: (id: SceneId) => void;
+    onTeleport: () => void;
+    onSkip: () => void;
+    onAuto: (on: boolean) => void;
+  }): void {
     const nav = document.querySelector("#debug-select");
     if (!(nav instanceof HTMLElement)) return;
     const show = isDebugMode();
@@ -196,16 +201,49 @@ export class Overlays {
     }
     nav.replaceChildren();
     const heading = document.createElement("p");
-    heading.textContent = "除錯";
+    heading.textContent = "除錯 · ?debug=1";
     nav.append(heading);
+    const tools = document.createElement("div");
+    tools.className = "debug-tools";
+    tools.append(
+      debugBtn("傳送到目標  F8", hooks.onTeleport),
+      debugBtn("跳過本關  F9", hooks.onSkip),
+    );
+    const auto = document.createElement("button");
+    auto.type = "button";
+    auto.dataset["auto"] = "0";
+    auto.textContent = "自動通關  F10";
+    auto.addEventListener("click", () => {
+      const on = auto.dataset["auto"] !== "1";
+      auto.dataset["auto"] = on ? "1" : "0";
+      auto.textContent = on ? "自動通關中…" : "自動通關  F10";
+      hooks.onAuto(on);
+    });
+    tools.append(auto);
+    nav.append(tools);
     for (const jump of DEBUG_JUMPS) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.textContent = jump.label;
-      btn.addEventListener("click", () => onJump(jump.id));
+      btn.addEventListener("click", () => hooks.onJump(jump.id));
       nav.append(btn);
     }
   }
+
+  setAutoRunning(on: boolean): void {
+    const auto = document.querySelector("#debug-select button[data-auto]");
+    if (!(auto instanceof HTMLButtonElement)) return;
+    auto.dataset["auto"] = on ? "1" : "0";
+    auto.textContent = on ? "自動通關中…" : "自動通關  F10";
+  }
+}
+
+function debugBtn(label: string, onClick: () => void): HTMLButtonElement {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.textContent = label;
+  btn.addEventListener("click", onClick);
+  return btn;
 }
 
 function bindCheck(sel: string, fn: (on: boolean) => void): void {

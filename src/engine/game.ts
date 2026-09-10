@@ -63,6 +63,10 @@ export class Game {
   private readonly hints = new WorldHints();
   private readonly guide = new Guide();
   private helpUntil = 0;
+  private debugAuto = false;
+  private autoClock = 0;
+  private autoScene = "";
+  private autoUsed = "";
   private readonly quality: QualityTier = detectQuality();
 
   constructor(canvas: HTMLCanvasElement) {
@@ -93,7 +97,13 @@ export class Game {
       onLeaveWorkshop: () => this.leaveWorkshopToHub(),
       onSettingsChange: (patch) => this.patchSettings(patch),
     });
-    this.overlays.mountDebug((id) => this.debugJump(id));
+    this.overlays.mountDebug({
+      onJump: (id) => this.debugJump(id),
+      onTeleport: () => this.debugTeleport(),
+      onSkip: () => this.debugSkip(),
+      onAuto: (on) => this.setDebugAuto(on),
+    });
+    if (isDebugMode()) this.exposeDebugApi();
     if (this.save.meta.currentScene !== "BOOT-S00") this.save.meta.hasSave = true;
     this.overlays.setHasSave(this.save.meta.hasSave, resumeLabel(this.save.meta.currentScene));
     this.overlays.setCorrupt(loaded.status === "corrupt");
@@ -112,6 +122,109 @@ export class Game {
     this.hud.hide();
     this.last = performance.now();
     requestAnimationFrame(this.frame);
+  }
+
+  private debugGoal(): Interactable | null {
+    return pickGoal(this.interact.items, this.interact.focused);
+  }
+
+  private debugTeleport(): void {
+    if (!isDebugMode()) return;
+    if (this.briefing.open) this.briefing.dismiss();
+    const goal = this.debugGoal();
+    const pos = goal?.position ?? (this.guide.hasGoal ? this.guide.goal : null);
+    if (!pos) {
+      this.hud.announce("沒有可傳送的目標");
+      return;
+    }
+    const yaw = Math.atan2(-(pos.x - this.player.position.x), -(pos.z - this.player.position.z));
+    this.player.reset(pos.x, Math.max(0, pos.y), pos.z, yaw);
+    this.cam.yaw = yaw;
+    this.cam.snapNext();
+    this.hud.announce(`已傳到 ${goal?.prompt ?? "目標"}`);
+  }
+
+  private debugSkip(): void {
+    if (!isDebugMode()) return;
+    if (this.briefing.open) this.briefing.dismiss();
+    if (!this.playing || !this.active) return;
+    this.hud.announce(`跳過 ${this.active.id}`);
+    this.completeAndGo();
+  }
+
+  private setDebugAuto(on: boolean): void {
+    if (!isDebugMode()) return;
+    this.debugAuto = on;
+    this.autoClock = 0;
+    this.autoScene = this.active?.id ?? "";
+    this.autoUsed = "";
+    this.overlays.setAutoRunning(on);
+    this.hud.announce(on ? "自動通關開。卡關會跳關。" : "自動通關關");
+  }
+
+  private tickAuto(dt: number): void {
+    if (!isDebugMode() || !this.debugAuto) return;
+    if (this.briefing.open) {
+      this.briefing.dismiss();
+      return;
+    }
+    if (this.hud.showing) {
+      this.hud.forceAdvance();
+      return;
+    }
+    const scene = this.active?.id ?? "";
+    if (scene !== this.autoScene) {
+      this.autoScene = scene;
+      this.autoClock = 0;
+      this.autoUsed = "";
+    }
+    this.autoClock += dt;
+    const goal = this.debugGoal();
+    if (goal && this.autoUsed !== `${scene}:${goal.id}`) {
+      this.debugTeleport();
+      try {
+        goal.onUse();
+      } catch {
+        /* scene may unmount */
+      }
+      this.autoUsed = `${scene}:${goal.id}`;
+      this.autoClock = 0;
+      return;
+    }
+    if (this.autoClock > 4.5) {
+      this.autoClock = 0;
+      if (scene === "HUB-S00") {
+        this.debugJump("C1-S00");
+        return;
+      }
+      if (scene === "C1-S08" || scene === "C2-STUB") {
+        this.setDebugAuto(false);
+        this.hud.announce("自動通關結束");
+        return;
+      }
+      this.debugSkip();
+    }
+  }
+
+  private exposeDebugApi(): void {
+    const api = {
+      snapshot: () => ({
+        scene: this.active?.id ?? this.save.meta.currentScene,
+        task: document.querySelector("#task-line")?.textContent ?? "",
+        prompt: this.interact.promptText(),
+        dialogue: this.hud.showing,
+        briefing: this.briefing.open,
+        auto: this.debugAuto,
+        player: { x: this.player.position.x, y: this.player.position.y, z: this.player.position.z },
+        goal: this.debugGoal()?.prompt ?? null,
+        items: this.interact.items.filter((item) => item.enabled).map((item) => item.id),
+      }),
+      teleport: () => this.debugTeleport(),
+      skip: () => this.debugSkip(),
+      auto: (on: boolean) => this.setDebugAuto(on),
+      jump: (id: SceneId) => this.debugJump(id),
+    };
+    (window as Window & { __LC?: typeof api }).__LC = api;
   }
 
   /** Debug-only. Requires `?debug=1`. Does not mark workshop complete. */
@@ -336,7 +449,9 @@ export class Game {
     const dt = Math.min(0.05, (stamp - this.last) / 1000);
     this.last = stamp;
     this.now += dt;
+    if (this.debugAuto && this.briefing.open) this.briefing.dismiss();
     if (this.playing && !this.paused && this.active) {
+      if (this.debugAuto) this.tickAuto(dt);
       this.input.holdAlternatives = this.save.settings.holdAlternatives;
       this.cam.applyMouse(
         this.input.mouseDX + this.input.lookPadX * 16,
@@ -529,6 +644,23 @@ export class Game {
   };
 
   private onKey = (event: KeyboardEvent): void => {
+    if (isDebugMode()) {
+      if (event.code === "F8") {
+        event.preventDefault();
+        this.debugTeleport();
+        return;
+      }
+      if (event.code === "F9") {
+        event.preventDefault();
+        this.debugSkip();
+        return;
+      }
+      if (event.code === "F10") {
+        event.preventDefault();
+        this.setDebugAuto(!this.debugAuto);
+        return;
+      }
+    }
     if (event.code === "KeyC" && this.playing && !this.overlays.anyModal()) {
       this.overlays.toggleCodex(this.save.player.codex.terms);
       return;

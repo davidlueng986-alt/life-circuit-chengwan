@@ -563,6 +563,22 @@ html[data-high-contrast="true"] .hud-task {
   text-align: left;
 }
 
+.debug-tools {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0.2rem 0 0.45rem;
+}
+
+.debug-tools button {
+  border-color: #8fd4cf;
+  color: #dff6f3;
+}
+
+.debug-tools button[data-auto="1"] {
+  background: linear-gradient(180deg, #3d5c58, #1a3030);
+  border-color: #ffe2a0;
+}
+
 #help-card {
   position: absolute;
   left: 50%;
