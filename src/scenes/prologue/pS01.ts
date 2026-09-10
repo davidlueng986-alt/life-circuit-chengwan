@@ -120,10 +120,10 @@ export function createDeadLift(): GameScene {
       ctx.world.addAnchor("floor", 0, 0, -2.6);
       ctx.world.killY = -2.2;
       const faceCrate = Math.atan2(-(L.crate.x - L.spawn.x), -(L.crate.z - L.spawn.z));
-      ctx.player.reset(L.spawn.x, L.spawn.y, L.spawn.z, faceCrate);
+      ctx.player.reset(0, 0, -1.6, faceCrate);
       ctx.camera.yaw = faceCrate;
-      ctx.camera.pitch = -0.22;
-      ctx.camera.dist = 6.2;
+      ctx.camera.pitch = -0.14;
+      ctx.camera.dist = 4.4;
       ctx.hud.setTask(TASK["P-S01-crate"] ?? "");
       ctx.guide.set("path", new THREE.Vector3(L.crate.x, 0, L.crate.z), [{ x0: -5, z0: -5, x1: 5, z1: 5 }]);
       ctx.say(P_LINE.deadLift);
@@ -181,6 +181,8 @@ export function createDeadLift(): GameScene {
     ladderReady = true;
     ctx.hud.setTask(TASK["P-S01-ladder"] ?? "");
     ctx.guide.setGoal(new THREE.Vector3(L.ladder.x, 0, L.ladder.z));
+    const crateItem = ctx.interact.items.find((entry) => entry.id === "crate");
+    if (crateItem) crateItem.enabled = false;
     if (flags.take("swim")) ctx.say(P_LINE.noSwim);
     ctx.world.addLadder(
       "maint",

@@ -71,6 +71,8 @@ export function createC1S01(): GameScene {
         parent: ctx.root,
         onSeat: () => {
           cageSeated = true;
+          const take = ctx.interact.items.find((entry) => entry.id === "take-probe");
+          if (take) take.enabled = true;
         },
       });
       wallGap(ctx);
@@ -104,10 +106,12 @@ export function createC1S01(): GameScene {
         prompt: PROMPT.pickProbe,
         position: xyz(C1_LAYOUT.cageFar),
         radius: 1.6,
-        enabled: true,
+        enabled: false,
         onUse: () => {
           if (!cageSeated) return;
           ctx.bioRig.carry();
+          const take = ctx.interact.items.find((entry) => entry.id === "take-probe");
+          if (take) take.enabled = false;
         },
       });
       ctx.interact.add({

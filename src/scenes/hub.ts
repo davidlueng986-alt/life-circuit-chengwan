@@ -122,9 +122,10 @@ export function createHubScene(id: SceneId = "HUB-S00"): GameScene {
         wall.name = "fail-wall";
       }
 
-      ctx.player.reset(0, 0, 5.15, 0);
+      ctx.player.reset(0, 0, 3.4, 0);
       ctx.camera.yaw = 0;
-      ctx.camera.pitch = -0.12;
+      ctx.camera.pitch = -0.18;
+      ctx.camera.dist = 5.1;
       ctx.hud.setTask(TASK["HUB-S00"] ?? "");
       ctx.guide.set("path", new THREE.Vector3(0.85, 0, 0.15), [{ x0: -11, z0: -8, x1: 11, z1: 8 }]);
 

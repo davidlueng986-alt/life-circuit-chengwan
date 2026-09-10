@@ -130,9 +130,11 @@ export function createBorrowedLens(): GameScene {
         kind: "solid",
       });
 
-      ctx.player.reset(0, 0, 3.15, 0.05);
-      ctx.camera.yaw = 0.05;
+      ctx.player.reset(L.spawn.x, L.spawn.y, L.spawn.z, L.spawn.yaw);
+      ctx.camera.yaw = L.spawn.yaw;
+      ctx.camera.pitch = -0.16;
       ctx.hud.setTask(TASK["P-S02-pick"] ?? "");
+      ctx.say(P_LINE.pickLens);
       ctx.guide.set("path", new THREE.Vector3(L.desk.x, 0, L.desk.z), [{ x0: -5, z0: -5, x1: 5, z1: 8 }]);
 
       ctx.interact.add({
@@ -147,9 +149,10 @@ export function createBorrowedLens(): GameScene {
           ctx.save.player.tool.flowLens = true;
           ctx.persist();
           if (lensMesh) lensMesh.visible = false;
+          const lensItem = ctx.interact.items.find((entry) => entry.id === "lens");
+          if (lensItem) lensItem.enabled = false;
           ctx.hud.setTask(TASK["P-S02-pulse"] ?? "");
           ctx.guide.setGoal(new THREE.Vector3(0, 0, L.wallZ));
-          ctx.say(P_LINE.pickLens);
         },
       });
       ctx.interact.add({
@@ -157,7 +160,7 @@ export function createBorrowedLens(): GameScene {
         prompt: PROMPT.seatRelay,
         position: new THREE.Vector3(L.relay.x, 0, L.relay.z),
         radius: 1.45,
-        enabled: true,
+        enabled: false,
         onUse: () => seat(ctx),
       });
     },
@@ -174,6 +177,8 @@ export function createBorrowedLens(): GameScene {
         if (flags.take("pulsed")) {
           ctx.hud.setTask(TASK["P-S02-follow"] ?? "");
           ctx.guide.setGoal(new THREE.Vector3(L.relay.x, 0, L.relay.z));
+          const relayItem = ctx.interact.items.find((entry) => entry.id === "relay");
+          if (relayItem) relayItem.enabled = true;
           ctx.say(P_LINE.followFlow);
         }
       }
