@@ -60,6 +60,7 @@ export function writeSave(save: SaveState): void {
 
 export function applySettings(save: SaveState, next: Partial<SettingsState>): void {
   save.settings = { ...save.settings, ...next };
+  if (next.relaxedTimer !== undefined) save.settings.relaxedChosen = true;
   save.settings.subtitleScale = snapSubtitleScale(save.settings.subtitleScale);
   save.settings.fov = Math.min(90, Math.max(50, save.settings.fov));
   save.settings.textScale = Math.min(2, Math.max(1, save.settings.textScale));
@@ -105,7 +106,8 @@ function mergeSave(base: SaveState, raw: Record<string, unknown>): SaveState {
       currentScene: current,
     },
     settings: {
-      relaxedTimer: settings["relaxedTimer"] === true,
+      relaxedTimer: settings["relaxedChosen"] === true && settings["relaxedTimer"] === true,
+      relaxedChosen: settings["relaxedChosen"] === true,
       reducedMotion: settings["reducedMotion"] === true,
       subtitleScale: snapSubtitleScale(num(settings["subtitleScale"], base.settings.subtitleScale)),
       fov: num(settings["fov"], base.settings.fov),

@@ -14,6 +14,8 @@ export type LocaleCode = "zh-Hant" | "both";
 
 export interface SettingsState {
   relaxedTimer: boolean;
+  /** True only after the player (or settings UI) explicitly toggles 寬鬆時間. */
+  relaxedChosen: boolean;
   reducedMotion: boolean;
   subtitleScale: SubtitleScale;
   fov: number;
@@ -103,6 +105,7 @@ export interface SaveState {
 
 export const DEFAULT_SETTINGS: SettingsState = {
   relaxedTimer: false,
+  relaxedChosen: false,
   reducedMotion: false,
   subtitleScale: 1,
   fov: 62,

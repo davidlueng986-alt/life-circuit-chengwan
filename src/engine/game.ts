@@ -250,7 +250,7 @@ export class Game {
   }
 
   private newGame(): void {
-    const settings = { ...this.save.settings, relaxedTimer: false };
+    const settings = { ...this.save.settings, relaxedTimer: false, relaxedChosen: false };
     this.save = emptySave();
     this.save.settings = settings;
     this.save.meta.hasSave = true;
